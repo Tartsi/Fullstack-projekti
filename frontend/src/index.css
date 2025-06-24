@@ -1,3 +1,11 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-brand-dark: #7A5C58;
+  --color-brand-purple: #8D80AD;
+  --color-brand-blue: #99B2DD;
+  --color-brand-neon: #9DFFF9;
+  --color-brand-green: #64F58D;
+}
+
 /* Base-CSS File */
