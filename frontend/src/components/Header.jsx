@@ -21,7 +21,7 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-transparent text-black border-b border-black-200">
+    <header className="fixed top-0 left-0 w-full z-50 bg-transparent text-black border-b">
       <div className="max-w-screen-xl mx-auto flex justify-center items-center px-8 py-5 relative">
         <div className="text-lg tracking-widest font-light uppercase italic">
           Workday-Vacuumers
@@ -34,7 +34,7 @@ const Header = () => {
         >
           {/* Hover-menu */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-0 text-sm font-light tracking-wide uppercase transition-all duration-300
+            className={`absolute top-1/2 -translate-y-1/2 right-0 text-sm font-light tracking-wide uppercase transition-all duration-700
                                             ${
                                               isHovered
                                                 ? "opacity-100 translate-x-0"
@@ -49,13 +49,13 @@ const Header = () => {
                 Link 2
               </span>
               <span className="block cursor-pointer hover:opacity-100 opacity-70 whitespace-nowrap italic transition-opacity duration-200">
-                Link 3
+                Contact
               </span>
             </div>
           </div>
 
           {/* Hamburger-symbol */}
-          <div className="text-4xl font-thin cursor-pointer select-none leading-none -mt-4 relative z-10">
+          <div className="text-4xl font-thin cursor-pointer select-none leading-none -mt-2 relative z-10">
             ≡
           </div>
         </div>
