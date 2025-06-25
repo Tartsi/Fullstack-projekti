@@ -8,3 +8,5 @@
     - 2 hours: Finished initial React-project setup.
     - 30 minutes: Had multiple Coolors-palette generated and one of them accepted by customer.
     - 30 minutes: Had website-example accepted by customer (Overall design + structure).
+25.06.2025
+    - 3 hours: Worked on Page-Layout + Header + Footer.

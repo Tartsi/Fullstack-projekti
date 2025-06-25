@@ -1,4 +1,4 @@
-# 📘 Project Definition – Workday-Vacuumers
+# Project Definition – Workday-Vacuumers
 
 ## Overview
 **Workday-Vacuumers** is a single-page web application for a service that cleans customers’ car interiors during the workday, while the car is idle. The website is designed to attract interest, explain the concept, and encourage users to book the service in as straightforward manner as possible.

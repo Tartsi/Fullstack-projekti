@@ -7,3 +7,7 @@
     - Finish initial React-project setup.
     - Had multiple Coolors-palette generated and one of them accepted by customer.
     - Had website-example accepted by customer (Overall design + structure).
+- 25.06.2025
+    - Added initial React-components.
+    - Added some initial CSS-styles.
+    - Added content to the website (Header + Footer).
