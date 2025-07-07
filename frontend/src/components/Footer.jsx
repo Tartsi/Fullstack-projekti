@@ -35,7 +35,7 @@ const Footer = () => {
           </div>
         </div>
         {/* Social Media */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-2">
           <h3 className="text-sm tracking-wide uppercase italic mb-4 opacity-90">
             Follow Us On Social Media!
           </h3>
@@ -44,35 +44,35 @@ const Footer = () => {
               href="#"
               className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              <span className="text-2xl mb-1">𝕏</span>
+              <i className="fab fa-x-twitter text-2xl mb-1"></i>
               <span className="text-xs">Twitter</span>
             </a>
             <a
               href="#"
               className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              <span className="text-2xl mb-1">💼</span>
+              <i className="fab fa-linkedin text-2xl mb-1"></i>
               <span className="text-xs">LinkedIn</span>
             </a>
             <a
               href="#"
               className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              <span className="text-2xl mb-1">👾</span>
+              <i className="fab fa-github text-2xl mb-1"></i>
               <span className="text-xs">GitHub</span>
             </a>
             <a
               href="#"
               className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              <span className="text-2xl mb-1">📷</span>
+              <i className="fab fa-instagram text-2xl mb-1"></i>
               <span className="text-xs">Instagram</span>
             </a>
             <a
               href="#"
               className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              <span className="text-2xl mb-1">🎵</span>
+              <i className="fab fa-tiktok text-2xl mb-1"></i>
               <span className="text-xs">TikTok</span>
             </a>
           </div>

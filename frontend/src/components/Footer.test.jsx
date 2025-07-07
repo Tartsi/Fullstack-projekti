@@ -33,12 +33,12 @@ describe("Footer Component", () => {
     const socialLinks = screen.getAllByRole("link");
     expect(socialLinks).toHaveLength(5); // 5 social media links
 
-    // Check if icons are present (using text content)
-    expect(screen.getByText("𝕏")).toBeInTheDocument(); // Twitter
-    expect(screen.getByText("💼")).toBeInTheDocument(); // LinkedIn
-    expect(screen.getByText("👾")).toBeInTheDocument(); // GitHub
-    expect(screen.getByText("📷")).toBeInTheDocument(); // Instagram
-    expect(screen.getByText("🎵")).toBeInTheDocument(); // TikTok
+    // Check if Font Awesome icons are present
+    expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument(); // Twitter
+    expect(document.querySelector(".fa-linkedin")).toBeInTheDocument(); // LinkedIn
+    expect(document.querySelector(".fa-github")).toBeInTheDocument(); // GitHub
+    expect(document.querySelector(".fa-instagram")).toBeInTheDocument(); // Instagram
+    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument(); // TikTok
   });
 
   it("renders copyright information with current year", () => {
