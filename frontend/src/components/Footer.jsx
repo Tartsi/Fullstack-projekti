@@ -36,47 +36,45 @@ const Footer = () => {
         </div>
         {/* Social Media */}
         <div className="text-center mb-6">
-          <h3 className="text-sm tracking-wide uppercase italic mb-2 opacity-90">
+          <h3 className="text-sm tracking-wide uppercase italic mb-4 opacity-90">
             Follow Us On Social Media!
           </h3>
-          <div className="flex justify-center space-x-6 mb-3">
+          <div className="flex justify-center space-x-8 mb-3">
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              𝕏
+              <span className="text-2xl mb-1">𝕏</span>
+              <span className="text-xs">Twitter</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              💼
+              <span className="text-2xl mb-1">💼</span>
+              <span className="text-xs">LinkedIn</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              👾
+              <span className="text-2xl mb-1">👾</span>
+              <span className="text-xs">GitHub</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              📷
+              <span className="text-2xl mb-1">📷</span>
+              <span className="text-xs">Instagram</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              🎵
+              <span className="text-2xl mb-1">🎵</span>
+              <span className="text-xs">TikTok</span>
             </a>
-          </div>
-          <div className="text-xs opacity-60 space-x-4">
-            <span>Twitter</span>
-            <span>LinkedIn</span>
-            <span>GitHub</span>
-            <span>Instagram</span>
-            <span>TikTok</span>
           </div>
         </div>
         {/* Copyright */}

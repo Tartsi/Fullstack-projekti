@@ -12,3 +12,10 @@
     - 30 minutes: Had website-example accepted by customer (Overall design + structure).
 - 25.06.2025
     - 3 hours: Worked on Page-Layout + Header + Footer.
+
+- 26.06.2025-06.07.2025 - Break
+    - Vacation, no work hours tracked.
+
+- 07.07.2025
+    - 1 hour: Reviewed previous work and planned next steps.
+    - 1 hour: Provided customer with font-options, wrote tests for Header, Footer and Layout components and started working on proper scaling of the website.

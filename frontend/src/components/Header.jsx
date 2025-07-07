@@ -22,7 +22,7 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-transparent text-black border-b">
-      <div className="max-w-screen-xl mx-auto flex justify-center items-center px-8 py-5 relative">
+      <div className="w-full flex justify-center items-center px-8 py-5 relative">
         <div className="text-lg tracking-widest font-light uppercase italic">
           Workday-Vacuumers
         </div>
@@ -47,6 +47,9 @@ const Header = () => {
               </span>
               <span className="block cursor-pointer hover:opacity-100 opacity-70 whitespace-nowrap italic transition-opacity duration-200">
                 Link 2
+              </span>
+              <span className="block cursor-pointer hover:opacity-100 opacity-70 whitespace-nowrap italic transition-opacity duration-200">
+                Order
               </span>
               <span className="block cursor-pointer hover:opacity-100 opacity-70 whitespace-nowrap italic transition-opacity duration-200">
                 Contact
