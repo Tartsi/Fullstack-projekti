@@ -31,7 +31,7 @@ describe("App Component", () => {
   it("renders contact section in footer", () => {
     render(<App />);
     expect(
-      screen.getByRole("heading", { level: 2, name: "Contact" })
+      screen.getByRole("heading", { level: 2, name: "Yhteystiedot" })
     ).toBeInTheDocument();
   });
 });
