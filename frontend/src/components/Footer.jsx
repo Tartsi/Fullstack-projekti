@@ -21,66 +21,64 @@ const Footer = () => {
     <footer className="bg-transparent text-black py-8 font-light">
       <div className="max-w-screen-xl mx-auto px-8">
         {/* Large Centered Contact Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl tracking-widest uppercase italic underline decoration-2 underline-offset-4">
+        <div className="text-center mb-4">
+          <h2 className="text-2xl tracking-widest uppercase italic underline decoration-2 underline-offset-4 font-cottage">
             Contact
           </h2>
         </div>
         {/* Contact Information */}
         <div className="text-center mb-6">
-          <div className="space-y-3 text-sm opacity-70 italic">
+          <div className="space-y-3 text-sm opacity-70 italic font-cottage">
             <div>info@workday-vacuumers.com</div>
             <div>+358 00 000 0000</div>
             <div>123 Clean Street, Spotless City, 00100</div>
           </div>
         </div>
         {/* Social Media */}
-        <div className="text-center mb-6">
-          <h3 className="text-sm tracking-wide uppercase italic mb-2 opacity-90">
+        <div className="text-center mb-2">
+          <h3 className="text-sm tracking-wide uppercase italic mb-4 opacity-90 font-cottage">
             Follow Us On Social Media!
           </h3>
-          <div className="flex justify-center space-x-6 mb-3">
+          <div className="flex justify-center space-x-8 mb-3">
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              𝕏
+              <i className="fab fa-x-twitter text-2xl mb-1"></i>
+              <span className="text-xs font-cottage">Twitter</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              💼
+              <i className="fab fa-linkedin text-2xl mb-1"></i>
+              <span className="text-xs font-cottage">LinkedIn</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              👾
+              <i className="fab fa-github text-2xl mb-1"></i>
+              <span className="text-xs font-cottage">GitHub</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              📷
+              <i className="fab fa-instagram text-2xl mb-1"></i>
+              <span className="text-xs font-cottage">Instagram</span>
             </a>
             <a
               href="#"
-              className="text-2xl hover:scale-125 transform transition-transform duration-700 opacity-70 hover:opacity-100"
+              className="flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100"
             >
-              🎵
+              <i className="fab fa-tiktok text-2xl mb-1"></i>
+              <span className="text-xs font-cottage">TikTok</span>
             </a>
-          </div>
-          <div className="text-xs opacity-60 space-x-4">
-            <span>Twitter</span>
-            <span>LinkedIn</span>
-            <span>GitHub</span>
-            <span>Instagram</span>
-            <span>TikTok</span>
           </div>
         </div>
         {/* Copyright */}
-        <div className="text-center text-xs tracking-wide opacity-60 border-t border-gray-200">
+        <div className="text-center text-xs tracking-wide opacity-60 border-t border-gray-200 font-cottage pt-4">
           © {new Date().getFullYear()} Workday-Vacuumers. All rights reserved.
         </div>
       </div>

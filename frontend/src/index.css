@@ -1,12 +1,41 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';
 
-@theme {
+/* Super Cottage Font - Local TrueType */
+@font-face {
+  font-family: 'Super Cottage';
+  src: url('./assets/fonts/SuperCottage-woAZ2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Custom CSS variables for brand colors */
+:root {
   --color-brand-dark: #7A5C58;
   --color-brand-purple: #8D80AD;
   --color-brand-blue: #99B2DD;
   --color-brand-neon: #9DFFF9;
   --color-brand-green: #64F58D;
   --color-brand-lightgrey: #EDECEB;
+
+  --font-family-cottage: 'Super Cottage', 'Inter', system-ui, sans-serif;
+  --font-family-sans: 'Inter', system-ui, sans-serif;
 }
 
 /* Base-CSS File */
+body {
+  font-family: 'Super Cottage', 'Inter', system-ui, sans-serif;
+}
+
+/* Custom font utility classes */
+.font-cottage {
+  font-family: 'Super Cottage', 'Inter', system-ui, sans-serif;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, sans-serif;
+}

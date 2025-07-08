@@ -2,11 +2,20 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, or documentation or self-studying.
 
-23.06.2025
+## Total hours: 9 hours
+
+- 23.06.2025
     - 3 hours: Initialized project repository and defined repository settings.
-24.06.2025
+- 24.06.2025
     - 2 hours: Finished initial React-project setup.
     - 30 minutes: Had multiple Coolors-palette generated and one of them accepted by customer.
     - 30 minutes: Had website-example accepted by customer (Overall design + structure).
-25.06.2025
+- 25.06.2025
     - 3 hours: Worked on Page-Layout + Header + Footer.
+
+- 26.06.2025-06.07.2025 - Break
+    - Vacation, no work hours tracked.
+
+- 07.07.2025
+    - 1 hour: Reviewed previous work and planned next steps.
+    - 1 hour: Provided customer with font-options, wrote tests for Header, Footer and Layout components and started working on proper scaling of the website.
