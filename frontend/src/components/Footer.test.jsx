@@ -11,7 +11,7 @@ describe("Footer Component", () => {
         <Footer />
       </LanguageProvider>
     );
-    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument(); // Contact in Finnish
+    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument();
   });
 
   it("renders contact information", () => {
@@ -37,7 +37,7 @@ describe("Footer Component", () => {
     );
     expect(
       screen.getByText("Seuraa Meitä Sosiaalisessa Mediassa!")
-    ).toBeInTheDocument(); // Follow Us in Finnish
+    ).toBeInTheDocument();
     expect(screen.getByText("Twitter")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
@@ -55,11 +55,11 @@ describe("Footer Component", () => {
     expect(socialLinks).toHaveLength(5); // 5 social media links
 
     // Check if Font Awesome icons are present
-    expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument(); // Twitter
-    expect(document.querySelector(".fa-linkedin")).toBeInTheDocument(); // LinkedIn
-    expect(document.querySelector(".fa-github")).toBeInTheDocument(); // GitHub
-    expect(document.querySelector(".fa-instagram")).toBeInTheDocument(); // Instagram
-    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument(); // TikTok
+    expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument();
+    expect(document.querySelector(".fa-linkedin")).toBeInTheDocument();
+    expect(document.querySelector(".fa-github")).toBeInTheDocument();
+    expect(document.querySelector(".fa-instagram")).toBeInTheDocument();
+    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument();
   });
 
   it("renders copyright information with current year", () => {

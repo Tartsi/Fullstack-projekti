@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
-import flagFi from "../assets/icons/flag-fi-svgrepo-com.svg";
+import flagFinland from "../assets/icons/flag-fi-svgrepo-com.svg";
 import flagEngland from "../assets/icons/flag-england-svgrepo-com.svg";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /**
  * Header component that displays a fixed navigation bar at the top of the page.
- * It includes a title and a hoverable menu triggered by a hamburger icon.
+ * It includes a title, a hoverable menu triggered by a hamburger icon, and a language selector.
  *
  * @component
  * @returns {JSX.Element} The rendered Header component.
@@ -15,12 +15,11 @@ import { useLanguage } from "../i18n/LanguageContext";
  * @description
  * - The header is fixed at the top of the viewport and spans the full width of the screen.
  * - It contains a title "Workday-Vacuumers" styled with uppercase, italic, and light font.
- * - A hoverable menu is displayed when the user hovers over the hamburger icon.
- * - The menu contains links with hover effects.
+ * - A hoverable navigation link-menu is displayed when the user hovers over the hamburger icon on the Header's right side.
  * - The visibility and position of the menu are animated using CSS transitions.
- *
- * @example
- * <Header />
+ * - A language selector is included on the left side, allowing users to switch between Finnish and English.
+ * - Language changes trigger animations for visual feedback.
+ * - The header includes icons for branding and visual appeal.
  */
 const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -28,6 +27,13 @@ const Header = () => {
   const [isLanguageChanging, setIsLanguageChanging] = useState(false);
   const { language, changeLanguage, t } = useLanguage();
 
+  /**
+   * Handles the language change process by updating the current language
+   * and triggering a temporary animation state.
+   *
+   * @param {string} newLanguage - The new language to switch to.
+   * @returns {void}
+   */
   const handleLanguageChange = (newLanguage) => {
     if (newLanguage !== language) {
       setIsLanguageChanging(true);
@@ -67,7 +73,7 @@ const Header = () => {
                 }`}
               >
                 <img
-                  src={flagFi}
+                  src={flagFinland}
                   alt="Finnish flag"
                   className="w-4 h-3 sm:w-5 sm:h-4 md:w-6 md:h-4 mb-1 rounded-sm"
                 />
@@ -100,7 +106,7 @@ const Header = () => {
             }`}
           >
             <img
-              src={language === "fi" ? flagFi : flagEngland}
+              src={language === "fi" ? flagFinland : flagEngland}
               alt={language === "fi" ? "Finnish flag" : "English flag"}
               className="w-4 h-3 sm:w-5 sm:h-4 rounded-sm"
             />

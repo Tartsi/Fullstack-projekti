@@ -35,11 +35,11 @@ describe("Header Component", () => {
     // Hover over the hamburger menu
     fireEvent.mouseEnter(hamburger.parentElement);
 
-    // Check if navigation links are visible (using translated text)
-    expect(screen.getByText("Palvelut")).toBeInTheDocument(); // Services in Finnish
-    expect(screen.getByText("Tietoa")).toBeInTheDocument(); // About in Finnish
-    expect(screen.getByText("Tilaa")).toBeInTheDocument(); // Order in Finnish
-    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument(); // Contact in Finnish
+    // Check if navigation links are visible
+    expect(screen.getByText("Palvelut")).toBeInTheDocument();
+    expect(screen.getByText("Tietoa")).toBeInTheDocument();
+    expect(screen.getByText("Tilaa")).toBeInTheDocument();
+    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument();
   });
 
   it("hides navigation links when not hovering", () => {

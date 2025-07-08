@@ -13,9 +13,6 @@ import { useLanguage } from "../i18n/LanguageContext";
  * - Provides contact information including email, phone number, and address (PLACEHOLDERS CURRENTLY!).
  * - Includes social media links with hover effects and corresponding labels (PLACEHOLDERS CURRENTLY!).
  * - Shows copyright information with the current year.
- *
- * @example
- * <Footer />
  */
 const Footer = () => {
   const { t } = useLanguage();

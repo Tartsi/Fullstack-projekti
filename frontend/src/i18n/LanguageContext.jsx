@@ -4,7 +4,19 @@ import { translations } from "./translations.js";
 // Language Context
 const LanguageContext = createContext();
 
-// Language Provider Component
+/**
+ * LanguageProvider component that provides language context to its children.
+ *
+ * @param {Object} props - The props object.
+ * @param {React.ReactNode} props.children - The child components to be wrapped by the provider.
+ *
+ * @returns {JSX.Element} A context provider that supplies language-related functionality.
+ *
+ * @property {string} language - The current language code (default is "fi").
+ * @property {function} changeLanguage - Function to change the current language.
+ * @property {function} t - Translation function that retrieves the translation for a given path.
+ * @property {string[]} availableLanguages - Array of available language codes.
+ */
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState("fi"); // Default to Finnish
 
