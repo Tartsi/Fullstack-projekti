@@ -1,12 +1,54 @@
-# React + Vite
+# Workday Vacuumers – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend** for the Workday Vacuumers single-page website.  
+It is built with **React + Vite**, styled with **Tailwind CSS**, enhanced with **MUI (Material UI)** components, and animated using **Framer Motion**.  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## Expanding the ESLint configuration
+| Tool | Purpose |
+|------|---------|
+| **Vite** | Fast dev server & build pipeline with HMR |
+| **React** | Component-based UI |
+| **Tailwind CSS** | Utility-first styling |
+| **MUI** | Polished, accessible UI blocks |
+| **Framer Motion** | Declarative animations |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Running the Project locally
+
+```bash
+# Install dependencies
+npm install
+
+# Start local dev server
+npm run dev
+```
+
+---
+
+## Linting & Formatting
+ESLint shipped via the Vite React template.
+
+Prettier for opinionated code formatting.
+### Recommended VS Code Settings
+
+To ensure consistent formatting and linting, add the following settings to your `.vscode/settings.json` file:
+
+```jsonc
+{
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
+```
+
+## License
+For educational & portfolio purposes only.
+© 2025 Workday Vacuumers
