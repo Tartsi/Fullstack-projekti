@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, or documentation or self-studying.
 
-## Total hours: 14 hours
+## Total hours: 18 hours
 
 - 23.06.2025
     - 3 hours: Initialized project repository and defined repository settings.
@@ -22,3 +22,6 @@
 - 08.07.2025
     - 1 hour: More scaling of the website + reviewed and approved some icons for the website with customer.
     - 2 hour: Added more content to the header, including translation functionality to the website and option for it in the header.
+- 09.07.2025
+    - 1 hour: Recreated backlog as the initial backlog was malfunctioning for some unknown reason as of yet.
+    - 3 hour: Added more content to the website, including Hero section and its tests, also modified Header to function properly.

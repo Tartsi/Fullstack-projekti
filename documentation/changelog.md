@@ -20,4 +20,6 @@
 - 08.07.2025
     - More scaling of the website.
     - Added more content to header: Icons and option to choose between Finnish and English.
-    - Added translation functionality to the website.
+- 09.07.2025
+    - Fixed backlog
+    - Added more content to the website: Hero section
