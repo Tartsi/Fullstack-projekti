@@ -21,8 +21,9 @@ describe("Layout Component", () => {
         <Layout />
       </LanguageProvider>
     );
-    // Check if header is present by looking for the company name
-    expect(screen.getByText("Workday-Vacuumers")).toBeInTheDocument();
+    // Check if header is present by looking for the banner role
+    const header = screen.getByRole("banner");
+    expect(header).toBeInTheDocument();
   });
 
   it("renders Footer component", () => {

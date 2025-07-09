@@ -1,6 +1,14 @@
 // Language translations for the application
 export const translations = {
   fi: {
+    // Hero
+    hero: {
+      headline: "Siivoamme Autosi Työpäivän Aikana",
+      subheading:
+        "Ammattitaitoinen auton sisäpuolien siivous samalla kun keskityt työhösi. Palaatte puhtaaseen autoon.",
+      cta: "Varaa Siivous",
+      scrollText: "Lue Lisää",
+    },
     // Header
     nav: {
       services: "Palvelut",
@@ -32,6 +40,14 @@ export const translations = {
     },
   },
   en: {
+    // Hero
+    hero: {
+      headline: "We Clean Your Car During Your Workday",
+      subheading:
+        "Professional car interior cleaning while you focus on work. Return to a spotless car.",
+      cta: "Book Cleaning",
+      scrollText: "Learn More",
+    },
     // Header
     nav: {
       services: "Services",

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
-import flagFinland from "../assets/icons/flag-fi-svgrepo-com.svg";
+import flagFi from "../assets/icons/flag-fi-svgrepo-com.svg";
 import flagEngland from "../assets/icons/flag-england-svgrepo-com.svg";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -25,7 +25,19 @@ const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLanguageHovered, setIsLanguageHovered] = useState(false);
   const [isLanguageChanging, setIsLanguageChanging] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { language, changeLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const heroHeight = window.innerHeight;
+      setIsScrolled(scrollPosition > heroHeight * 0.8); // Show header after scrolling 80% of hero height
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   /**
    * Handles the language change process by updating the current language
@@ -46,8 +58,18 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-transparent text-black border-b">
-      <div className="w-full flex justify-center items-center px-4 sm:px-6 md:px-8 py-5 relative">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-200 translate-y-0 opacity-100"
+          : "bg-transparent border-b border-transparent -translate-y-full opacity-0"
+      } text-black`}
+    >
+      <div
+        className={`w-full flex justify-center items-center px-4 sm:px-6 md:px-8 transition-all duration-500 ${
+          isScrolled ? "py-3" : "py-5"
+        } relative`}
+      >
         {/* Language Selector - Left */}
         <div
           className="absolute left-3 sm:left-4 md:left-6 lg:left-8 flex items-center"
@@ -73,7 +95,7 @@ const Header = () => {
                 }`}
               >
                 <img
-                  src={flagFinland}
+                  src={flagFi}
                   alt="Finnish flag"
                   className="w-4 h-3 sm:w-5 sm:h-4 md:w-6 md:h-4 mb-1 rounded-sm"
                 />
@@ -106,7 +128,7 @@ const Header = () => {
             }`}
           >
             <img
-              src={language === "fi" ? flagFinland : flagEngland}
+              src={language === "fi" ? flagFi : flagEngland}
               alt={language === "fi" ? "Finnish flag" : "English flag"}
               className="w-4 h-3 sm:w-5 sm:h-4 rounded-sm"
             />
