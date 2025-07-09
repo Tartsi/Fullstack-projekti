@@ -20,6 +20,12 @@ It is built with **React + Vite**, styled with **Tailwind CSS**, enhanced with *
 ## Running the Project locally
 
 ```bash
+# Clone the repository
+git clone https://github.com/Tartsi/Fullstack-projekti
+
+# Navigate to the frontend-folder from the root
+cd frontend
+
 # Install dependencies
 npm install
 
