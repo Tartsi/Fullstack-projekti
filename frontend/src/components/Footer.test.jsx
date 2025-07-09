@@ -2,25 +2,42 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Footer from "./Footer";
+import { LanguageProvider } from "../i18n/LanguageContext";
 
 describe("Footer Component", () => {
   it("renders the contact header", () => {
-    render(<Footer />);
-    expect(screen.getByText("Contact")).toBeInTheDocument();
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
+    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument();
   });
 
   it("renders contact information", () => {
-    render(<Footer />);
-    expect(screen.getByText("info@workday-vacuumers.com")).toBeInTheDocument();
-    expect(screen.getByText("+358 00 000 0000")).toBeInTheDocument();
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     expect(
-      screen.getByText("123 Clean Street, Spotless City, 00100")
+      screen.getByText("info@workday-siivouspalvelut.fi")
+    ).toBeInTheDocument();
+    expect(screen.getByText("+358 40 123 4567")).toBeInTheDocument();
+    expect(
+      screen.getByText("Siivoustie 123, 00100 Helsinki")
     ).toBeInTheDocument();
   });
 
   it("renders social media section", () => {
-    render(<Footer />);
-    expect(screen.getByText("Follow Us On Social Media!")).toBeInTheDocument();
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
+    expect(
+      screen.getByText("Seuraa Meitä Sosiaalisessa Mediassa!")
+    ).toBeInTheDocument();
     expect(screen.getByText("Twitter")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
@@ -29,30 +46,42 @@ describe("Footer Component", () => {
   });
 
   it("renders social media icons", () => {
-    render(<Footer />);
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     const socialLinks = screen.getAllByRole("link");
     expect(socialLinks).toHaveLength(5); // 5 social media links
 
     // Check if Font Awesome icons are present
-    expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument(); // Twitter
-    expect(document.querySelector(".fa-linkedin")).toBeInTheDocument(); // LinkedIn
-    expect(document.querySelector(".fa-github")).toBeInTheDocument(); // GitHub
-    expect(document.querySelector(".fa-instagram")).toBeInTheDocument(); // Instagram
-    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument(); // TikTok
+    expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument();
+    expect(document.querySelector(".fa-linkedin")).toBeInTheDocument();
+    expect(document.querySelector(".fa-github")).toBeInTheDocument();
+    expect(document.querySelector(".fa-instagram")).toBeInTheDocument();
+    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument();
   });
 
   it("renders copyright information with current year", () => {
-    render(<Footer />);
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     const currentYear = new Date().getFullYear();
     expect(
       screen.getByText(
-        `© ${currentYear} Workday-Vacuumers. All rights reserved.`
+        `© ${currentYear} Workday-Siivouspalvelut. Kaikki oikeudet pidätetään.`
       )
     ).toBeInTheDocument();
   });
 
   it("has correct styling for contact header", () => {
-    render(<Footer />);
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     const contactHeader = screen.getByRole("heading", { level: 2 });
     expect(contactHeader).toHaveClass(
       "text-2xl",
@@ -64,7 +93,11 @@ describe("Footer Component", () => {
   });
 
   it("social media links have hover effects", () => {
-    render(<Footer />);
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     const socialLinks = screen.getAllByRole("link");
 
     socialLinks.forEach((link) => {
@@ -77,7 +110,11 @@ describe("Footer Component", () => {
   });
 
   it("has proper footer semantic structure", () => {
-    render(<Footer />);
+    render(
+      <LanguageProvider>
+        <Footer />
+      </LanguageProvider>
+    );
     const footer = screen.getByRole("contentinfo");
     expect(footer).toBeInTheDocument();
     expect(footer).toHaveClass(

@@ -2,35 +2,52 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Header from "./Header";
+import { LanguageProvider } from "../i18n/LanguageContext";
 
 describe("Header Component", () => {
   it("renders the company name", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     expect(screen.getByText("Workday-Vacuumers")).toBeInTheDocument();
   });
 
   it("renders the hamburger menu icon", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     const hamburger = screen.getByText("≡");
     expect(hamburger).toBeInTheDocument();
   });
 
   it("shows navigation links on hover", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     const hamburger = screen.getByText("≡");
 
     // Hover over the hamburger menu
     fireEvent.mouseEnter(hamburger.parentElement);
 
     // Check if navigation links are visible
-    expect(screen.getByText("Link 1")).toBeInTheDocument();
-    expect(screen.getByText("Link 2")).toBeInTheDocument();
-    expect(screen.getByText("Order")).toBeInTheDocument();
-    expect(screen.getByText("Contact")).toBeInTheDocument();
+    expect(screen.getByText("Palvelut")).toBeInTheDocument();
+    expect(screen.getByText("Tietoa")).toBeInTheDocument();
+    expect(screen.getByText("Tilaa")).toBeInTheDocument();
+    expect(screen.getByText("Yhteystiedot")).toBeInTheDocument();
   });
 
   it("hides navigation links when not hovering", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     const hamburger = screen.getByText("≡");
 
     // Initially, links should not be visible (they have pointer-events-none)
@@ -38,20 +55,28 @@ describe("Header Component", () => {
     fireEvent.mouseLeave(menuContainer);
 
     // The links exist in DOM but are hidden with opacity-0
-    const link1 = screen.getByText("Link 1");
-    expect(link1).toBeInTheDocument();
+    const services = screen.getByText("Palvelut");
+    expect(services).toBeInTheDocument();
     // Check if the parent container has opacity-0 class
-    expect(link1.closest(".opacity-0")).toBeInTheDocument();
+    expect(services.closest(".opacity-0")).toBeInTheDocument();
   });
 
   it("has correct styling classes", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     const header = screen.getByRole("banner");
     expect(header).toHaveClass("fixed", "top-0", "left-0", "w-full", "z-50");
   });
 
   it("hamburger icon is clickable", () => {
-    render(<Header />);
+    render(
+      <LanguageProvider>
+        <Header />
+      </LanguageProvider>
+    );
     const hamburger = screen.getByText("≡");
     expect(hamburger).toHaveClass("cursor-pointer");
   });

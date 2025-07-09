@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./Header";
+import Hero from "./Hero";
 import Footer from "./Footer";
 
 /**
@@ -15,7 +16,10 @@ const Layout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-brand-lightgrey text-white font-cottage">
       <Header />
-      <main className="flex-1">{children}</main>
+      <Hero />
+      <main className="flex-1 relative z-10 bg-brand-lightgrey">
+        {children}
+      </main>
       <Footer />
     </div>
   );

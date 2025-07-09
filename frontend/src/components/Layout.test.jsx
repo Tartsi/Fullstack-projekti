@@ -2,41 +2,61 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import Layout from "./Layout";
+import { LanguageProvider } from "../i18n/LanguageContext";
 
 describe("Layout Component", () => {
   it("renders without crashing", () => {
-    render(<Layout />);
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
     // Check if the main layout structure is present
     expect(screen.getByRole("main")).toBeInTheDocument();
   });
 
   it("renders Header component", () => {
-    render(<Layout />);
-    // Check if header is present by looking for the company name
-    expect(screen.getByText("Workday-Vacuumers")).toBeInTheDocument();
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
+    // Check if header is present by looking for the banner role
+    const header = screen.getByRole("banner");
+    expect(header).toBeInTheDocument();
   });
 
   it("renders Footer component", () => {
-    render(<Layout />);
-    // Check if footer is present by looking for contact section header (h2)
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
+    // Check if footer is present by looking for contact section header (h2) in Finnish
     expect(
-      screen.getByRole("heading", { level: 2, name: "Contact" })
+      screen.getByRole("heading", { level: 2, name: "Yhteystiedot" })
     ).toBeInTheDocument();
   });
 
   it("renders children content", () => {
     const TestChild = () => <div>Test Child Content</div>;
     render(
-      <Layout>
-        <TestChild />
-      </Layout>
+      <LanguageProvider>
+        <Layout>
+          <TestChild />
+        </Layout>
+      </LanguageProvider>
     );
 
     expect(screen.getByText("Test Child Content")).toBeInTheDocument();
   });
 
   it("has correct layout structure", () => {
-    render(<Layout />);
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
     const layoutContainer = screen.getByRole("main").parentElement;
     expect(layoutContainer).toHaveClass(
       "min-h-screen",
@@ -47,13 +67,21 @@ describe("Layout Component", () => {
   });
 
   it("main content area has flex-1 class", () => {
-    render(<Layout />);
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
     const mainContent = screen.getByRole("main");
     expect(mainContent).toHaveClass("flex-1");
   });
 
   it("maintains proper semantic structure", () => {
-    render(<Layout />);
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
 
     // Check for proper semantic elements
     expect(screen.getByRole("banner")).toBeInTheDocument(); // Header
@@ -62,7 +90,11 @@ describe("Layout Component", () => {
   });
 
   it("applies correct text color class", () => {
-    render(<Layout />);
+    render(
+      <LanguageProvider>
+        <Layout />
+      </LanguageProvider>
+    );
     const layoutContainer = screen.getByRole("main").parentElement;
     expect(layoutContainer).toHaveClass("text-white");
   });

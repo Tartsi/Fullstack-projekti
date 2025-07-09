@@ -17,3 +17,9 @@
 
 - 07.07.2025
     - Component tests + started working on proper scaling of the website.
+- 08.07.2025
+    - More scaling of the website.
+    - Added more content to header: Icons and option to choose between Finnish and English.
+- 09.07.2025
+    - Fixed backlog
+    - Added more content to the website: Hero section
