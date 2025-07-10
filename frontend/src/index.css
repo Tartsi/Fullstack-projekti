@@ -50,3 +50,25 @@ body {
 .language-change-animation {
   animation: languageChange 0.6s ease-in-out;
 }
+
+/* Brand color utilities */
+.bg-brand-dark { background-color: var(--color-brand-dark); }
+.bg-brand-purple { background-color: var(--color-brand-purple); }
+.bg-brand-blue { background-color: var(--color-brand-blue); }
+.bg-brand-neon { background-color: var(--color-brand-neon); }
+.bg-brand-green { background-color: var(--color-brand-green); }
+.bg-brand-lightgrey { background-color: var(--color-brand-lightgrey); }
+
+.text-brand-dark { color: var(--color-brand-dark); }
+.text-brand-purple { color: var(--color-brand-purple); }
+.text-brand-blue { color: var(--color-brand-blue); }
+.text-brand-neon { color: var(--color-brand-neon); }
+.text-brand-green { color: var(--color-brand-green); }
+.text-brand-lightgrey { color: var(--color-brand-lightgrey); }
+
+.border-brand-dark { border-color: var(--color-brand-dark); }
+.border-brand-purple { border-color: var(--color-brand-purple); }
+.border-brand-blue { border-color: var(--color-brand-blue); }
+.border-brand-neon { border-color: var(--color-brand-neon); }
+.border-brand-green { border-color: var(--color-brand-green); }
+.border-brand-lightgrey { border-color: var(--color-brand-lightgrey); }

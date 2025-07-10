@@ -57,6 +57,16 @@ const Header = () => {
     }
   };
 
+  /**
+   * Scrolls to the about section when the About nav link is clicked.
+   */
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
@@ -192,7 +202,10 @@ const Header = () => {
               <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">
                 {t("nav.services")}
               </span>
-              <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">
+              <span
+                onClick={scrollToAbout}
+                className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm"
+              >
                 {t("nav.about")}
               </span>
               <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">

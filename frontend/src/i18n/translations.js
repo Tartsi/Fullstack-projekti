@@ -32,6 +32,19 @@ export const translations = {
       },
       copyright: "Workday-Siivouspalvelut. Kaikki oikeudet pidätetään.",
     },
+    // About section
+    about: {
+      title: "Mikä on Workday-Siivouspalvelut?",
+      description1:
+        "Workday-Siivouspalvelut on innovatiivinen palvelu, joka siivoaa autosi sisätilat työpäivän aikana.",
+      description2:
+        "Kun keskityt työhösi toimistossa, ammattitaitoiset siivouspalvelumme huolehtivat autosi puhtaudesta parkkipaikalla.",
+      description3:
+        "Palaat töistä raikkaaseen ja puhtaaseen autoon – ei tarvitse uhrata viikonloppuja auton siivoamiseen.",
+      valueProposition:
+        "Siivoamme autosi sisätilat työpäivän aikana – jotta voit ajaa kotiin raikkaassa autossa joka päivä.",
+      imagePlaceholder: "Siivouspalvelu työssä",
+    },
     // Main content
     content: {
       welcome: "Tervetuloa",
@@ -70,6 +83,19 @@ export const translations = {
         tiktok: "TikTok",
       },
       copyright: "Workday-Vacuumers. All rights reserved.",
+    },
+    // About section
+    about: {
+      title: "What is Workday Vacuumers?",
+      description1:
+        "Workday Vacuumers is an innovative service that cleans your car interior during your workday.",
+      description2:
+        "While you focus on work at the office, our professional cleaning team takes care of your car's cleanliness in the parking lot.",
+      description3:
+        "Return from work to a fresh and clean car – no need to sacrifice weekends for car cleaning.",
+      valueProposition:
+        "We clean your car interior while you work—so you drive home fresh every day.",
+      imagePlaceholder: "Cleaning service at work",
     },
     // Main content
     content: {
