@@ -7,3 +7,18 @@
 ### Content
 - [Documentation](./documentation/)
 
+### Quick Setup Guide
+
+```bash
+# Clone the repository
+git clone https://github.com/Tartsi/Fullstack-projekti
+
+# Navigate to the frontend-folder from the root
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start local dev server
+npm run dev
+```
