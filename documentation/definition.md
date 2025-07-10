@@ -1,7 +1,7 @@
 # Project Definition – Workday-Vacuumers
 
 ## Overview
-**Workday-Vacuumers** is a single-page web application for a service that cleans customers’ car interiors during the workday, while the car is idle. The website is designed to attract interest, explain the concept, and encourage users to book the service in as straightforward manner as possible.
+**Workday-Vacuumers** is a single-page web application for a service that cleans customers’ car interiors during the workday, while the car is parked. The website is designed to attract interest, explain the concept, and encourage users to book the service in as straightforward manner as possible.
 
 ---
 
@@ -11,8 +11,8 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 ---
 
 ## Core Intended Features
-- **Hero Section** with brand identity and call-to-action
-- **Service Overview** explaining what the business does
+- **Hero Section** with brand identity
+- **About Section** explaining what the business does
 - **Process Explanation** to show how it works (e.g., step-by-step)
 - **Pricing Section** with clear and simple plans
 - **FAQ Section** for common concerns (trust & convenience)
@@ -27,19 +27,19 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 - Full frontend implementation with React + Vite
 - Component-based architecture
 - Visual polish using MUI + Framer Motion
-- Hosting and (deployment?)
+- Hosting
 - Documentation and version control
 
 ### Excluded (for MVP)
 - Payment integrations
 - User accounts or login
-- Backend database or API (can be added later)
+- Backend database or API
 
 ---
 
 ## Target Users
-- Busy professionals who park their car for hours during the workday
-- Office parks, city center workers, or business districts
+- Busy professionals who park their car for workhours during the workday
+- Office parks, city center workers, business districts even university students
 
 ---
 

@@ -23,3 +23,6 @@
 - 09.07.2025
     - Fixed backlog
     - Added more content to the website: Hero section
+- 10.07.2025
+    - Added more content to the website: About section
+    - More scalability fixes and tweaks

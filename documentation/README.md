@@ -1,6 +1,6 @@
 # Documentation
 
-This folder contains the technical and visual documentation for the Fullstack-project.
+This folder contains the technical documentation for the Fullstack-project.
 
 ## Contents
 - [definition.md](./definition.md): Project definition
