@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /**
- * About component that displays information about the Workday Vacuumers service.
+ * About component that displays information about the WOCUUMING service by Workday-Vacuumers.
  * Features a two-column layout with text on the left and placeholder image on the right.
  *
  * @component
  * @returns {JSX.Element} The rendered About section.
  *
  * @description
- * - Displays a title "What is Workday Vacuumers?"
- * - Provides a 3-sentence explanation of the concept
+ * - Displays a title "What is WOCUUMING? - explains the (WOCUUMING) concept"
+ * - Provides a 3-sentence explanation of the service concept
  * - Two-column desktop layout (text left, image right)
  * - Responsive design that stacks on mobile
  * - Fade-in and slide-up animation when section comes into view

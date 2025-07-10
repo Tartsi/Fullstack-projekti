@@ -33,7 +33,7 @@ describe("Hero Component", () => {
     );
     expect(
       screen.getByText(
-        "Ammattitaitoinen auton sisäpuolien siivous samalla kun keskityt työhösi. Palaatte puhtaaseen autoon."
+        "Ammattitaitoinen auton sisäsiivous samalla, kun keskityt työhösi. Palaat kotiin puhtaalla autolla."
       )
     ).toBeInTheDocument();
   });
