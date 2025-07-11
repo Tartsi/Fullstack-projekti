@@ -5,7 +5,7 @@ export const translations = {
     hero: {
       headline: "Siivoamme Autosi Työpäivän Aikana",
       subheading:
-        "Ammattitaitoinen auton sisäpuolien siivous samalla kun keskityt työhösi. Palaatte puhtaaseen autoon.",
+        "Ammattitaitoinen auton sisäsiivous samalla, kun keskityt työhösi. Palaat kotiin puhtaalla autolla.",
       cta: "Varaa Siivous",
       scrollText: "Lue Lisää",
     },
@@ -30,12 +30,25 @@ export const translations = {
         instagram: "Instagram",
         tiktok: "TikTok",
       },
-      copyright: "Workday-Siivouspalvelut. Kaikki oikeudet pidätetään.",
+      copyright: "Workday-Vacuumers. Kaikki oikeudet pidätetään.",
+    },
+    // About section
+    about: {
+      title: "Mitä on WOCUUMING?",
+      description1:
+        "WOCUUMING eli Workday-Vacuuming on nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana!",
+      description2:
+        "Samalla, kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
+      description3:
+        "Palaat töistä raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen.",
+      valueProposition:
+        "Siivoamme autosi sisätilat työpäivän aikana – jotta voit ajaa kotiin puhtaalla autolla.",
+      imagePlaceholder: "Siivouspalvelu työssä",
     },
     // Main content
     content: {
       welcome: "Tervetuloa",
-      description: "Ammattitaitoisia siivouspalveluja työpaikallesi",
+      description: "Ammattitaitoista siivouspalvelua työpaikallesi",
       getStarted: "Aloita tästä",
     },
   },
@@ -44,7 +57,7 @@ export const translations = {
     hero: {
       headline: "We Clean Your Car During Your Workday",
       subheading:
-        "Professional car interior cleaning while you focus on work. Return to a spotless car.",
+        "Professional car interior cleaning while you focus on work. Return home with a clean car.",
       cta: "Book Cleaning",
       scrollText: "Learn More",
     },
@@ -71,10 +84,23 @@ export const translations = {
       },
       copyright: "Workday-Vacuumers. All rights reserved.",
     },
+    // About section
+    about: {
+      title: "What is WOCUUMING?",
+      description1:
+        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday!",
+      description2:
+        "While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
+      description3:
+        "Return from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car.",
+      valueProposition:
+        "We clean your car interior during your workday – so you can drive home with in a clean car.",
+      imagePlaceholder: "Cleaning service at work",
+    },
     // Main content
     content: {
       welcome: "Welcome",
-      description: "Professional cleaning services for your workplace",
+      description: "Professional cleaning service for your workplace",
       getStarted: "Get Started",
     },
   },

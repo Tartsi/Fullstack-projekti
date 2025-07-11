@@ -71,7 +71,7 @@ describe("Footer Component", () => {
     const currentYear = new Date().getFullYear();
     expect(
       screen.getByText(
-        `© ${currentYear} Workday-Siivouspalvelut. Kaikki oikeudet pidätetään.`
+        `© ${currentYear} Workday-Vacuumers. Kaikki oikeudet pidätetään.`
       )
     ).toBeInTheDocument();
   });

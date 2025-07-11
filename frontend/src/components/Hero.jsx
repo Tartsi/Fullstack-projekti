@@ -41,11 +41,17 @@ const Hero = () => {
   }, []);
 
   const scrollToContent = () => {
-    const heroHeight = window.innerHeight;
-    window.scrollTo({
-      top: heroHeight,
-      behavior: "smooth",
-    });
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Fallback to hero height if about section is not found
+      const heroHeight = window.innerHeight;
+      window.scrollTo({
+        top: heroHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   const scrollToTop = () => {
