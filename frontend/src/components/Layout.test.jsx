@@ -62,7 +62,8 @@ describe("Layout Component", () => {
       "min-h-screen",
       "flex",
       "flex-col",
-      "bg-brand-lightgrey"
+      "text-white",
+      "font-cottage"
     );
   });
 
