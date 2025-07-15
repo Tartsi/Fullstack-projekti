@@ -32,7 +32,9 @@ describe("App Component", () => {
     const appContainer = screen.getByRole("main").parentElement;
     expect(appContainer).toHaveClass("text-white", "font-cottage");
     // Check for background image in style attribute
-    expect(appContainer).toHaveStyle("background-image: url('./src/assets/background/blob-scene-haikei.svg')");
+    expect(appContainer).toHaveStyle(
+      "background-image: url('./src/assets/background/blob-scene-haikei.svg')"
+    );
   });
 
   it("renders contact section in footer", () => {

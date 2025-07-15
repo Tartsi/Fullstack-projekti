@@ -50,7 +50,7 @@ const About = () => {
       id="about"
       role="region"
       aria-labelledby="about-title"
-      className="py-12 sm:py-16 px-4 sm:px-6 md:px-8 text-black"
+      className="py-12 sm:py-16 px-4 sm:px-6 md:px-8 text-black relative z-10"
     >
       <div className="max-w-screen-xl mx-auto">
         <div
@@ -62,7 +62,7 @@ const About = () => {
           <div className="space-y-6">
             <h2
               id="about-title"
-              className="text-2xl sm:text-3xl lg:text-4xl font-cottage italic tracking-wide text-brand-dark"
+              className="text-2xl sm:text-3xl lg:text-4xl font-cottage italic tracking-wide text-brand-dark underline"
             >
               {t("about.title")}
             </h2>
@@ -93,7 +93,7 @@ const About = () => {
           <div className="flex justify-center md:justify-end">
             <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
               {/* Placeholder Image Container */}
-              <div className="aspect-square rounded-2xl shadow-xl p-6 sm:p-8 flex items-center bg-white justify-center opacity-60">
+              <div className="aspect-square rounded-2xl shadow-xl p-6 sm:p-8 flex items-center bg-transparent justify-center opacity-100">
                 <div className="text-center space-y-3 sm:space-y-4">
                   {/* Car Icon SVG */}
                   <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto bg-white/30 rounded-full flex items-center justify-center">

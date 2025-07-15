@@ -52,13 +52,6 @@ const Hero = () => {
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Main Hero Content */}
@@ -164,23 +157,6 @@ const Hero = () => {
               </span>
             </span>
           </button>
-        </div>
-
-        {/* Back to Top Button */}
-        <div
-          onClick={scrollToTop}
-          className={`absolute top-8 right-8 cursor-pointer transition-all duration-1000 delay-1300 ${
-            isVisible && scrollY > 100
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-        >
-          <div className="flex flex-col items-center text-black opacity-70 hover:opacity-100 transition-opacity duration-300 bg-white/10 backdrop-blur-sm rounded-full p-3 hover:bg-white/20">
-            <div className="text-xl animate-bounce">↑</div>
-            <span className="text-xs font-cottage uppercase tracking-wider">
-              Ylös
-            </span>
-          </div>
         </div>
       </div>
     </section>

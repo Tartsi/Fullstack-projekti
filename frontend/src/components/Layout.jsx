@@ -14,14 +14,6 @@ import Footer from "./Footer";
  * @returns {JSX.Element} The rendered Layout component.
  */
 const Layout = ({ children }) => {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <div
       className="min-h-screen flex flex-col text-white font-cottage"
