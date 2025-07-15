@@ -15,10 +15,8 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 - **About Section** explaining what the business does
 - **Process Explanation** to show how it works (e.g., step-by-step)
 - **Pricing Section** with clear and simple plans
-- **FAQ Section** for common concerns (trust & convenience)
-- **Contact Form** (optional backend integration)
-- **Responsive Layout** for desktop-first experience
-- **Modern Design** using MUI, Framer Motion, and SVG assets
+- **User Review Section** including testimonials and ratings + a large overall rating
+- **Contact Form** for any inquiries, placed next to the footer information
 
 ---
 
@@ -46,5 +44,5 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 ## Success Criteria
 - Page loads quickly and functions without bugs
 - Visitors understand and trust the service concept
-- At least one call-to-action is visible and inviting
+- At least one call-to-action is visible and inviting in the hero section and later on, on the page
 - The layout and brand feel aligned with a modern tech service

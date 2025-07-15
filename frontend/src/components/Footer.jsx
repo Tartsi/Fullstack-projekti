@@ -17,7 +17,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 const Footer = () => {
   const { t } = useLanguage();
   return (
-    <footer className=" text-black py-8 font-light">
+    <footer className="text-black py-8 font-light">
       <div className="max-w-screen-xl mx-auto px-8">
         {/* Large Centered Contact Header */}
         <div className="text-center mb-4">

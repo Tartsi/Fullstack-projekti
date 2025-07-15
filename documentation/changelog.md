@@ -26,3 +26,5 @@
 - 10.07.2025
     - Added more content to the website: About section
     - More scalability fixes and tweaks
+- 11.07.2025
+    - Fixed translations in the About-section after customer feedback.
