@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { translations } from "./translations.js";
 
 // Language Context
@@ -20,33 +26,70 @@ const LanguageContext = createContext();
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState("fi"); // Default to Finnish
 
-  const changeLanguage = (newLanguage) => {
-    if (translations[newLanguage]) {
-      setLanguage(newLanguage);
-    }
-  };
-
-  const t = (path) => {
-    const keys = path.split(".");
-    let value = translations[language];
-
-    for (const key of keys) {
-      if (value && typeof value === "object") {
-        value = value[key];
-      } else {
-        return path; // Return path if translation not found
+  /**
+   * Optimized language change function with validation
+   * Uses useCallback to prevent unnecessary re-renders
+   */
+  const changeLanguage = useCallback(
+    (newLanguage) => {
+      if (translations[newLanguage] && newLanguage !== language) {
+        setLanguage(newLanguage);
       }
-    }
+    },
+    [language]
+  );
 
-    return value || path;
-  };
+  /**
+   * Optimized translation function with better error handling
+   * Uses useCallback for performance optimization
+   */
+  const t = useCallback(
+    (path) => {
+      const keys = path.split(".");
+      let value = translations[language];
 
-  const value = {
-    language,
-    changeLanguage,
-    t, // Translation function
-    availableLanguages: Object.keys(translations),
-  };
+      for (const key of keys) {
+        if (value && typeof value === "object" && key in value) {
+          value = value[key];
+        } else {
+          // Better fallback - try English if current language fails
+          if (language !== "en") {
+            let fallbackValue = translations.en;
+            for (const fallbackKey of keys) {
+              if (
+                fallbackValue &&
+                typeof fallbackValue === "object" &&
+                fallbackKey in fallbackValue
+              ) {
+                fallbackValue = fallbackValue[fallbackKey];
+              } else {
+                return path; // Return path if both current and fallback fail
+              }
+            }
+            return fallbackValue;
+          }
+          return path; // Return path if translation not found
+        }
+      }
+
+      return value || path;
+    },
+    [language]
+  );
+
+  /**
+   * Memoized context value to prevent unnecessary re-renders
+   * Only recreates when language changes
+   */
+  const value = useMemo(
+    () => ({
+      language,
+      changeLanguage,
+      t, // Translation function
+      availableLanguages: Object.keys(translations),
+    }),
+    [language, changeLanguage, t]
+  );
 
   return (
     <LanguageContext.Provider value={value}>
