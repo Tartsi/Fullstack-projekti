@@ -12,6 +12,11 @@ import Footer from "./Footer";
  * @param {Object} props - The props object.
  * @param {React.ReactNode} props.children - The child components to be rendered inside the main content area.
  * @returns {JSX.Element} The rendered Layout component.
+ *
+ * @description
+ * - Uses a flexible layout structure with proper semantic HTML
+ * - Includes background styling with CSS variables for better maintainability
+ * - Responsive design that works across all device sizes
  */
 const Layout = ({ children }) => {
   return (
@@ -20,11 +25,13 @@ const Layout = ({ children }) => {
       style={{
         backgroundImage: `url('./src/assets/background/blob-scene-haikei.svg')`,
         backgroundSize: "cover",
+        backgroundAttachment: "fixed",
       }}
     >
       <Header />
       <Hero />
       <About />
+      {/* Main content area for future components */}
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

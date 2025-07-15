@@ -23,6 +23,7 @@
 
   --font-family-cottage: 'Super Cottage', 'Inter', system-ui, sans-serif;
   --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-body: Arial, sans-serif;
 }
 
 /* Base-CSS File */
@@ -38,6 +39,10 @@ body {
 
 .font-sans {
   font-family: 'Inter', system-ui, sans-serif;
+}
+
+.font-body {
+  font-family: Arial, sans-serif;
 }
 
 /* Language change animation */

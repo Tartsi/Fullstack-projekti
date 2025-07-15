@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
@@ -24,33 +24,74 @@ const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
-  useEffect(() => {
-    // Trigger entrance animation after component mounts
-    const timer = setTimeout(() => setIsVisible(true), 200);
+  /**
+   * Optimized scroll handler using useCallback
+   */
+  const handleScroll = useCallback(() => setScrollY(window.scrollY), []);
 
-    // Handle scroll for parallax effect
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const scrollToContent = () => {
+  /**
+   * Ultra slow scroll to content function for maximum smoothness
+   * Uses custom smooth scrolling with extended duration
+   */
+  const scrollToContent = useCallback(() => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: "smooth" });
+      // Get the target position
+      const targetPosition = aboutSection.offsetTop;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 3000; // 3 seconds for ultra slow scroll
+      let start = null;
+
+      // Custom easing function for ultra smooth animation
+      const easeInOutCubic = (t) => {
+        return t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+      };
+
+      const animation = (currentTime) => {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        const ease = easeInOutCubic(progress);
+        window.scrollTo(0, startPosition + distance * ease);
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      };
+
+      requestAnimationFrame(animation);
     } else {
-      // Fallback to hero height if about section is not found
+      // Fallback with ultra slow scroll
       const heroHeight = window.innerHeight;
       window.scrollTo({
         top: heroHeight,
         behavior: "smooth",
       });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Trigger entrance animation after component mounts
+    const timer = setTimeout(() => setIsVisible(true), 200);
+
+    // Handle scroll for parallax effect
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
+
+  // Language configuration to reduce repetition
+  const languageOptions = [
+    { code: "fi", flag: flagFi, label: "FIN", alt: "Finnish flag" },
+    { code: "en", flag: flagEngland, label: "ENG", alt: "English flag" },
+  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -62,43 +103,30 @@ const Hero = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div
-            className={`flex items-center space-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ${
-              language === "fi"
-                ? "opacity-100 font-semibold"
-                : "opacity-70 hover:opacity-100"
-            }`}
-            onClick={() => changeLanguage("fi")}
-          >
-            <img
-              src={flagFi}
-              alt="Finnish flag"
-              className="w-6 h-4 sm:w-8 sm:h-5"
-            />
-            <span className="text-black font-cottage text-sm sm:text-base font-medium">
-              FIN
-            </span>
-          </div>
-
-          <div className="w-px h-6 bg-black opacity-30"></div>
-
-          <div
-            className={`flex items-center space-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ${
-              language === "en"
-                ? "opacity-100 font-semibold"
-                : "opacity-70 hover:opacity-100"
-            }`}
-            onClick={() => changeLanguage("en")}
-          >
-            <img
-              src={flagEngland}
-              alt="English flag"
-              className="w-6 h-4 sm:w-8 sm:h-5"
-            />
-            <span className="text-black font-cottage text-sm sm:text-base font-medium">
-              ENG
-            </span>
-          </div>
+          {languageOptions.map((option, index) => (
+            <React.Fragment key={option.code}>
+              {index > 0 && (
+                <div className="w-px h-6 bg-black opacity-30"></div>
+              )}
+              <div
+                className={`flex items-center space-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ${
+                  language === option.code
+                    ? "opacity-100 font-semibold"
+                    : "opacity-70 hover:opacity-100"
+                }`}
+                onClick={() => changeLanguage(option.code)}
+              >
+                <img
+                  src={option.flag}
+                  alt={option.alt}
+                  className="w-6 h-4 sm:w-8 sm:h-5"
+                />
+                <span className="text-black font-cottage text-sm sm:text-base font-medium">
+                  {option.label}
+                </span>
+              </div>
+            </React.Fragment>
+          ))}
         </div>
 
         {/* Logo/Brand Icons */}
@@ -112,7 +140,7 @@ const Hero = () => {
             alt="Car"
             className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 filter drop-shadow-lg"
           />
-          <div className="text-2xl sm:text-3xl lg:text-4xl font-cottage italic text-black">
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-cottage italic underline text-black">
             Workday-Vacuumers
           </div>
           <img
@@ -133,7 +161,7 @@ const Hero = () => {
 
         {/* Subheading */}
         <p
-          className={`text-lg sm:text-xl md:text-2xl lg:text-3xl text-black mb-8 font-cottage italic max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-900 ${
+          className={`text-lg sm:text-xl md:text-2xl lg:text-3xl text-black mb-8 font-body italic max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-900 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -148,7 +176,8 @@ const Hero = () => {
         >
           <button
             onClick={scrollToContent}
-            className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-transparent hover:border-brand-neon cursor-pointer"
+            className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
+            hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-transparent hover:border-brand-neon cursor-pointer"
           >
             <span className="flex items-center space-x-2">
               <span>{t("hero.scrollText")}</span>

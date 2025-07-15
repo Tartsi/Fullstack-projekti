@@ -11,12 +11,12 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 ---
 
 ## Core Intended Features
-- **Hero Section** with brand identity
-- **About Section** explaining what the business does
-- **Process Explanation** to show how it works (e.g., step-by-step)
-- **Pricing Section** with clear and simple plans
-- **User Review Section** including testimonials and ratings + a large overall rating
-- **Contact Form** for any inquiries, placed next to the footer information
+- **Hero Section**: with brand identity
+- **About Section**: explaining what the business does
+- **Process Explanation**: to show how it works (e.g., step-by-step)
+- **Pricing Section**: with clear and simple plans
+- **User Review Section**: including testimonials and ratings + a large overall rating
+- **Contact Form**: for any inquiries, placed next to the footer information
 
 ---
 

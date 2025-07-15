@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
 import flagFi from "../assets/icons/flag-fi-svgrepo-com.svg";
@@ -28,44 +28,97 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { language, changeLanguage, t } = useLanguage();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const heroHeight = window.innerHeight;
-      setIsScrolled(scrollPosition > heroHeight * 0.8); // Show header after scrolling 80% of hero height
-    };
+  /**
+   * Optimized scroll handler using useCallback to prevent unnecessary re-renders
+   */
+  const handleScroll = useCallback(() => {
+    const scrollPosition = window.scrollY;
+    const heroHeight = window.innerHeight;
+    setIsScrolled(scrollPosition > heroHeight * 0.8); // Show header after scrolling 80% of hero height
+  }, []);
 
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   /**
    * Handles the language change process by updating the current language
    * and triggering a temporary animation state.
+   * Added optimization to prevent unnecessary state changes
    *
    * @param {string} newLanguage - The new language to switch to.
    * @returns {void}
    */
-  const handleLanguageChange = (newLanguage) => {
-    if (newLanguage !== language) {
-      setIsLanguageChanging(true);
-      changeLanguage(newLanguage);
-      // Reset animation after a short delay
-      setTimeout(() => {
-        setIsLanguageChanging(false);
-      }, 600);
-    }
-  };
+  const handleLanguageChange = useCallback(
+    (newLanguage) => {
+      if (newLanguage !== language) {
+        setIsLanguageChanging(true);
+        changeLanguage(newLanguage);
+        // Reset animation after a short delay
+        setTimeout(() => {
+          setIsLanguageChanging(false);
+        }, 600);
+      }
+    },
+    [language, changeLanguage]
+  );
 
   /**
-   * Scrolls to the about section when the About nav link is clicked.
+   * Ultra slow scroll to the about section when the About nav link is clicked.
+   * Uses custom smooth scrolling with extended duration for maximum smoothness
    */
-  const scrollToAbout = () => {
+  const scrollToAbout = useCallback(() => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: "smooth" });
+      // Get the target position
+      const targetPosition = aboutSection.offsetTop;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 3000; // 3 seconds for ultra slow scroll
+      let start = null;
+
+      // Custom easing function for ultra smooth animation
+      const easeInOutCubic = (t) => {
+        return t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+      };
+
+      const animation = (currentTime) => {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        const ease = easeInOutCubic(progress);
+        window.scrollTo(0, startPosition + distance * ease);
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      };
+
+      requestAnimationFrame(animation);
     }
-  };
+  }, []);
+
+  // Language configuration data to reduce repetition
+  const languageOptions = [
+    { code: "fi", flag: flagFi, label: "FIN", alt: "Finnish flag" },
+    { code: "en", flag: flagEngland, label: "ENG", alt: "English flag" },
+  ];
+
+  // Navigation items to reduce repetition
+  const navItems = [
+    { key: "services", onClick: null },
+    { key: "about", onClick: scrollToAbout },
+    { key: "order", onClick: null },
+    { key: "contact", onClick: null },
+  ];
+
+  // Common CSS classes for hover effects
+  const navItemClasses =
+    "block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm";
 
   return (
     <header
@@ -96,36 +149,26 @@ const Header = () => {
                                             }`}
           >
             <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 sm:px-4 md:px-5 lg:px-6 py-4 text-black pl-10 sm:pl-12 md:pl-14 lg:pl-16">
-              <div
-                onClick={() => handleLanguageChange("fi")}
-                className={`flex flex-col items-center cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium ${
-                  language === "fi"
-                    ? "opacity-100 font-medium text-gray-900"
-                    : ""
-                }`}
-              >
-                <img
-                  src={flagFi}
-                  alt="Finnish flag"
-                  className="w-4 h-3 sm:w-5 sm:h-4 md:w-6 md:h-4 mb-1 rounded-sm"
-                />
-                <span className="text-xs sm:text-xs md:text-sm">FIN</span>
-              </div>
-              <div
-                onClick={() => handleLanguageChange("en")}
-                className={`flex flex-col items-center cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium ${
-                  language === "en"
-                    ? "opacity-100 font-medium text-gray-900"
-                    : ""
-                }`}
-              >
-                <img
-                  src={flagEngland}
-                  alt="English flag"
-                  className="w-4 h-3 sm:w-5 sm:h-4 md:w-6 md:h-4 mb-1 rounded-sm"
-                />
-                <span className="text-xs sm:text-xs md:text-sm">ENG</span>
-              </div>
+              {languageOptions.map((option) => (
+                <div
+                  key={option.code}
+                  onClick={() => handleLanguageChange(option.code)}
+                  className={`flex flex-col items-center cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium ${
+                    language === option.code
+                      ? "opacity-100 font-medium text-gray-900"
+                      : ""
+                  }`}
+                >
+                  <img
+                    src={option.flag}
+                    alt={option.alt}
+                    className="w-4 h-3 sm:w-5 sm:h-4 md:w-6 md:h-4 mb-1 rounded-sm"
+                  />
+                  <span className="text-xs sm:text-xs md:text-sm">
+                    {option.label}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -137,14 +180,23 @@ const Header = () => {
                 : "scale-100"
             }`}
           >
-            <img
-              src={language === "fi" ? flagFi : flagEngland}
-              alt={language === "fi" ? "Finnish flag" : "English flag"}
-              className="w-4 h-3 sm:w-5 sm:h-4 rounded-sm"
-            />
-            <span className="uppercase tracking-wide">
-              {language === "fi" ? "FIN" : "ENG"}
-            </span>
+            {(() => {
+              const currentLang = languageOptions.find(
+                (opt) => opt.code === language
+              );
+              return (
+                <>
+                  <img
+                    src={currentLang?.flag}
+                    alt={currentLang?.alt}
+                    className="w-4 h-3 sm:w-5 sm:h-4 rounded-sm"
+                  />
+                  <span className="uppercase tracking-wide">
+                    {currentLang?.label}
+                  </span>
+                </>
+              );
+            })()}
           </div>
         </div>
 
@@ -184,6 +236,7 @@ const Header = () => {
           />
         </div>
 
+        {/* Navigation Menu - Right */}
         <div
           className="absolute right-3 sm:right-4 md:right-6 lg:right-8 flex items-center"
           onMouseEnter={() => setIsHovered(true)}
@@ -199,21 +252,15 @@ const Header = () => {
                                             }`}
           >
             <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 sm:px-4 md:px-5 lg:px-6 py-4 text-black pr-10 sm:pr-12 md:pr-14 lg:pr-16">
-              <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">
-                {t("nav.services")}
-              </span>
-              <span
-                onClick={scrollToAbout}
-                className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm"
-              >
-                {t("nav.about")}
-              </span>
-              <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">
-                {t("nav.order")}
-              </span>
-              <span className="block cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm">
-                {t("nav.contact")}
-              </span>
+              {navItems.map((item) => (
+                <span
+                  key={item.key}
+                  onClick={item.onClick}
+                  className={navItemClasses}
+                >
+                  {t(`nav.${item.key}`)}
+                </span>
+              ))}
             </div>
           </div>
 
