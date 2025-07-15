@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
-import carLotIcon from "../assets/icons/car-lot-park-svgrepo-com.svg";
-import cacheCleanerIcon from "../assets/icons/cache-cleaner-svgrepo-com.svg";
 import flagFi from "../assets/icons/flag-fi-svgrepo-com.svg";
 import flagEngland from "../assets/icons/flag-england-svgrepo-com.svg";
 
@@ -54,41 +52,8 @@ const Hero = () => {
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-lightgrey via-brand-blue to-brand-purple overflow-hidden">
-      {/* Background animated elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className={`absolute top-20 left-10 transition-opacity duration-1000 delay-200 ${
-            isVisible ? "opacity-10" : "opacity-0"
-          }`}
-        >
-          <img
-            src={carLotIcon}
-            alt="Background car lot"
-            className="w-32 h-32 lg:w-48 lg:h-48"
-          />
-        </div>
-        <div
-          className={`absolute bottom-20 right-10 transition-opacity duration-1000 delay-400 ${
-            isVisible ? "opacity-10" : "opacity-0"
-          }`}
-        >
-          <img
-            src={cacheCleanerIcon}
-            alt="Background cache cleaner"
-            className="w-24 h-24 lg:w-36 lg:h-36 -rotate-12"
-          />
-        </div>
-      </div>
-
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Main Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         {/* Language Selector */}
@@ -192,23 +157,6 @@ const Hero = () => {
               </span>
             </span>
           </button>
-        </div>
-
-        {/* Back to Top Button */}
-        <div
-          onClick={scrollToTop}
-          className={`absolute top-8 right-8 cursor-pointer transition-all duration-1000 delay-1300 ${
-            isVisible && scrollY > 100
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-        >
-          <div className="flex flex-col items-center text-black opacity-70 hover:opacity-100 transition-opacity duration-300 bg-white/10 backdrop-blur-sm rounded-full p-3 hover:bg-white/20">
-            <div className="text-xl animate-bounce">↑</div>
-            <span className="text-xs font-cottage uppercase tracking-wider">
-              Ylös
-            </span>
-          </div>
         </div>
       </div>
     </section>

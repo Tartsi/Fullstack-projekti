@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Hero from "./Hero";
 import About from "./About";
@@ -15,13 +15,17 @@ import Footer from "./Footer";
  */
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-brand-lightgrey text-white font-cottage">
+    <div
+      className="min-h-screen flex flex-col text-white font-cottage"
+      style={{
+        backgroundImage: `url('./src/assets/background/blob-scene-haikei.svg')`,
+        backgroundSize: "cover",
+      }}
+    >
       <Header />
       <Hero />
       <About />
-      <main className="flex-1 relative z-10 bg-brand-lightgrey">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

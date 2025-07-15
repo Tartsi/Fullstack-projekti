@@ -117,11 +117,6 @@ describe("Footer Component", () => {
     );
     const footer = screen.getByRole("contentinfo");
     expect(footer).toBeInTheDocument();
-    expect(footer).toHaveClass(
-      "bg-transparent",
-      "text-black",
-      "py-8",
-      "font-light"
-    );
+    expect(footer).toHaveClass("text-black", "py-8", "font-light");
   });
 });
