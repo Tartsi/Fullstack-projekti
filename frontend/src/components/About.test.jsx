@@ -27,11 +27,30 @@ describe("About Component", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it("renders the placeholder image container", () => {
+  it("renders the car icon", () => {
     render(<AboutWithProvider />);
 
-    const placeholderImage = screen.getByText("Siivouspalvelu työssä");
-    expect(placeholderImage).toBeInTheDocument();
+    const carIcon = screen.getByAltText(
+      "Car icon representing professional cleaning service"
+    );
+    expect(carIcon).toBeInTheDocument();
+  });
+
+  it("renders description paragraphs", () => {
+    render(<AboutWithProvider />);
+
+    // Check for description text (partial match since it's long)
+    const description1 = screen.getByText(/WOCUUMING eli Workday-Vacuuming/);
+    expect(description1).toBeInTheDocument();
+  });
+
+  it("renders value proposition", () => {
+    render(<AboutWithProvider />);
+
+    const valueProposition = screen.getByText(
+      /Siivoamme autosi sisätilat työpäivän aikana/
+    );
+    expect(valueProposition).toBeInTheDocument();
   });
 
   it("has proper accessibility attributes", () => {

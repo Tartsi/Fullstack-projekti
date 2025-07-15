@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, or documentation or self-studying.
 
-## Total hours: 31 hours
+## Total hours: 35 hours
 
 - Hours spent with customer: 5 hours
     - Large review number #1 15.07.2025 (Through port-forwarding)
@@ -35,3 +35,5 @@
     - 1 hour: Provided customer with the current state of the project and received feedback + also provided customer with background options for the site.
 - 11.07.2025
     - 1 hour: Fixed translations in the About-section after customer feedback.
+- 15.07.2025
+    - 4 hours: Added Background to the site and made the site be more responsive through large code optimizations. Updated Project definition based on customer review #1 of the site.

@@ -28,3 +28,7 @@
     - More scalability fixes and tweaks
 - 11.07.2025
     - Fixed translations in the About-section after customer feedback.
+- 15.07.2025
+    - Added Background to the site.
+    - Better responsiveness to the site through large code optimizations.
+    - Update Project definition based on customer review #1 of the site.
