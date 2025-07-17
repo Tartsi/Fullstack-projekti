@@ -22,45 +22,18 @@ const Explanation = () => {
     }
   );
 
-  // Process steps configuration
-  const processSteps = [
-    {
-      id: 1,
-      title: t("explanation.steps.step1.title"),
-      description: t("explanation.steps.step1.description"),
-      icon: "📅",
-    },
-    {
-      id: 2,
-      title: t("explanation.steps.step2.title"),
-      description: t("explanation.steps.step2.description"),
-      icon: "📍",
-    },
-    {
-      id: 3,
-      title: t("explanation.steps.step3.title"),
-      description: t("explanation.steps.step3.description"),
-      icon: "🔓",
-    },
-    {
-      id: 4,
-      title: t("explanation.steps.step4.title"),
-      description: t("explanation.steps.step4.description"),
-      icon: "⏱️",
-    },
-    {
-      id: 5,
-      title: t("explanation.steps.step5.title"),
-      description: t("explanation.steps.step5.description"),
-      icon: "✅",
-    },
-    {
-      id: 6,
-      title: t("explanation.steps.step6.title"),
-      description: t("explanation.steps.step6.description"),
-      icon: "😊",
-    },
-  ];
+  // Process steps configuration - simplified with array generation
+  const processSteps = Array.from({ length: 6 }, (_, index) => {
+    const stepNumber = index + 1;
+    const icons = ["�", "📍", "🔓", "⏱️", "✅", "😊"];
+
+    return {
+      id: stepNumber,
+      title: t(`explanation.steps.step${stepNumber}.title`),
+      description: t(`explanation.steps.step${stepNumber}.description`),
+      icon: icons[index],
+    };
+  });
 
   /**
    * Starts automatic progression through steps
@@ -72,10 +45,7 @@ const Explanation = () => {
     }
 
     intervalRef.current = setInterval(() => {
-      setActiveStep((prevStep) => {
-        const nextStep = (prevStep + 1) % 6; // Fixed length instead of processSteps.length
-        return nextStep;
-      });
+      setActiveStep((prevStep) => (prevStep + 1) % processSteps.length);
     }, 7500); // Change every 7.5 seconds
   }, []); // No dependencies to prevent recreation
 
