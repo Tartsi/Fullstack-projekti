@@ -1,13 +1,12 @@
 # Work Hours
 
-- Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, or documentation or self-studying.
+- Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 35 hours
+## Total hours: 43.5 hours
 
-- Hours spent with customer: 5 hours
-    - Large review number #1 15.07.2025 (Through port-forwarding)
-
-- Hours spent designing website (includes mental visualisation, testing different approaches, etc.): 4 hours
+###  Large review number #1 15.07.2025 (Through port-forwarding)
+- Total hours with customer: 1 hour 30 minutes
+- Total hours designing the site: 4 hours
 
 - 23.06.2025
     - 3 hours: Initialized project repository and defined repository settings.
@@ -37,3 +36,5 @@
     - 1 hour: Fixed translations in the About-section after customer feedback.
 - 15.07.2025
     - 4 hours: Added Background to the site and made the site be more responsive through large code optimizations. Updated Project definition based on customer review #1 of the site.
+- 16.07.2025 & 17.07.2025
+    - 12 hours: Large scale animation changes to the site, Header changes, and Explanation section implementation, a lot of bug fixes and scaling changes which ate up my time...
