@@ -4,15 +4,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import Explanation from "./Explanation";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
-// Mock the custom hooks and utilities
-vi.mock("../hooks/useAnimations", () => ({
-  useIntersectionAnimation: () => ({
-    isVisible: true,
-    sectionRef: { current: null },
-    getAnimationClass: vi.fn(() => "opacity-100 translate-y-0"),
-  }),
-}));
-
 // Mock IntersectionObserver
 const mockIntersectionObserver = vi.fn();
 mockIntersectionObserver.mockReturnValue({
@@ -69,14 +60,16 @@ describe("Explanation Component", () => {
   it("renders step icons", () => {
     render(<ExplanationWithProvider />);
 
-    // Check that icon containers exist instead of specific emoji characters
-    // since emojis may not render properly in test environment
+    // Check that icon containers exist
     const iconContainers = document.querySelectorAll(".flex-shrink-0.w-8");
     expect(iconContainers).toHaveLength(6); // Should have 6 step icons
 
-    // Verify each icon container has content
+    // Verify each icon container has an img element (SVG icon)
     iconContainers.forEach((container) => {
-      expect(container.textContent.trim()).not.toBe("");
+      const imgElement = container.querySelector("img");
+      expect(imgElement).toBeInTheDocument();
+      expect(imgElement).toHaveAttribute("src");
+      expect(imgElement).toHaveAttribute("alt");
     });
   });
 
@@ -122,11 +115,26 @@ describe("Explanation Component", () => {
 
   it("cleans up intervals on unmount", () => {
     const clearIntervalSpy = vi.spyOn(global, "clearInterval");
+
+    // Mock IntersectionObserver to trigger visibility immediately
+    let observerCallback;
+    const mockIntersectionObserver = vi.fn((callback) => {
+      observerCallback = callback;
+      return {
+        observe: vi.fn((element) => {
+          // Trigger the callback immediately with isIntersecting: true
+          observerCallback([{ isIntersecting: true }]);
+        }),
+        disconnect: vi.fn(),
+      };
+    });
+    global.IntersectionObserver = mockIntersectionObserver;
+
     const { unmount } = render(<ExplanationWithProvider />);
 
-    // Wait for component to initialize and start interval
+    // Advance timers to trigger the timeout that starts auto progression
     act(() => {
-      vi.advanceTimersByTime(1500); // Animation completion delay
+      vi.advanceTimersByTime(2000); // Wait for animation completion delay + a bit more
     });
 
     unmount();
