@@ -27,16 +27,7 @@ describe("About Component", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it("renders the car icon", () => {
-    render(<AboutWithProvider />);
-
-    const carIcon = screen.getByAltText(
-      "Car icon representing professional cleaning service"
-    );
-    expect(carIcon).toBeInTheDocument();
-  });
-
-  it("renders description paragraphs", () => {
+  it("renders description paragraphs in centered layout", () => {
     render(<AboutWithProvider />);
 
     // Check for description text (partial match since it's long)

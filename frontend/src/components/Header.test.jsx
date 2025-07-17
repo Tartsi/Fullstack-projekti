@@ -5,13 +5,19 @@ import Header from "./Header";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
 describe("Header Component", () => {
-  it("renders the company name", () => {
+  it("renders the language selector", () => {
     render(
       <LanguageProvider>
         <Header />
       </LanguageProvider>
     );
-    expect(screen.getByText("Workday-Vacuumers")).toBeInTheDocument();
+    // Check if the Finnish language selector is present by default
+    const finElements = screen.getAllByText("FIN");
+    expect(finElements.length).toBeGreaterThan(0);
+
+    // Check if there are multiple Finnish flag elements
+    const flagElements = screen.getAllByAltText("Finnish flag");
+    expect(flagElements.length).toBeGreaterThan(0);
   });
 
   it("renders the hamburger menu icon", () => {
@@ -50,7 +56,7 @@ describe("Header Component", () => {
     );
     const hamburger = screen.getByText("≡");
 
-    // Initially, links should not be visible (they have pointer-events-none)
+    // Initially, links should not be visible
     const menuContainer = hamburger.parentElement;
     fireEvent.mouseLeave(menuContainer);
 

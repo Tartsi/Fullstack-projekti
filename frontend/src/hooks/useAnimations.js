@@ -44,20 +44,23 @@ export const useIntersectionAnimation = ({
   /**
    * Helper function to create consistent animation classes
    * @param {string} delay - Tailwind delay class (e.g., "200", "400")
-   * @param {string} transform - Initial transform state
-   * @param {number} duration - Animation duration in milliseconds
+   * @param {string} transform - Initial transform state (default: translate-y-4)
+   * @param {number} duration - Animation duration in milliseconds (default: 700)
    * @returns {string} - Complete animation class string
    */
   const getAnimationClass = useCallback(
     (delay, transform = "translate-y-4", duration = 700) => {
-      const baseClasses = `transition-all duration-${duration}`;
+      // Simplified class generation with consistent patterns
+      const durationClass =
+        duration === 1000 ? "duration-1000" : "duration-700";
+      const delayClass = delay ? `delay-${delay}` : "";
+
+      const baseClasses = `transition-all ${durationClass} ${delayClass}`;
       const visibleClasses =
         "opacity-100 translate-x-0 translate-y-0 scale-100";
       const hiddenClasses = `opacity-0 ${transform}`;
 
-      return `${baseClasses} delay-${delay} ${
-        isVisible ? visibleClasses : hiddenClasses
-      }`;
+      return `${baseClasses} ${isVisible ? visibleClasses : hiddenClasses}`;
     },
     [isVisible]
   );

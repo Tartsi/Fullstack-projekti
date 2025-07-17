@@ -1,9 +1,5 @@
 /**
- * Scroll utilities for smooth animations
- */
-
-/**
- * Easing functions for smooth animations
+ * Scroll utilities for smooth and consistent animations
  */
 export const easingFunctions = {
   // Ease-in-out-quad (gentle acceleration and deceleration)
