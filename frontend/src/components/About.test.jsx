@@ -53,4 +53,27 @@ describe("About Component", () => {
     const title = screen.getByRole("heading", { level: 2 });
     expect(title).toBeInTheDocument();
   });
+
+  it("renders transition arrow to explanation section", () => {
+    render(<AboutWithProvider />);
+
+    const transitionButton = screen.getByRole("button", {
+      name: /scroll to explanation section/i,
+    });
+    expect(transitionButton).toBeInTheDocument();
+  });
+
+  it("has responsive classes", () => {
+    render(<AboutWithProvider />);
+
+    const section = screen.getByRole("region");
+    expect(section).toHaveClass(
+      "py-6",
+      "sm:py-8",
+      "lg:py-10",
+      "px-4",
+      "sm:px-6",
+      "md:px-8"
+    );
+  });
 });

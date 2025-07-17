@@ -4,15 +4,6 @@ import { describe, it, expect, vi } from "vitest";
 import Layout from "./Layout";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
-// Mock TransitionArrow component
-vi.mock("./TransitionArrow", () => ({
-  default: ({ targetSectionId, triggerSectionId }) => (
-    <div data-testid="transition-arrow">
-      Transition from {triggerSectionId} to {targetSectionId}
-    </div>
-  ),
-}));
-
 // Mock IntersectionObserver
 const mockIntersectionObserver = vi.fn();
 mockIntersectionObserver.mockReturnValue({

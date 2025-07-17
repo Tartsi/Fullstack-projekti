@@ -4,7 +4,6 @@ import Hero from "./Hero";
 import About from "./About";
 import Explanation from "./Explanation";
 import Footer from "./Footer";
-import TransitionArrow from "./TransitionArrow";
 
 /**
  * Layout component that serves as the main structure for the application.
@@ -33,14 +32,6 @@ const Layout = ({ children }) => {
       <Header />
       <Hero />
       <About />
-
-      {/* Transition Section between About and Explanation */}
-      <TransitionArrow
-        targetSectionId="explanation"
-        triggerSectionId="about"
-        delayAfterTrigger={1500}
-      />
-
       <Explanation />
       {/* Main content area for future components */}
       <main className="flex-1">{children}</main>
