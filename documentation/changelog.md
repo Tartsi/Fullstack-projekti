@@ -32,3 +32,6 @@
     - Added Background to the site.
     - Better responsiveness to the site through large code optimizations.
     - Update Project definition based on customer review #1 of the site.
+- 16.07.2025 & 17.07.2025
+    - Added Explanation section to the site and its tests.
+    - Large scale animation changes to the site, Header changes. A lot of bug fixes and scaling changes which ate up my time...

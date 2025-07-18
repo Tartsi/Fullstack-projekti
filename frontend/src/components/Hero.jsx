@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
+import { languageOptions } from "../utils/languageUtils";
+import { scrollAnimations } from "../utils/scrollUtils";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
-import flagFi from "../assets/icons/flag-fi-svgrepo-com.svg";
-import flagEngland from "../assets/icons/flag-england-svgrepo-com.svg";
 
 /**
  * Hero component that displays a full-screen landing section with main message,
@@ -30,42 +30,14 @@ const Hero = () => {
   const handleScroll = useCallback(() => setScrollY(window.scrollY), []);
 
   /**
-   * Ultra slow scroll to content function for maximum smoothness
-   * Uses custom smooth scrolling with extended duration
+   * Enhanced scroll to content using centralized scroll utility
    */
   const scrollToContent = useCallback(() => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
-      // Get the target position
-      const targetPosition = aboutSection.offsetTop;
-      const startPosition = window.pageYOffset;
-      const distance = targetPosition - startPosition;
-      const duration = 3000; // 3 seconds for ultra slow scroll
-      let start = null;
-
-      // Custom easing function for ultra smooth animation
-      const easeInOutCubic = (t) => {
-        return t < 0.5
-          ? 4 * t * t * t
-          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-      };
-
-      const animation = (currentTime) => {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const progress = Math.min(timeElapsed / duration, 1);
-
-        const ease = easeInOutCubic(progress);
-        window.scrollTo(0, startPosition + distance * ease);
-
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
-        }
-      };
-
-      requestAnimationFrame(animation);
+      scrollAnimations.medium("about");
     } else {
-      // Fallback with ultra slow scroll
+      // Fallback for initial load
       const heroHeight = window.innerHeight;
       window.scrollTo({
         top: heroHeight,
@@ -86,12 +58,6 @@ const Hero = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
-
-  // Language configuration to reduce repetition
-  const languageOptions = [
-    { code: "fi", flag: flagFi, label: "FIN", alt: "Finnish flag" },
-    { code: "en", flag: flagEngland, label: "ENG", alt: "English flag" },
-  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

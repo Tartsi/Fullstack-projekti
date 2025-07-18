@@ -18,12 +18,8 @@
   --color-brand-purple: #8D80AD;
   --color-brand-blue: #99B2DD;
   --color-brand-neon: #9DFFF9;
-  --color-brand-green: #64F58D;
+  --color-brand-green: #56d87b;
   --color-brand-lightgrey: #EDECEB;
-
-  --font-family-cottage: 'Super Cottage', 'Inter', system-ui, sans-serif;
-  --font-family-sans: 'Inter', system-ui, sans-serif;
-  --font-family-body: Arial, sans-serif;
 }
 
 /* Base-CSS File */

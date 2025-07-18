@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Hero from "./Hero";
 import About from "./About";
+import Explanation from "./Explanation";
 import Footer from "./Footer";
 
 /**
@@ -31,6 +32,7 @@ const Layout = ({ children }) => {
       <Header />
       <Hero />
       <About />
+      <Explanation />
       {/* Main content area for future components */}
       <main className="flex-1">{children}</main>
       <Footer />
