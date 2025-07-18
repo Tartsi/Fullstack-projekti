@@ -4,6 +4,7 @@ import {
   languageOptions,
   getCurrentLanguageOption,
 } from "../utils/languageUtils";
+import { scrollAnimations } from "../utils/scrollUtils";
 
 /**
  * Header component that displays a minimal fixed navigation at the top of the page.
@@ -69,10 +70,7 @@ const Header = () => {
   const scrollToAbout = useCallback(() => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
-      // Use the centralized scroll utility
-      import("../utils/scrollUtils").then(({ scrollAnimations }) => {
-        scrollAnimations.medium("about");
-      });
+      scrollAnimations.medium("about");
     }
   }, []);
 

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 
 /**
@@ -40,54 +46,58 @@ const Explanation = () => {
   }, []);
 
   // Process steps configuration
-  const processSteps = Array.from({ length: 6 }, (_, index) => {
-    const stepNumber = index + 1;
-    const icons = [
-      <img
-        key="calendar"
-        src="/src/assets/icons/calendar-lines-pen-svgrepo-com.svg"
-        alt="Calendar"
-        className="w-full h-full"
-      />,
-      <img
-        key="location"
-        src="/src/assets/icons/location-place-pin-svgrepo-com.svg"
-        alt="Location"
-        className="w-full h-full"
-      />,
-      <img
-        key="car-key"
-        src="/src/assets/icons/car-key-svgrepo-com.svg"
-        alt="Car Key"
-        className="w-full h-full"
-      />,
-      <img
-        key="cleaning-service"
-        src="/src/assets/icons/cleaning-service-svgrepo-com.svg"
-        alt="Cleaning Service"
-        className="w-full h-full"
-      />,
-      <img
-        key="check-circle"
-        src="/src/assets/icons/check-circle-svgrepo-com.svg"
-        alt="Check Circle"
-        className="w-full h-full"
-      />,
-      <img
-        key="joy-joyful"
-        src="/src/assets/icons/joy-joyful-enjoy-svgrepo-com.svg"
-        alt="Joy"
-        className="w-full h-full"
-      />,
-    ];
+  const processSteps = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, index) => {
+        const stepNumber = index + 1;
+        const icons = [
+          <img
+            key="calendar"
+            src="/src/assets/icons/calendar-lines-pen-svgrepo-com.svg"
+            alt="Calendar"
+            className="w-full h-full"
+          />,
+          <img
+            key="location"
+            src="/src/assets/icons/location-place-pin-svgrepo-com.svg"
+            alt="Location"
+            className="w-full h-full"
+          />,
+          <img
+            key="car-key"
+            src="/src/assets/icons/car-key-svgrepo-com.svg"
+            alt="Car Key"
+            className="w-full h-full"
+          />,
+          <img
+            key="cleaning-service"
+            src="/src/assets/icons/cleaning-service-svgrepo-com.svg"
+            alt="Cleaning Service"
+            className="w-full h-full"
+          />,
+          <img
+            key="check-circle"
+            src="/src/assets/icons/check-circle-svgrepo-com.svg"
+            alt="Check Circle"
+            className="w-full h-full"
+          />,
+          <img
+            key="joy-joyful"
+            src="/src/assets/icons/joy-joyful-enjoy-svgrepo-com.svg"
+            alt="Joy"
+            className="w-full h-full"
+          />,
+        ];
 
-    return {
-      id: stepNumber,
-      title: t(`explanation.steps.step${stepNumber}.title`),
-      description: t(`explanation.steps.step${stepNumber}.description`),
-      icon: icons[index],
-    };
-  });
+        return {
+          id: stepNumber,
+          title: t(`explanation.steps.step${stepNumber}.title`),
+          description: t(`explanation.steps.step${stepNumber}.description`),
+          icon: icons[index],
+        };
+      }),
+    [t]
+  );
 
   /**
    * Starts automatic 'progression' through steps
@@ -101,7 +111,7 @@ const Explanation = () => {
     intervalRef.current = setInterval(() => {
       setActiveStep((prevStep) => (prevStep + 1) % processSteps.length);
     }, 7500); // Change every 7.5 seconds
-  }, []); // No dependencies to prevent recreation
+  }, [processSteps.length]);
 
   // Start auto progression only after section becomes visible and animations complete
   useEffect(() => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
+import { scrollAnimations } from "../utils/scrollUtils";
 
 /**
  * About component that displays information about the WOCUUMING service by Workday-Vacuumers.
@@ -25,12 +26,11 @@ const About = () => {
   /**
    * Smooth scroll to explanation section with 2-second animation
    */
-  const scrollToExplanation = useCallback(async () => {
+  const scrollToExplanation = useCallback(() => {
     try {
-      const { scrollAnimations } = await import("../utils/scrollUtils");
       scrollAnimations.medium("explanation");
     } catch (error) {
-      console.error("Failed to load scroll utilities:", error);
+      console.error("Failed to execute scroll animation:", error);
     }
   }, []);
 

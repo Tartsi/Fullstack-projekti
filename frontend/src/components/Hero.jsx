@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { languageOptions } from "../utils/languageUtils";
+import { scrollAnimations } from "../utils/scrollUtils";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
 
@@ -34,10 +35,7 @@ const Hero = () => {
   const scrollToContent = useCallback(() => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
-      // Use the centralized scroll utility from scrollUtils
-      import("../utils/scrollUtils").then(({ scrollAnimations }) => {
-        scrollAnimations.medium("about");
-      });
+      scrollAnimations.medium("about");
     } else {
       // Fallback for initial load
       const heroHeight = window.innerHeight;
