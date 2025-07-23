@@ -35,3 +35,5 @@
 - 16.07.2025 & 17.07.2025
     - Added Explanation section to the site and its tests.
     - Large scale animation changes to the site, Header changes. A lot of bug fixes and scaling changes which ate up my time...
+- 18.07.2025 (excluding 19.07.2025 & 20.07.2025) ->
+    - As of 23.07.2025, currently still working on Pricing and Reservation section
