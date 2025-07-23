@@ -78,6 +78,41 @@ export const translations = {
       },
       cta: "Aloita WOCUUMING Tänään",
     },
+    // Pricing Calendar
+    pricing: {
+      title: "Wocuuming",
+      price: "49€",
+      vatIncluded: "(ALV sisältyy)",
+      perCleaning: "per siivous",
+      features: {
+        professional: "Ammattitaitoinen siivouspalvelu.",
+        convenient: "Aikataulutus miellyttävästi.",
+        ecoFriendly: "Ympäristöystävällisiä siivoustuotteita.",
+      },
+      calendar: {
+        selectDate: "Valitse Päivämäärä",
+        selectTimeSlot: "Valitse Aikavälä",
+        legend: {
+          fourSlots: "4 aikaa",
+          threeSlots: "3 aikaa",
+          twoSlots: "2 aikaa",
+          oneSlot: "1 aika",
+          none: "ei vapaita",
+        },
+        weekDays: {
+          mon: "Ma",
+          tue: "Ti",
+          wed: "Ke",
+          thu: "To",
+          fri: "Pe",
+        },
+        pleaseSelectDate: "Valitse ensin päivämäärä",
+        selectDateTime: "Valitse Päivämäärä ja Aika",
+        confirmBooking: "Vahvista Varaus",
+        bookingConfirmation:
+          "Varaus vahvistettu ajalle {date} kello {start} - {end}",
+      },
+    },
     // Main content
     content: {
       welcome: "Tervetuloa",
@@ -163,6 +198,41 @@ export const translations = {
         },
       },
       cta: "Start WOCUUMING Today",
+    },
+    // Pricing Calendar
+    pricing: {
+      title: "Wocuuming",
+      price: "49€",
+      vatIncluded: "(VAT included)",
+      perCleaning: "per cleaning",
+      features: {
+        professional: "Professional cleaning service.",
+        convenient: "Scheduled at your convenience.",
+        ecoFriendly: "Eco-friendly cleaning products.",
+      },
+      calendar: {
+        selectDate: "Select Date",
+        selectTimeSlot: "Select Time Slot",
+        legend: {
+          fourSlots: "4 slots",
+          threeSlots: "3 slots",
+          twoSlots: "2 slots",
+          oneSlot: "1 slot",
+          none: "none",
+        },
+        weekDays: {
+          mon: "Mon",
+          tue: "Tue",
+          wed: "Wed",
+          thu: "Thu",
+          fri: "Fri",
+        },
+        pleaseSelectDate: "Please select a date first",
+        selectDateTime: "Select Date and Time",
+        confirmBooking: "Confirm Booking",
+        bookingConfirmation:
+          "Booking confirmed for {date} from {start} to {end}",
+      },
     },
     // Main content
     content: {
