@@ -15,6 +15,7 @@
 /* Custom CSS variables for brand colors */
 :root {
   --color-brand-dark: #7A5C58;
+  --color-brand-dark-300: #a08b87;
   --color-brand-purple: #8D80AD;
   --color-brand-blue: #99B2DD;
   --color-brand-neon: #9DFFF9;
@@ -54,6 +55,7 @@ body {
 
 /* Brand color utilities */
 .bg-brand-dark { background-color: var(--color-brand-dark); }
+.bg-brand-dark-300 { background-color: var(--color-brand-dark-300); }
 .bg-brand-purple { background-color: var(--color-brand-purple); }
 .bg-brand-blue { background-color: var(--color-brand-blue); }
 .bg-brand-neon { background-color: var(--color-brand-neon); }
@@ -61,6 +63,7 @@ body {
 .bg-brand-lightgrey { background-color: var(--color-brand-lightgrey); }
 
 .text-brand-dark { color: var(--color-brand-dark); }
+.text-brand-dark-300 { color: var(--color-brand-dark-300); }
 .text-brand-purple { color: var(--color-brand-purple); }
 .text-brand-blue { color: var(--color-brand-blue); }
 .text-brand-neon { color: var(--color-brand-neon); }
@@ -68,6 +71,7 @@ body {
 .text-brand-lightgrey { color: var(--color-brand-lightgrey); }
 
 .border-brand-dark { border-color: var(--color-brand-dark); }
+.border-brand-dark-300 { border-color: var(--color-brand-dark-300); }
 .border-brand-purple { border-color: var(--color-brand-purple); }
 .border-brand-blue { border-color: var(--color-brand-blue); }
 .border-brand-neon { border-color: var(--color-brand-neon); }

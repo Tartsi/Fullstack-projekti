@@ -171,6 +171,7 @@ const Explanation = () => {
                 <div key={step.id} className="relative">
                   {/* Step Container with Border */}
                   <div
+                    {...(step.id === 6 ? { "data-step": "6" } : {})}
                     className={`
                       flex items-start space-x-2 sm:space-x-3 lg:space-x-4 xl:space-x-6 p-2 sm:p-3 lg:p-4 xl:p-6 rounded-lg sm:rounded-xl
                       border-2 border-gray-200 transition-all duration-1000 bg-white/80 backdrop-blur-sm shadow-md
@@ -257,38 +258,6 @@ const Explanation = () => {
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Call to Action */}
-        <div
-          className={`text-center mt-6 sm:mt-8 lg:mt-12 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-          style={{
-            transitionDelay: isVisible ? "3050ms" : "0ms",
-          }}
-        >
-          <button
-            className="inline-flex items-center px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 bg-brand-green text-white font-cottage font-medium
-           text-sm sm:text-base lg:text-lg rounded-lg sm:rounded-xl shadow-lg hover:bg-brand-dark hover:shadow-xl transform hover:scale-105 transition-all duration-600 cursor-pointer"
-          >
-            <span>{t("explanation.cta")}</span>
-            <svg
-              className="ml-2 w-4 h-4 sm:w-5 sm:h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              role="img"
-              aria-label="Arrow right"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </button>
         </div>
       </div>
     </section>

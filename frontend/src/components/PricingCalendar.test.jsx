@@ -17,6 +17,15 @@ vi.mock("framer-motion", () => ({
   AnimatePresence: ({ children }) => children,
 }));
 
+// Mock IntersectionObserver for tests
+const mockIntersectionObserver = vi.fn();
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null,
+});
+window.IntersectionObserver = mockIntersectionObserver;
+
 // Helper function to render component with LanguageProvider
 const renderWithLanguageProvider = (component) => {
   return render(<LanguageProvider>{component}</LanguageProvider>);
