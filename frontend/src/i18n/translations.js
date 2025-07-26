@@ -129,6 +129,22 @@ export const translations = {
         bookingConfirmation:
           "Varaus vahvistettu ajalle {date} kello {start} - {end}",
       },
+      payment: {
+        title: "Maksu",
+        subtitle: "Valitse maksutapa varauksen viimeistelemiseksi",
+        methods: {
+          card: "Kortti",
+          mobilepay: "MobilePay",
+          bank: "Pankki",
+          cash: "Käteinen",
+        },
+        helpTooltip: "Tarvitsetko apua maksussa?",
+        helpContent:
+          "Placeholder: Tässä näkyy maksuohje ja yhteystiedot tarvittaessa. Voit maksaa heti tai paikan päällä palvelun jälkeen.",
+        confirmPayment: "Vahvista Maksu",
+        selectDateTime: "Valitse Päivä ja Aika",
+        selectPaymentMethod: "Valitse Maksutapa",
+      },
     },
     // Main content
     content: {
@@ -266,6 +282,22 @@ export const translations = {
         confirmBooking: "Confirm Booking",
         bookingConfirmation:
           "Booking confirmed for {date} from {start} to {end}",
+      },
+      payment: {
+        title: "Payment",
+        subtitle: "Select payment method to complete your booking",
+        methods: {
+          card: "Card",
+          mobilepay: "MobilePay",
+          bank: "Bank",
+          cash: "Cash",
+        },
+        helpTooltip: "Need help with payment?",
+        helpContent:
+          "Placeholder: Payment instructions and contact information will be shown here. You can pay now or on-site after the service.",
+        confirmPayment: "Confirm Payment",
+        selectDateTime: "Select Date and Time",
+        selectPaymentMethod: "Select Payment Method",
       },
     },
     // Main content
