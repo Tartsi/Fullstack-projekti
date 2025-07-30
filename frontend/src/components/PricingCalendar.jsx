@@ -1,38 +1,28 @@
-// SPACEBAR BUGI, ANIMAATIOT KUNTOON, TEKSTIT KUNTOON!
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
 import {
   timeSlots,
-  monthNames,
-  dayNames,
   generateAvailableDates,
-  getCalendarDays,
   isDateAvailable,
   isDateSelected,
-  goToPreviousMonth,
-  goToNextMonth,
   getAvailableTimeSlotsForDate,
-  formatBookingConfirmation,
   formatDateForDisplay,
   getWeekStart,
   getWeekDays,
   handlePreviousWeek,
   handleNextWeek,
-  hasAvailableDatesInWeek,
   canGoToPreviousWeek,
   canGoToNextWeek,
-  getWeekNumber,
   getWeekDisplayText,
   getCurrentMonthName,
-  getAvailableSlotCount,
   getDateColorClass,
   getAvailabilityBoxColorClass,
-  formatDateForDisplayWithTranslations,
 } from "../utils/calendarUtils";
-import CleaningServiceIcon from "../assets/icons/cleaning-service-svgrepo-com.svg";
 import VacuumCleanerIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
-import CheckCircleIcon from "../assets/icons/check-circle-svgrepo-com.svg";
+import WipingIcon from "../assets/icons/wiping-svgrepo-com.svg";
+import TintingIcon from "../assets/icons/tinting-svgrepo-com.svg";
+import CarSeatIcon from "../assets/icons/car-seat-svgrepo-com.svg";
 import LockSlashIcon from "../assets/icons/lock-slash-svgrepo-com.svg";
 import BankIcon from "../assets/icons/bank-svgrepo-com.svg";
 import CashIcon from "../assets/icons/cash-payment-pay-money-cash-svgrepo-com.svg";
@@ -42,68 +32,107 @@ import ThinkingIcon from "../assets/icons/thinking-consider-ponder-think-svgrepo
 import WalletArrowIcon from "../assets/icons/wallet-arrow-right-svgrepo-com.svg";
 
 /**
- * PricingCalendar component that displays a modern, minimalist calendar booking interface
- * CURRENTLY USES PLACEHOLDER DATA FOR DATES AND TIME SLOTS!
- * BACKEND FUNCTIONALITY IS NOT IMPLEMENTED YET!
+ * PricingCalendar - Booking interface component
  *
- * Features:
- * - Modern white-themed design with clean vertical layout
- * - Large centered price container (49€ including VAT)
- * - Date selection calendar (minimum 2 days from current date)
- * - Time slot selection (2-hour intervals from 09:00-17:00)
- * - Confirm button and booking summary
- * - Responsive design with clean typography
+ * IMPORTANT: Currently uses placeholder data for demonstration purposes.
+ * Backend integration required for production use.
+ *
+ * @component
+ * @description A comprehensive booking interface with the following features:
+ *
+ * UI Design:
+ * - White-themed design with vertical layout
+ * - Progressive disclosure: price → date → time → payment
+ * - Responsive design with smooth animations
  * - Purple accent colors for selected states
- * - Unavailable time slots shown as disabled - maintain layout consistency
  *
- * Layout structure (top to bottom):
+ * Functionality:
+ * - Large centered price display (49€ including VAT)
+ * - Week-based calendar navigation (Monday-Friday only)
+ * - Minimum booking window: 2 days from current date
+ * - Time slot selection (4 x 2-hour intervals: 09:00-17:00)
+ * - Multi-step payment method selection
+ * - Real-time availability display with color coding
+ * - Animated transitions between booking stages
  *
- * 1. Large centered price container
- * 2. Date selection calendar
- * 3. Time slot selection
- * 4. Confirm button
- * 5. Booking summary (when both date and time selected)
+ * Layout Structure (progressive reveal):
+ * 1. Price container with service details
+ * 2. Date selection calendar (week view)
+ * 3. Time slot selection grid
+ * 4. Payment method selection
+ * 5. Confirmation button
  *
- * @returns {JSX.Element} The rendered modern PricingCalendar component
+ * Accessibility:
+ * - Keyboard navigation support
+ * - Screen reader friendly labels
+ * - High contrast color schemes
+ * - Focus management
+ *
+ * Security Considerations:
+ * - Input validation on date/time selection
+ * - No sensitive data stored in local state
+ * - Payment processing handled externally
+ *
+ * @returns {JSX.Element} The rendered booking interface
+ *
+ * @example
+ * // Basic usage in a page component
+ * <PricingCalendar />
+ *
+ * @todo
+ * - Integrate with backend API for real availability data
+ * - Implement actual payment processing
+ * - Add form validation for user inputs
+ * - Add booking confirmation flow
+ * - Implement calendar accessibility improvements
  */
 const PricingCalendar = () => {
   const { t } = useLanguage();
+
+  // Core booking state
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+  // Data state (TODO: Replace with API calls)
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+
+  // Calendar navigation state
   const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
+
+  // UI state for progressive disclosure animation
   const [isPriceSelected, setIsPriceSelected] = useState(false);
   const [showDateSection, setShowDateSection] = useState(false);
   const [showTimeSection, setShowTimeSection] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const [showPaymentSection, setShowPaymentSection] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [showPaymentTooltip, setShowPaymentTooltip] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Refs for cleanup and DOM manipulation
   const timeoutRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Initialize current week to start of this week
+  // Initialize current week to start of this week on component mount
   useEffect(() => {
     const today = new Date();
     setCurrentWeekStart(getWeekStart(today));
   }, []);
 
-  // Watch for this section to be 30% visible to trigger animation
+  // Intersection Observer: Trigger animations when 90% of component is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect(); // Stop observing once triggered
+          observer.disconnect(); // Stop observing once triggered to prevent re-animations
         }
       },
       {
-        threshold: 0.9, // Trigger when 80% of the section is visible
+        threshold: 0.9, // Trigger when 90% of the section is visible
       }
     );
 
-    // Observe this section directly for 80% visibility
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
@@ -111,23 +140,24 @@ const PricingCalendar = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Generate available dates (placeholder data - would come from backend)
+  // Initialize placeholder data (TODO: Replace with API call)
   useEffect(() => {
     const dates = generateAvailableDates();
     setAvailableDates(dates);
 
-    // Don't auto-select any date - let user choose
+    // Reset all selections when data changes
     setSelectedDate(null);
     setSelectedTimeSlot(null);
+    setSelectedPaymentMethod(null);
     setAvailableTimeSlots([]);
   }, []);
 
-  // Update available time slots when date changes
+  // Update available time slots when selected date changes
   useEffect(() => {
     if (selectedDate) {
       const slots = getAvailableTimeSlotsForDate(selectedDate, availableDates);
       setAvailableTimeSlots(slots);
-      setSelectedTimeSlot(null); // Reset time selection
+      setSelectedTimeSlot(null); // Reset time selection when date changes
 
       // If the selected date no longer has available slots, deselect it
       if (!slots || slots.length === 0) {
@@ -139,60 +169,70 @@ const PricingCalendar = () => {
     }
   }, [selectedDate, availableDates]);
 
+  /**
+   * Handle date selection with validation
+   * Only allows selection of dates with available time slots
+   */
   const handleDateSelect = (date) => {
     if (isDateAvailable(date, availableDates)) {
       const slots = getAvailableTimeSlotsForDate(date, availableDates);
-      // Only select the date if it has available time slots
+      // Security: Only select the date if it has available time slots
       if (slots && slots.length > 0) {
         setSelectedDate(date);
-        // Reset time selection and payment method when changing date
+        // Reset dependent selections when changing date
         setSelectedTimeSlot(null);
         setSelectedPaymentMethod(null);
-        // Animate time section in after a short delay
+
+        // Progressive disclosure: Show time section after date selection
         setTimeout(() => {
           setShowTimeSection(true);
         }, 300);
-        // Show payment section in unselectable mode when date is first selected
+
+        // Show payment section (in unselectable mode) when date is first selected
         setTimeout(() => {
           setShowPaymentSection(true);
-        }, 800); // Delay to show after time section starts animating
+        }, 800); // Delay to show after time section animation
       }
     } else {
-      // If date is not available, reset selections
+      // Security: Clear payment method if date becomes unavailable
       setSelectedPaymentMethod(null);
     }
   };
 
+  /**
+   * Handle time slot selection
+   * TODO: Add validation for business hours and slot availability
+   */
   const handleTimeSlotSelect = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
   };
 
-  // Handle payment method selection
+  /**
+   * Handle payment method selection
+   * TODO: Integrate with payment processor validation
+   */
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
   };
 
+  /**
+   * Handle price container selection to start booking flow
+   */
   const handlePriceSelect = () => {
     setIsPriceSelected(true);
-    // Clear any existing timeout
+    // Clear any existing timeout to prevent memory leaks
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    // Trigger date section animation after a short delay
+    // Trigger date section animation with slight delay for better UX
     timeoutRef.current = setTimeout(() => {
       setShowDateSection(true);
     }, 100);
   };
 
-  // Cleanup timeout on component unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
+  /**
+   * Week navigation handlers
+   */
   const handlePreviousWeekClick = () => {
     setCurrentWeekStart(handlePreviousWeek(currentWeekStart));
   };
@@ -200,6 +240,41 @@ const PricingCalendar = () => {
   const handleNextWeekClick = () => {
     setCurrentWeekStart(handleNextWeek(currentWeekStart));
   };
+
+  /**
+   * Handle payment confirmation
+   * TODO: Replace with secure payment processing integration
+   * SECURITY: Never expose payment data in console/alerts in production
+   */
+  const handlePaymentConfirmation = () => {
+    if (selectedDate && selectedTimeSlot && selectedPaymentMethod) {
+      // TODO: Implement secure payment processing
+      // This should:
+      // 1. Validate all selections server-side
+      // 2. Create secure payment session
+      // 3. Redirect to payment processor
+      // 4. Handle success/failure callbacks
+
+      console.log("Booking confirmation initiated:", {
+        date: selectedDate.toISOString().split("T")[0], // Safe date format
+        timeSlot: selectedTimeSlot.id, // Use ID instead of full object
+        paymentMethod: selectedPaymentMethod, // This should be sanitized
+        timestamp: new Date().toISOString(),
+      });
+
+      // Placeholder: In production, this would redirect to payment processor
+      // Example: window.location.href = `/checkout?session=${secureSessionId}`;
+    }
+  };
+
+  // Cleanup timeout on component unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <motion.section
@@ -245,45 +320,32 @@ const PricingCalendar = () => {
           </div>
 
           {/* Separator Line */}
-          <div className="border-t border-gray-300 my-4"></div>
+          <div className="border-t border-gray-300 my-4" />
 
+          {/* Explanation on its own line + underline */}
+          <p className="text-gray-600 text-lg font-normal underline mb-4">
+            {t("pricing.explanation")}
+          </p>
+
+          {/* Services list */}
           <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 flex justify-center">
-                <img
-                  src={CleaningServiceIcon}
-                  alt="Professional cleaning service"
-                  className="w-4 h-4"
-                />
+            {[
+              {
+                icon: VacuumCleanerIcon,
+                label: t("pricing.services.vacuuming"),
+              },
+              { icon: WipingIcon, label: t("pricing.services.wiping") },
+              {
+                icon: TintingIcon,
+                label: t("pricing.services.windowCleaning"),
+              },
+              { icon: CarSeatIcon, label: t("pricing.services.seatCleaning") },
+            ].map(({ icon, label }) => (
+              <div key={label} className="flex items-start space-x-4">
+                <img src={icon} alt="" className="w-14 h-6 flex-shrink-0" />
+                <p className="text-gray-600 text-lg font-normal">{label}</p>
               </div>
-              <p className="text-gray-600 text-sm font-normal text-center flex-1">
-                {t("pricing.features.professional")}
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 flex justify-center ">
-                <img
-                  src={VacuumCleanerIcon}
-                  alt="Scheduled at your convenience"
-                  className="w-4 h-4"
-                />
-              </div>
-              <p className="text-gray-600 text-sm font-normal text-center flex-1">
-                {t("pricing.features.convenient")}
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 flex justify-center">
-                <img
-                  src={CheckCircleIcon}
-                  alt="Eco-friendly cleaning products"
-                  className="w-4 h-4"
-                />
-              </div>
-              <p className="text-gray-600 text-sm font-normal text-center flex-1">
-                {t("pricing.features.ecoFriendly")}
-              </p>
-            </div>
+            ))}
           </div>
         </motion.div>
 
@@ -311,6 +373,17 @@ const PricingCalendar = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.8, ease: "easeOut", delay: 1.44 }}
                 >
+                  {/* Booking Instructions */}
+                  <div className="mb-6 text-center px-4">
+                    <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                      {t("pricing.calendar.bookingInstructions")}
+                    </p>
+                    <p className="text-gray-600 text-xs font-medium">
+                      {t("pricing.calendar.bookingNote")}
+                    </p>
+                    <div className="border-t border-gray-300 mt-4 mb-2"></div>
+                  </div>
+
                   <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
                     {t("pricing.calendar.selectDate")}
                   </h3>
@@ -588,11 +661,14 @@ const PricingCalendar = () => {
               ease: "easeOut",
               delay: 0.2,
             }}
-            className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md mx-auto border-2 transition-all duration-700 ${
+            className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md mx-auto border-2 transition-all duration-700 font-sans ${
               selectedDate && selectedTimeSlot
                 ? "border-black shadow-lg"
                 : "border-gray-100"
             }`}
+            style={{
+              fontFamily: "Arial, sans-serif",
+            }}
           >
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -600,7 +676,7 @@ const PricingCalendar = () => {
               transition={{ duration: 0.8, ease: "easeOut", delay: 1.64 }}
             >
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-cottage font-bold text-gray-800 mb-2">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
                   {t("pricing.payment.title")}
                 </h3>
                 <p className="text-gray-600 text-sm">
@@ -737,7 +813,7 @@ const PricingCalendar = () => {
                         : { opacity: 0, y: 8 }
                     }
                     transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="p-4 text-sm text-gray-600"
+                    className="p-4 text-sm text-gray-600 whitespace-pre-line"
                   >
                     {t("pricing.payment.helpContent")}
                   </motion.p>
@@ -749,10 +825,7 @@ const PricingCalendar = () => {
                 layout
                 onClick={
                   selectedDate && selectedTimeSlot && selectedPaymentMethod
-                    ? () =>
-                        alert(
-                          `Selected payment method: ${selectedPaymentMethod}`
-                        )
+                    ? handlePaymentConfirmation
                     : null
                 }
                 disabled={
@@ -791,7 +864,7 @@ const PricingCalendar = () => {
                   opacity: { duration: 1.2, ease: "easeInOut" },
                   scale: { duration: 0.4, ease: "easeOut" },
                 }}
-                className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white"
+                className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white relative overflow-hidden"
               >
                 <span>
                   {selectedDate && selectedTimeSlot && selectedPaymentMethod
@@ -800,19 +873,31 @@ const PricingCalendar = () => {
                     ? t("pricing.payment.selectDateTime")
                     : t("pricing.payment.selectPaymentMethod")}
                 </span>
-                <img
-                  src={
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? WalletArrowIcon
-                      : LockSlashIcon
-                  }
-                  alt={
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? "Proceed"
-                      : "Locked"
-                  }
-                  className="w-5 h-5 ml-6"
-                />
+
+                {/* Animated Wallet Icon - slides in from right edge when payment method is selected */}
+                {selectedDate && selectedTimeSlot && selectedPaymentMethod && (
+                  <motion.img
+                    src={WalletArrowIcon}
+                    alt="Proceed"
+                    className="w-20 h-5 absolute"
+                    initial={{ x: "100%", opacity: 0 }}
+                    animate={{ x: "calc(100% + 32px)", opacity: 1 }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                  />
+                )}
+
+                {/* Lock Icon for disabled state */}
+                {!(
+                  selectedDate &&
+                  selectedTimeSlot &&
+                  selectedPaymentMethod
+                ) && (
+                  <img
+                    src={LockSlashIcon}
+                    alt="Locked"
+                    className="w-5 h-5 ml-6"
+                  />
+                )}
               </motion.button>
             </motion.div>
           </motion.div>

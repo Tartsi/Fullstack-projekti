@@ -1,4 +1,4 @@
-// Calendar utility functions and constants
+// Calendar utility functions and constants for the PricingCalendar component
 
 // Time slots for booking (2-hour intervals from 09:00-17:00)
 export const timeSlots = [
@@ -6,33 +6,6 @@ export const timeSlots = [
   { id: 2, start: "11:00", end: "13:00", label: "11:00 - 13:00" },
   { id: 3, start: "13:00", end: "15:00", label: "13:00 - 15:00" },
   { id: 4, start: "15:00", end: "17:00", label: "15:00 - 17:00" },
-];
-
-// Month names
-export const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-// Day names
-export const dayNames = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
 ];
 
 // Get the start of the current week (Monday)
@@ -68,17 +41,13 @@ export const handleNextWeek = (currentWeekStart) => {
   return newWeekStart;
 };
 
-// Check if current week has any available dates
-export const hasAvailableDatesInWeek = (weekStart, availableDates) => {
-  const weekDays = getWeekDays(weekStart);
-  return weekDays.some((date) => isDateAvailable(date, availableDates));
-};
-
 // Check if we can go to previous week (has available dates)
 export const canGoToPreviousWeek = (currentWeekStart, availableDates) => {
   const previousWeekStart = new Date(currentWeekStart);
   previousWeekStart.setDate(currentWeekStart.getDate() - 7);
-  return hasAvailableDatesInWeek(previousWeekStart, availableDates);
+
+  const weekDays = getWeekDays(previousWeekStart);
+  return weekDays.some((date) => isDateAvailable(date, availableDates));
 };
 
 // Check if we can go to next week (within one month limit)
@@ -95,7 +64,7 @@ export const canGoToNextWeek = (currentWeekStart) => {
   return nextWeekDays.some((date) => date <= oneMonthFromToday);
 };
 
-// Get week number for a given date
+// Get week number for a given date (used by getWeekDisplayText)
 export const getWeekNumber = (date) => {
   const d = new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
@@ -152,7 +121,7 @@ export const getCurrentMonthName = (currentWeekStart, t) => {
   }
 };
 
-// Get available time slots count for a specific date
+// Get available time slots count for a specific date (used by color functions)
 export const getAvailableSlotCount = (date, availableDates) => {
   const slots = getAvailableTimeSlotsForDate(date, availableDates);
   return slots.length;
@@ -175,13 +144,7 @@ export const getDateColorClass = (
 
   const slotCount = getAvailableSlotCount(date, availableDates);
 
-  if (slotCount === 4) {
-    return "text-black hover:bg-gray-100 cursor-pointer";
-  } else if (slotCount === 3) {
-    return "text-black hover:bg-gray-100 cursor-pointer";
-  } else if (slotCount === 2) {
-    return "text-black hover:bg-gray-100 cursor-pointer";
-  } else if (slotCount === 1) {
+  if (slotCount >= 1) {
     return "text-black hover:bg-gray-100 cursor-pointer";
   } else {
     return "hover:bg-gray-100 text-gray-700 cursor-pointer";
@@ -213,100 +176,49 @@ export const getAvailabilityBoxColorClass = (
   }
 };
 
-// Format date for display with translations
-export const formatDateForDisplayWithTranslations = (date, t) => {
-  if (!date) return "";
-
-  const dayNames = [
-    t("pricing.calendar.weekDays.sun") || "Sunday",
-    t("pricing.calendar.weekDays.mon") || "Monday",
-    t("pricing.calendar.weekDays.tue") || "Tuesday",
-    t("pricing.calendar.weekDays.wed") || "Wednesday",
-    t("pricing.calendar.weekDays.thu") || "Thursday",
-    t("pricing.calendar.weekDays.fri") || "Friday",
-    t("pricing.calendar.weekDays.sat") || "Saturday",
-  ];
-
-  const monthTranslations = [
-    t("pricing.calendar.months.january"),
-    t("pricing.calendar.months.february"),
-    t("pricing.calendar.months.march"),
-    t("pricing.calendar.months.april"),
-    t("pricing.calendar.months.may"),
-    t("pricing.calendar.months.june"),
-    t("pricing.calendar.months.july"),
-    t("pricing.calendar.months.august"),
-    t("pricing.calendar.months.september"),
-    t("pricing.calendar.months.october"),
-    t("pricing.calendar.months.november"),
-    t("pricing.calendar.months.december"),
-  ];
-
-  const targetDate = new Date(date);
-  const dayName = dayNames[targetDate.getDay()];
-  const monthName = monthTranslations[targetDate.getMonth()];
-  const day = targetDate.getDate();
-  const year = targetDate.getFullYear();
-
-  return `${dayName}, ${monthName} ${day}, ${year}`;
-};
-
-// Generate placeholder available dates (would come from backend in real implementation)
+// Generate placeholder available dates (TODO: Replace with API call)
 export const generateAvailableDates = () => {
   const dates = [];
   const today = new Date();
 
-  // Generate dates for the next 30 days
+  // Generate dates for the next 30 days with minimum 2-day booking window
   for (let i = 2; i <= 31; i++) {
-    // Start from 2 days ahead
     const date = new Date(today);
     date.setDate(today.getDate() + i);
 
-    // Skip weekends
+    // Business rule: Only weekdays (Monday-Friday)
     if (date.getDay() !== 0 && date.getDay() !== 6) {
       // Randomly assign available slots (placeholder logic)
       const availableSlotCount = Math.floor(Math.random() * 5); // 0-4 slots
       const availableSlots = timeSlots.slice(0, availableSlotCount);
 
-      dates.push({
-        date: date,
-        availableSlots: availableSlots,
-      });
+      // Validate date before adding
+      if (date instanceof Date && !isNaN(date)) {
+        dates.push({
+          date: date,
+          availableSlots: availableSlots,
+        });
+      }
     }
   }
 
   return dates;
 };
 
-// Get calendar days for a given month (not currently used but kept for compatibility)
-export const getCalendarDays = (year, month) => {
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const startingDayOfWeek = firstDay.getDay();
-
-  const days = [];
-
-  // Add empty cells for days before the first day of the month
-  for (let i = 0; i < startingDayOfWeek; i++) {
-    days.push(null);
-  }
-
-  // Add all days of the month
-  for (let day = 1; day <= daysInMonth; day++) {
-    days.push(new Date(year, month, day));
-  }
-
-  return days;
-};
-
 // Check if a date is available (has at least one available time slot)
 export const isDateAvailable = (date, availableDates) => {
-  if (!date || !availableDates) return false;
+  if (!date || !availableDates || !(date instanceof Date) || isNaN(date)) {
+    return false;
+  }
 
   const dateEntry = availableDates.find((availableDate) => {
+    if (!availableDate || !availableDate.date) return false;
+
     const targetDate = new Date(date);
     const compareDate = new Date(availableDate.date);
+
+    // Validate both dates are valid
+    if (!(compareDate instanceof Date) || isNaN(compareDate)) return false;
 
     return (
       targetDate.getFullYear() === compareDate.getFullYear() &&
@@ -317,13 +229,27 @@ export const isDateAvailable = (date, availableDates) => {
 
   // Return true only if the date exists AND has at least one available time slot
   return (
-    dateEntry && dateEntry.availableSlots && dateEntry.availableSlots.length > 0
+    dateEntry &&
+    dateEntry.availableSlots &&
+    Array.isArray(dateEntry.availableSlots) &&
+    dateEntry.availableSlots.length > 0
   );
 };
 
 // Check if a date is selected
 export const isDateSelected = (date, selectedDate) => {
-  if (!date || !selectedDate) return false;
+  if (
+    !date ||
+    !selectedDate ||
+    !(date instanceof Date) ||
+    !(selectedDate instanceof Date)
+  ) {
+    return false;
+  }
+
+  if (isNaN(date) || isNaN(selectedDate)) {
+    return false;
+  }
 
   const targetDate = new Date(date);
   const compareDate = new Date(selectedDate);
@@ -335,27 +261,23 @@ export const isDateSelected = (date, selectedDate) => {
   );
 };
 
-// Go to previous month (not currently used but kept for compatibility)
-export const goToPreviousMonth = (currentDate) => {
-  const newDate = new Date(currentDate);
-  newDate.setMonth(newDate.getMonth() - 1);
-  return newDate;
-};
-
-// Go to next month (not currently used but kept for compatibility)
-export const goToNextMonth = (currentDate) => {
-  const newDate = new Date(currentDate);
-  newDate.setMonth(newDate.getMonth() + 1);
-  return newDate;
-};
-
 // Get available time slots for a specific date
 export const getAvailableTimeSlotsForDate = (date, availableDates) => {
-  if (!date || !availableDates) return [];
+  if (!date || !availableDates || !(date instanceof Date) || isNaN(date)) {
+    return [];
+  }
+
+  if (!Array.isArray(availableDates)) {
+    return [];
+  }
 
   const targetDate = new Date(date);
   const dateEntry = availableDates.find((availableDate) => {
+    if (!availableDate || !availableDate.date) return false;
+
     const compareDate = new Date(availableDate.date);
+    if (!(compareDate instanceof Date) || isNaN(compareDate)) return false;
+
     return (
       targetDate.getFullYear() === compareDate.getFullYear() &&
       targetDate.getMonth() === compareDate.getMonth() &&
@@ -363,15 +285,9 @@ export const getAvailableTimeSlotsForDate = (date, availableDates) => {
     );
   });
 
-  return dateEntry ? dateEntry.availableSlots : [];
-};
-
-// Format booking confirmation message
-export const formatBookingConfirmation = (date, timeSlot) => {
-  if (!date || !timeSlot) return "";
-
-  const formattedDate = formatDateForDisplay(date);
-  return `Booking confirmed for ${formattedDate} from ${timeSlot.start} to ${timeSlot.end}`;
+  return dateEntry && Array.isArray(dateEntry.availableSlots)
+    ? dateEntry.availableSlots
+    : [];
 };
 
 // Format date for display

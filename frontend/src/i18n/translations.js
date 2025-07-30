@@ -84,12 +84,23 @@ export const translations = {
       price: "49€",
       vatIncluded: "(ALV sisältyy)",
       perCleaning: "per siivous",
+      explanation: "Hintaan sisältyy:",
+      services: {
+        vacuuming: "Imurointi",
+        wiping: "Pintojen pyyhintä",
+        windowCleaning: "Ikkunoiden sisäpesu",
+        seatCleaning: "Penkkien kuivapesu",
+      },
       features: {
         professional: "Ammattitaitoinen siivouspalvelu.",
         convenient: "Aikataulutus miellyttävästi.",
         ecoFriendly: "Ympäristöystävällisiä siivoustuotteita.",
       },
       calendar: {
+        bookingInstructions:
+          "Varaa sinulle sopiva päivämäärä ja 2 tunnin kellonaika klo 9 – 17 väliltä, jona aikana siivous tapahtuu.",
+        bookingNote:
+          "Huom! Aikaisin varaus on mahdollista kolmen päivän kulottua tilaushetkestä.",
         selectDate: "Valitse Päivämäärä",
         selectTimeSlot: "Valitse Aika",
         legend: {
@@ -138,9 +149,9 @@ export const translations = {
           bank: "Pankki",
           cash: "Käteinen",
         },
-        helpTooltip: "Tarvitsetko apua maksussa?",
+        helpTooltip: "Maksuehdot",
         helpContent:
-          "Placeholder: Tässä näkyy maksuohje ja yhteystiedot tarvittaessa. Voit maksaa heti tai paikan päällä palvelun jälkeen.",
+          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta viimeistään 24 h ennen varattua aikaa.\n• Alle 24 h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
         confirmPayment: "Vahvista Maksu",
         selectDateTime: "Valitse Päivä ja Aika",
         selectPaymentMethod: "Valitse Maksutapa",
@@ -238,12 +249,23 @@ export const translations = {
       price: "49€",
       vatIncluded: "(VAT included)",
       perCleaning: "per cleaning",
+      explanation: "Included:",
+      services: {
+        vacuuming: "Vacuuming",
+        wiping: "Surface wiping",
+        windowCleaning: "Interior window cleaning",
+        seatCleaning: "Dry seat cleaning",
+      },
       features: {
         professional: "Professional cleaning service.",
         convenient: "Scheduled at your convenience.",
         ecoFriendly: "Eco-friendly cleaning products.",
       },
       calendar: {
+        bookingInstructions:
+          "Book a suitable date and 2-hour time slot between 9 AM – 5 PM during which the cleaning will take place.",
+        bookingNote:
+          "Note! The earliest booking is possible three days after the order date.",
         selectDate: "Select Date",
         selectTimeSlot: "Select Time Slot",
         legend: {
@@ -292,9 +314,9 @@ export const translations = {
           bank: "Bank",
           cash: "Cash",
         },
-        helpTooltip: "Need help with payment?",
+        helpTooltip: "Payment Terms",
         helpContent:
-          "Placeholder: Payment instructions and contact information will be shown here. You can pay now or on-site after the service.",
+          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge up to 24 hours before the scheduled time.\n• For cancellations less than 24 hours in advance, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
         confirmPayment: "Confirm Payment",
         selectDateTime: "Select Date and Time",
         selectPaymentMethod: "Select Payment Method",
