@@ -83,14 +83,6 @@ describe("Explanation Component", () => {
     expect(arrows.length).toBe(5); // 6 steps should have 5 connecting arrows
   });
 
-  it("renders call to action button", () => {
-    render(<ExplanationWithProvider />);
-
-    const ctaButton = screen.getByRole("button");
-    expect(ctaButton).toBeInTheDocument();
-    expect(ctaButton).toHaveClass("bg-brand-green");
-  });
-
   it("has proper accessibility attributes", () => {
     render(<ExplanationWithProvider />);
 

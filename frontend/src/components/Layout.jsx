@@ -3,6 +3,7 @@ import Header from "./Header";
 import Hero from "./Hero";
 import About from "./About";
 import Explanation from "./Explanation";
+import PricingCalendar from "./PricingCalendar";
 import Footer from "./Footer";
 
 /**
@@ -33,6 +34,7 @@ const Layout = ({ children }) => {
       <Hero />
       <About />
       <Explanation />
+      <PricingCalendar />
       {/* Main content area for future components */}
       <main className="flex-1">{children}</main>
       <Footer />
