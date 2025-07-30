@@ -2,10 +2,10 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 50 hours
+## Total hours: 60 hours
 
 ###  Large review number #1 15.07.2025 (Through port-forwarding)
-- Total hours with customer: 2 hours
+- Total hours with customer: 3 hours
 - Total hours designing the site: 4 hours
 
 - 23.06.2025
@@ -38,5 +38,5 @@
     - 4 hours: Added Background to the site and made the site be more responsive through large code optimizations. Updated Project definition based on customer review #1 of the site.
 - 16.07.2025 & 17.07.2025
     - 12 hours: Large scale animation changes to the site, Header changes, and Explanation section implementation, a lot of bug fixes and scaling changes which ate up my time...
-- 18.07.2025 (excluding 19.07.2025 & 20.07.2025) ->
-    - 6 hours as of 23.07.2025 - Working on Pricing and Reservation section; including animations, testing, scalability, bugfixing, a lot of designing
+- 18.07.2025 -> 30.07.2025 (excluding 19.07.2025, 20.07.2025, 27.07.2025, 28.07.2025)
+    - 15 hours: Working on Pricing and Reservation section; including animations, testing, scalability, bugfixing, a lot of designing.
