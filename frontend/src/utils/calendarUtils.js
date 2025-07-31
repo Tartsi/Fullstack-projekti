@@ -290,16 +290,71 @@ export const getAvailableTimeSlotsForDate = (date, availableDates) => {
     : [];
 };
 
-// Format date for display
-export const formatDateForDisplay = (date) => {
+// Format date for display with localization support
+export const formatDateForDisplay = (date, t, language = "fi") => {
   if (!date) return "";
 
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  const weekdayNames = {
+    fi: [
+      t("pricing.calendar.weekDays.sun"),
+      t("pricing.calendar.weekDays.mon"),
+      t("pricing.calendar.weekDays.tue"),
+      t("pricing.calendar.weekDays.wed"),
+      t("pricing.calendar.weekDays.thu"),
+      t("pricing.calendar.weekDays.fri"),
+      t("pricing.calendar.weekDays.sat"),
+    ],
+    en: [
+      t("pricing.calendar.weekDays.sun"),
+      t("pricing.calendar.weekDays.mon"),
+      t("pricing.calendar.weekDays.tue"),
+      t("pricing.calendar.weekDays.wed"),
+      t("pricing.calendar.weekDays.thu"),
+      t("pricing.calendar.weekDays.fri"),
+      t("pricing.calendar.weekDays.sat"),
+    ],
   };
 
-  return new Date(date).toLocaleDateString("en-US", options);
+  const monthNames = {
+    fi: [
+      t("pricing.calendar.months.january"),
+      t("pricing.calendar.months.february"),
+      t("pricing.calendar.months.march"),
+      t("pricing.calendar.months.april"),
+      t("pricing.calendar.months.may"),
+      t("pricing.calendar.months.june"),
+      t("pricing.calendar.months.july"),
+      t("pricing.calendar.months.august"),
+      t("pricing.calendar.months.september"),
+      t("pricing.calendar.months.october"),
+      t("pricing.calendar.months.november"),
+      t("pricing.calendar.months.december"),
+    ],
+    en: [
+      t("pricing.calendar.months.january"),
+      t("pricing.calendar.months.february"),
+      t("pricing.calendar.months.march"),
+      t("pricing.calendar.months.april"),
+      t("pricing.calendar.months.may"),
+      t("pricing.calendar.months.june"),
+      t("pricing.calendar.months.july"),
+      t("pricing.calendar.months.august"),
+      t("pricing.calendar.months.september"),
+      t("pricing.calendar.months.october"),
+      t("pricing.calendar.months.november"),
+      t("pricing.calendar.months.december"),
+    ],
+  };
+
+  const dateObj = new Date(date);
+  const weekday =
+    weekdayNames[language]?.[dateObj.getDay()] ||
+    weekdayNames.fi[dateObj.getDay()];
+  const month =
+    monthNames[language]?.[dateObj.getMonth()] ||
+    monthNames.fi[dateObj.getMonth()];
+  const day = dateObj.getDate();
+  const year = dateObj.getFullYear();
+
+  return `${weekday}, ${day}. ${month} ${year}`;
 };

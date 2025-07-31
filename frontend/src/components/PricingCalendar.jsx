@@ -87,7 +87,7 @@ import WalletArrowIcon from "../assets/icons/wallet-arrow-right-svgrepo-com.svg"
  * - Implement calendar accessibility improvements
  */
 const PricingCalendar = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Core booking state
   const [selectedDate, setSelectedDate] = useState(null);
@@ -279,6 +279,7 @@ const PricingCalendar = () => {
   return (
     <motion.section
       ref={sectionRef}
+      id="pricing"
       data-pricing-section
       initial={{ opacity: 0, y: 50 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
@@ -286,13 +287,23 @@ const PricingCalendar = () => {
       className="py-20 px-4"
     >
       <div className="max-w-4xl mx-auto">
+        {/* Section Title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-3xl sm:text-4xl lg:text-5xl font-cottage italic tracking-wide text-brand-dark underline mb-12 text-center"
+        >
+          {t("services.title")}
+        </motion.h2>
+
         {/* Large centered Price Container */}
         <motion.div
           initial={{ scale: 0.9 }}
           animate={{
-            scale: isPriceSelected ? 1.12 : 1,
+            scale: isPriceSelected ? 1.06 : 1,
           }}
-          whileHover={{ scale: isPriceSelected ? 1.12 : 1.1 }}
+          whileHover={{ scale: isPriceSelected ? 1.06 : 1.03 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
           onClick={handlePriceSelect}
           className={`bg-white rounded-lg shadow-sm border-2 py-12 px-5 mb-8 text-center max-w-xs mx-auto font-sans cursor-pointer transition-all duration-700 ${
@@ -594,7 +605,7 @@ const PricingCalendar = () => {
                     {selectedDate ? (
                       <div>
                         <p className="text-sm font-normal text-gray-600 mb-4 text-center">
-                          {formatDateForDisplay(selectedDate)}
+                          {formatDateForDisplay(selectedDate, t, language)}
                         </p>
 
                         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -724,7 +735,7 @@ const PricingCalendar = () => {
                       selectedDate && selectedTimeSlot ? { scale: 0.95 } : {}
                     }
                     animate={{
-                      opacity: selectedDate && selectedTimeSlot ? 1 : 0.3, // More gray when uninteractable
+                      opacity: selectedDate && selectedTimeSlot ? 1 : 0.3, // Gray when uninteractable
                       cursor:
                         selectedDate && selectedTimeSlot
                           ? "pointer"
@@ -866,7 +877,7 @@ const PricingCalendar = () => {
                 }}
                 className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white relative overflow-hidden"
               >
-                <span>
+                <span className="relative z-10">
                   {selectedDate && selectedTimeSlot && selectedPaymentMethod
                     ? t("pricing.payment.confirmPayment")
                     : !(selectedDate && selectedTimeSlot)
@@ -874,15 +885,15 @@ const PricingCalendar = () => {
                     : t("pricing.payment.selectPaymentMethod")}
                 </span>
 
-                {/* Animated Wallet Icon - slides in from right edge when payment method is selected */}
+                {/* Animated Wallet Icon - slides in from text end when payment method is selected */}
                 {selectedDate && selectedTimeSlot && selectedPaymentMethod && (
                   <motion.img
                     src={WalletArrowIcon}
                     alt="Proceed"
-                    className="w-20 h-5 absolute"
-                    initial={{ x: "100%", opacity: 0 }}
-                    animate={{ x: "calc(100% + 32px)", opacity: 1 }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="w-5 h-5 ml-2 relative z-10"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                   />
                 )}
 

@@ -39,3 +39,4 @@
     - Added Pricing & Reservation section
 - 31.07.2025
     - Added User Review Section
+    - Made some fixes to UI as per customer request

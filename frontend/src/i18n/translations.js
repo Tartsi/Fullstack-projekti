@@ -8,13 +8,16 @@ export const translations = {
         "Ammattitaitoinen auton sisäsiivous samalla, kun keskityt työhösi. Palaat kotiin puhtaalla autolla.",
       cta: "Varaa Siivous",
       scrollText: "Lue Lisää",
+      login: "Kirjaudu Sisään",
     },
     // Header
     nav: {
       services: "Palvelut",
+      process: "Prosessi",
       about: "Tietoa",
       order: "Tilaa",
       contact: "Yhteystiedot",
+      login: "Kirjaudu sisään",
     },
     // Footer
     footer: {
@@ -35,15 +38,15 @@ export const translations = {
     // About section
     about: {
       title: "Mitä on WOCUUMING?",
-      description1:
-        "WOCUUMING eli Workday-Vacuuming on nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana!",
-      description2:
-        "Samalla, kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
-      description3:
-        "Palaat töistä raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen.",
+      description:
+        "WOCUUMING eli Workday-Vacuuming on nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Samalla, kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.\n\nPalaat töistä raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
       valueProposition:
         "Siivoamme autosi sisätilat työpäivän aikana – jotta voit ajaa kotiin puhtaalla autolla.",
       imagePlaceholder: "Siivouspalvelu työssä",
+    },
+    // Services section
+    services: {
+      title: "Palvelut",
     },
     // Explanation/Process section
     explanation: {
@@ -177,13 +180,16 @@ export const translations = {
         "Professional car interior cleaning while you focus on work. Return home with a clean car.",
       cta: "Book Cleaning",
       scrollText: "Learn More",
+      login: "Log In",
     },
     // Header
     nav: {
       services: "Services",
+      process: "Process",
       about: "About",
       order: "Order",
       contact: "Contact",
+      login: "Log in",
     },
     // Footer
     footer: {
@@ -204,15 +210,15 @@ export const translations = {
     // About section
     about: {
       title: "What is WOCUUMING?",
-      description1:
-        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday!",
-      description2:
-        "While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
-      description3:
-        "Return from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car.",
+      description:
+        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.\n\nReturn from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
       valueProposition:
         "We clean your car interior during your workday – so you can drive home in a clean car.",
       imagePlaceholder: "Cleaning service at work",
+    },
+    // Services section
+    services: {
+      title: "Services",
     },
     // Explanation/Process section
     explanation: {

@@ -68,18 +68,46 @@ const Header = () => {
    * Enhanced scroll to the about section using centralized utility
    */
   const scrollToAbout = useCallback(() => {
-    const aboutSection = document.getElementById("about");
-    if (aboutSection) {
-      scrollAnimations.medium("about");
-    }
+    scrollAnimations.medium("about");
+  }, []);
+
+  /**
+   * Scroll to the explanation section (process)
+   */
+  const scrollToProcess = useCallback(() => {
+    scrollAnimations.medium("explanation");
+  }, []);
+
+  /**
+   * Scroll to the services section (pricing calendar) with proper positioning
+   * Shows the services title and makes pricing selectable while keeping reviews visible
+   */
+  const scrollToServices = useCallback(() => {
+    scrollAnimations.medium("pricing");
+  }, []);
+
+  /**
+   * Scroll to the contact section (footer)
+   */
+  const scrollToContact = useCallback(() => {
+    scrollAnimations.medium("footer");
+  }, []);
+
+  /**
+   * Login function placeholder
+   */
+  const handleLogin = useCallback(() => {
+    // TODO: Implement login functionality
+    console.log("Login clicked");
   }, []);
 
   // Navigation items to reduce repetition
   const navItems = [
+    { key: "login", onClick: handleLogin, separated: true },
     { key: "about", onClick: scrollToAbout },
-    { key: "services", onClick: null },
-    { key: "order", onClick: null },
-    { key: "contact", onClick: null },
+    { key: "process", onClick: scrollToProcess },
+    { key: "order", onClick: scrollToServices },
+    { key: "contact", onClick: scrollToContact },
   ];
 
   // Common CSS classes for hover effects
@@ -97,22 +125,29 @@ const Header = () => {
           isScrolled ? "py-3" : "py-5"
         }`}
       >
-        {/* Language Selector - Left */}
+        {/* Language Selector */}
         <div
-          className="flex items-center"
+          className="flex items-center relative"
           onMouseEnter={() => setIsLanguageHovered(true)}
           onMouseLeave={() => setIsLanguageHovered(false)}
         >
+          {/* Hover Zone for Language Menu */}
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 left-0 w-80 h-16 transition-all duration-700 z-40 ${
+              isLanguageHovered ? "pointer-events-auto" : "pointer-events-none"
+            }`}
+          />
+
           {/* Language Hover Menu */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 left-0 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700
+            className={`absolute top-1/2 -translate-y-1/2 left-16 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
                                             ${
                                               isLanguageHovered
                                                 ? "opacity-100 translate-x-0"
                                                 : "opacity-0 -translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 sm:px-4 md:px-5 lg:px-6 py-4 text-black pl-16 sm:pl-18 md:pl-22 lg:pl-24">
+            <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg">
               {languageOptions.map((option) => (
                 <div
                   key={option.code}
@@ -162,30 +197,38 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Navigation Menu - Right */}
+        {/* Navigation Menu*/}
         <div
-          className="flex items-center"
+          className="flex items-center relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Hover Zone for Hamburger Menu */}
+          <div
+            className={`absolute top-1/2 -translate-y-1/2 right-0 w-96 h-16 transition-all duration-700 z-40 ${
+              isHovered ? "pointer-events-auto" : "pointer-events-none"
+            }`}
+          />
+
           {/* Hover-menu */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-0 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700
+            className={`absolute top-1/2 -translate-y-1/2 right-12 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
                                             ${
                                               isHovered
                                                 ? "opacity-100 translate-x-0"
                                                 : "opacity-0 translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 sm:px-4 md:px-5 lg:px-6 py-4 text-black pr-16 sm:pr-18 md:pr-20 lg:pr-24">
-              {navItems.map((item) => (
-                <span
-                  key={item.key}
-                  onClick={item.onClick}
-                  className={navItemClasses}
-                >
-                  {t(`nav.${item.key}`)}
-                </span>
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg">
+              {navItems.map((item, index) => (
+                <React.Fragment key={item.key}>
+                  {item.separated && index > 0 && (
+                    <div className="w-px h-6 bg-black mx-2"></div>
+                  )}
+                  <span onClick={item.onClick} className={navItemClasses}>
+                    {t(`nav.${item.key}`)}
+                  </span>
+                </React.Fragment>
               ))}
             </div>
           </div>
