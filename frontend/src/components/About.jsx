@@ -81,36 +81,16 @@ const About = () => {
           {t("about.title")}
         </h2>
 
-        {/* Description paragraphs */}
-        <div className="max-w-3xl mx-auto mb-8 space-y-4">
+        {/* Description */}
+        <div className="max-w-3xl mx-auto mb-8">
           <p
-            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-1000 delay-[700ms] ${
+            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-1000 delay-[700ms] whitespace-pre-line ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
             }`}
           >
-            {t("about.description1")}
-          </p>
-
-          <p
-            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-1000 delay-[1050ms] ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
-          >
-            {t("about.description2")}
-          </p>
-
-          <p
-            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-1000 delay-[1400ms] ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
-          >
-            {t("about.description3")}
+            {t("about.description")}
           </p>
         </div>
 

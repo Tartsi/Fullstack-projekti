@@ -42,7 +42,7 @@ describe("Header Component", () => {
     fireEvent.mouseEnter(hamburger.parentElement);
 
     // Check if navigation links are visible
-    expect(screen.getByText("Palvelut")).toBeInTheDocument();
+    expect(screen.getByText("Prosessi")).toBeInTheDocument();
     expect(screen.getByText("Tietoa")).toBeInTheDocument();
     expect(screen.getByText("Tilaa")).toBeInTheDocument();
     expect(screen.getByText("Yhteystiedot")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("Header Component", () => {
     fireEvent.mouseLeave(menuContainer);
 
     // The links exist in DOM but are hidden with opacity-0
-    const services = screen.getByText("Palvelut");
+    const services = screen.getByText("Prosessi");
     expect(services).toBeInTheDocument();
     // Check if the parent container has opacity-0 class
     expect(services.closest(".opacity-0")).toBeInTheDocument();

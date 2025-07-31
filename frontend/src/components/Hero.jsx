@@ -46,6 +46,35 @@ const Hero = () => {
     }
   }, []);
 
+  /**
+   * Scroll to the explanation section (process)
+   */
+  const scrollToProcess = useCallback(() => {
+    scrollAnimations.medium("explanation");
+  }, []);
+
+  /**
+   * Scroll to the services section (pricing calendar)
+   */
+  const scrollToServices = useCallback(() => {
+    scrollAnimations.medium("pricing");
+  }, []);
+
+  /**
+   * Scroll to the contact section (footer)
+   */
+  const scrollToContact = useCallback(() => {
+    scrollAnimations.medium("footer");
+  }, []);
+
+  /**
+   * Login function placeholder
+   */
+  const handleLogin = useCallback(() => {
+    // TODO: Implement login functionality
+    console.log("Login clicked");
+  }, []);
+
   useEffect(() => {
     // Trigger entrance animation after component mounts
     const timer = setTimeout(() => setIsVisible(true), 200);
@@ -134,24 +163,58 @@ const Hero = () => {
           {t("hero.subheading")}
         </p>
 
-        {/* Learn More Button */}
+        {/* Action Buttons */}
         <div
           className={`transition-all duration-1000 delay-1100 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <button
-            onClick={scrollToContent}
-            className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
-            hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-transparent hover:border-brand-neon cursor-pointer"
-          >
-            <span className="flex items-center space-x-2">
-              <span>{t("hero.scrollText")}</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">
-                →
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+            <button
+              onClick={scrollToContent}
+              className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
+              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-transparent hover:border-brand-neon cursor-pointer"
+            >
+              <span className="flex items-center space-x-2">
+                <span>{t("hero.scrollText")}</span>
+                <span className="group-hover:translate-x-1 transition-transform duration-300">
+                  →
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+
+            <button
+              onClick={handleLogin}
+              className="group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
+              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer"
+            >
+              <span className="flex items-center space-x-2">
+                <span>{t("hero.login")}</span>
+              </span>
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="flex justify-center items-center space-x-6 sm:space-x-8 md:space-x-12">
+            <button
+              onClick={scrollToProcess}
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+            >
+              {t("nav.process")}
+            </button>
+            <button
+              onClick={scrollToServices}
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+            >
+              {t("nav.order")}
+            </button>
+            <button
+              onClick={scrollToContact}
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+            >
+              {t("nav.contact")}
+            </button>
+          </div>
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ describe("Hero Component", () => {
         <Hero />
       </LanguageProvider>
     );
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByText("Lue Lisää")).toBeInTheDocument();
   });
 
   it("renders the main headline", () => {
@@ -44,8 +44,8 @@ describe("Hero Component", () => {
         <Hero />
       </LanguageProvider>
     );
-    const learnMoreButton = screen.getByRole("button");
-    expect(learnMoreButton).toHaveTextContent("Lue Lisää");
+    const learnMoreButton = screen.getByText("Lue Lisää");
+    expect(learnMoreButton).toBeInTheDocument();
   });
 
   it("renders the company brand name", () => {
@@ -72,7 +72,7 @@ describe("Hero Component", () => {
         <Hero />
       </LanguageProvider>
     );
-    const heroSection = screen.getByRole("button").closest("section");
+    const heroSection = document.querySelector("section");
     expect(heroSection).toHaveClass(
       "relative",
       "min-h-screen",
@@ -88,7 +88,7 @@ describe("Hero Component", () => {
         <Hero />
       </LanguageProvider>
     );
-    const learnMoreButton = screen.getByRole("button");
+    const learnMoreButton = screen.getByText("Lue Lisää").closest("button");
     expect(learnMoreButton).toHaveClass(
       "hover:bg-brand-dark",
       "hover:scale-105",
@@ -102,7 +102,7 @@ describe("Hero Component", () => {
         <Hero />
       </LanguageProvider>
     );
-    const learnMoreButton = screen.getByRole("button");
+    const learnMoreButton = screen.getByText("Lue Lisää").closest("button");
     expect(learnMoreButton).toHaveClass("cursor-pointer");
   });
 

@@ -38,7 +38,7 @@ const Footer = () => {
     "flex flex-col items-center hover:scale-110 transform transition-transform duration-300 opacity-70 hover:opacity-100";
 
   return (
-    <footer className="text-black py-8 font-light">
+    <footer id="footer" className="text-black py-8 font-light">
       <div className="max-w-screen-xl mx-auto px-8">
         {/* Large Centered Contact Header */}
         <div className="text-center mb-4">
@@ -81,8 +81,10 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-xs tracking-wide opacity-60 border-t border-gray-200 font-body pt-4">
-          © {new Date().getFullYear()} {t("footer.copyright")}
+        <div className="text-center">
+          <div className="inline-block text-xs tracking-wide opacity-60 border-t border-black font-body pt-4">
+            © {new Date().getFullYear()} {t("footer.copyright")}
+          </div>
         </div>
       </div>
     </footer>
