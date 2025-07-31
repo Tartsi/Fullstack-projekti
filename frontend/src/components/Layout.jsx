@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import About from "./About";
 import Explanation from "./Explanation";
 import PricingCalendar from "./PricingCalendar";
+import UserReviewSection from "./UserReviewSection";
 import Footer from "./Footer";
 
 /**
@@ -34,6 +35,7 @@ const Layout = ({ children }) => {
       <Hero />
       <About />
       <Explanation />
+      <UserReviewSection />
       <PricingCalendar />
       {/* Main content area for future components */}
       <main className="flex-1">{children}</main>

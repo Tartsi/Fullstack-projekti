@@ -157,6 +157,11 @@ export const translations = {
         selectPaymentMethod: "Valitse Maksutapa",
       },
     },
+    // Reviews section
+    reviews: {
+      headline: "Wocuuming pelasti päiväni!",
+      overall: "Kokonaisarvosana",
+    },
     // Main content
     content: {
       welcome: "Tervetuloa",
@@ -321,6 +326,11 @@ export const translations = {
         selectDateTime: "Select Date and Time",
         selectPaymentMethod: "Select Payment Method",
       },
+    },
+    // Reviews section
+    reviews: {
+      headline: "Wocuuming polished my day!",
+      overall: "Overall Rating",
     },
     // Main content
     content: {
