@@ -37,3 +37,5 @@
     - Large scale animation changes to the site, Header changes. A lot of bug fixes and scaling changes which ate up my time...
 - 30.07.2025
     - Added Pricing & Reservation section
+- 31.07.2025
+    - Added User Review Section
