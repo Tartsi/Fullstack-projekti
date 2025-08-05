@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 65 hours
+## Total hours: 67 hours
 
 ###  Large review number #1 15.07.2025 (Through port-forwarding)
 - Total hours with customer: 3 hours
@@ -43,3 +43,7 @@
 - 31.07.2025:
     - 3 hours: Started and finished User Review Section. Included are animation, scalability, testing and designing.
     - 2 hours: Made some UI improvements as per customer request
+- 04.08.2025
+    - 1 hour: Added new PricingCalendar-component Service-option
+- 05.08.2025
+    - 1 hour: Fix animation bug, Change Calendar-animation + fix scrolling animation to bottom sections on large screens, update terms & conditions
