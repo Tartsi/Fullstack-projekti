@@ -154,7 +154,7 @@ export const translations = {
         },
         helpTooltip: "Maksuehdot",
         helpContent:
-          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta viimeistään 24 h ennen varattua aikaa.\n• Alle 24 h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
+          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
         confirmPayment: "Vahvista Maksu",
         selectDateTime: "Valitse Päivä ja Aika",
         selectPaymentMethod: "Valitse Maksutapa",
@@ -327,7 +327,7 @@ export const translations = {
         },
         helpTooltip: "Payment Terms",
         helpContent:
-          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge up to 24 hours before the scheduled time.\n• For cancellations less than 24 hours in advance, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
+          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
         confirmPayment: "Confirm Payment",
         selectDateTime: "Select Date and Time",
         selectPaymentMethod: "Select Payment Method",

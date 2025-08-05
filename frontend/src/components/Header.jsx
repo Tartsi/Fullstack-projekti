@@ -81,16 +81,27 @@ const Header = () => {
   /**
    * Scroll to the services section (pricing calendar) with proper positioning
    * Shows the services title and makes pricing selectable while keeping reviews visible
+   * Uses ultra-slow scrolling on large screens for better UX
    */
   const scrollToServices = useCallback(() => {
-    scrollAnimations.medium("pricing");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("pricing");
+    } else {
+      scrollAnimations.medium("pricing");
+    }
   }, []);
 
   /**
-   * Scroll to the contact section (footer)
+   * Scroll to the contact section (footer) with ultra-slow animation on large screens
    */
   const scrollToContact = useCallback(() => {
-    scrollAnimations.medium("footer");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("footer");
+    } else {
+      scrollAnimations.medium("footer");
+    }
   }, []);
 
   /**

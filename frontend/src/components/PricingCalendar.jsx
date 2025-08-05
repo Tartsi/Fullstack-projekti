@@ -126,17 +126,23 @@ const PricingCalendar = () => {
     setCurrentWeekStart(getWeekStart(today));
   }, []);
 
-  // Intersection Observer: Trigger animations when 90% of component is visible
+  // Intersection Observer: Trigger animations with 0.5 s delay
   useEffect(() => {
+    let timerId;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Stop observing once triggered to prevent re-animations
+          timerId = setTimeout(() => {
+            setIsVisible(true);
+          }, 500);
+
+          observer.disconnect();
         }
       },
       {
-        threshold: 0.9, // Trigger when 90% of the section is visible
+        threshold: 0.1, // Trigger when 10% of the section is visible
+        rootMargin: "0px 0px -100px 0px", // Trigger when element is 100px from bottom of viewport
       }
     );
 
@@ -144,7 +150,10 @@ const PricingCalendar = () => {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timerId) clearTimeout(timerId);
+    };
   }, []);
 
   // Initialize placeholder data (TODO: Replace with API call)
@@ -526,7 +535,7 @@ const PricingCalendar = () => {
                 initial={{ opacity: 0, scaleY: 0 }}
                 animate={{ opacity: 1, scaleY: 1 }}
                 exit={{ opacity: 0, scaleY: 0 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
                 className={`bg-white rounded-lg shadow-md p-4 mt-16 max-w-md mx-auto font-sans border-2 transition-all duration-700 ${
                   isPriceSelected ? "border-black shadow-lg" : "border-gray-400"
                 }`}
