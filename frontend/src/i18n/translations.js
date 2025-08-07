@@ -33,6 +33,13 @@ export const translations = {
         instagram: "Instagram",
         tiktok: "TikTok",
       },
+      contactUs: {
+        title: "Ota Yhteyttä",
+        placeholder: "Kirjoita viestisi tähän (max 150 merkkiä)",
+        submit: "Lähetä",
+        success: "Viesti lähetetty onnistuneesti!",
+        error: "Viestin lähetys epäonnistui. Yritä uudelleen.",
+      },
       copyright: "Workday-Vacuumers. Kaikki oikeudet pidätetään.",
     },
     // About section
@@ -206,6 +213,13 @@ export const translations = {
         github: "GitHub",
         instagram: "Instagram",
         tiktok: "TikTok",
+      },
+      contactUs: {
+        title: "Contact Us",
+        placeholder: "Write your message here (max 150 characters)",
+        submit: "Send",
+        success: "Message sent successfully!",
+        error: "Failed to send message. Please try again.",
       },
       copyright: "Workday-Vacuumers. All rights reserved.",
     },
