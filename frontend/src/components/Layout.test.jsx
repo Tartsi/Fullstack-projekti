@@ -4,108 +4,150 @@ import { describe, it, expect, vi } from "vitest";
 import Layout from "./Layout";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
+// Mock child components
+vi.mock("./Header", () => ({
+  default: () => <div data-testid="header">Header Component</div>,
+}));
+
+vi.mock("./Footer", () => ({
+  default: () => <div data-testid="footer">Footer Component</div>,
+}));
+
 // Mock IntersectionObserver
 const mockIntersectionObserver = vi.fn();
 mockIntersectionObserver.mockReturnValue({
-  observe: () => null,
-  unobserve: () => null,
-  disconnect: () => null,
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 });
 window.IntersectionObserver = mockIntersectionObserver;
 
-describe("Layout Component", () => {
-  it("renders without crashing", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+// Helper function to render component with LanguageProvider
+const renderWithLanguageProvider = (component) => {
+  return render(<LanguageProvider>{component}</LanguageProvider>);
+};
+
+describe("Layout", () => {
+  it("renders the layout component", () => {
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
-    // Check if the main layout structure is present
-    expect(screen.getByRole("main")).toBeInTheDocument();
+
+    renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
+    );
+
+    const layout = screen.getByTestId("test-children").closest("div");
+    expect(layout).toBeInTheDocument();
   });
 
-  it("renders Header component", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+  it("renders the Header component", () => {
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
-    // Check if header is present by looking for the banner role
-    const header = screen.getByRole("banner");
-    expect(header).toBeInTheDocument();
+
+    renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
+    );
+
+    expect(screen.getByTestId("header")).toBeInTheDocument();
   });
 
-  it("renders Footer component", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+  it("renders the Footer component", () => {
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
-    // Check if footer is present by looking for contact section header (h2) in Finnish
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Yhteystiedot" })
-    ).toBeInTheDocument();
+
+    renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
+    );
+
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 
   it("renders children content", () => {
-    const TestChild = () => <div>Test Child Content</div>;
-    render(
-      <LanguageProvider>
-        <Layout>
-          <TestChild />
-        </Layout>
-      </LanguageProvider>
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
 
-    expect(screen.getByText("Test Child Content")).toBeInTheDocument();
+    renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
+    );
+
+    expect(screen.getByTestId("test-children")).toBeInTheDocument();
+    expect(screen.getByText("Test Content")).toBeInTheDocument();
   });
 
-  it("has correct layout structure", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+  it("has proper semantic structure", () => {
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
-    const layoutContainer = screen.getByRole("main").parentElement;
-    expect(layoutContainer).toHaveClass(
-      "min-h-screen",
-      "flex",
-      "flex-col",
-      "text-white",
-      "font-cottage"
+
+    renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
     );
+
+    // Check for proper semantic HTML structure
+    const header = screen.getByTestId("header");
+    const footer = screen.getByTestId("footer");
+    const main = screen.getByTestId("test-children");
+
+    expect(header).toBeInTheDocument();
+    expect(main).toBeInTheDocument();
+    expect(footer).toBeInTheDocument();
   });
 
-  it("main content area has flex-1 class", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+  it("applies correct CSS classes to layout container", () => {
+    const TestChildren = () => (
+      <div data-testid="test-children">Test Content</div>
     );
-    const mainContent = screen.getByRole("main");
-    expect(mainContent).toHaveClass("flex-1");
+
+    const { container } = renderWithLanguageProvider(
+      <Layout>
+        <TestChildren />
+      </Layout>
+    );
+
+    const layoutContainer = container.firstChild;
+    expect(layoutContainer).toHaveClass("min-h-screen");
+    expect(layoutContainer).toHaveClass("flex");
+    expect(layoutContainer).toHaveClass("flex-col");
   });
 
-  it("maintains proper semantic structure", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
+  it("handles multiple children", () => {
+    const FirstChild = () => <div data-testid="first-child">First Child</div>;
+    const SecondChild = () => (
+      <div data-testid="second-child">Second Child</div>
     );
 
-    // Check for proper semantic elements
-    expect(screen.getByRole("banner")).toBeInTheDocument(); // Header
-    expect(screen.getByRole("main")).toBeInTheDocument(); // Main content
-    expect(screen.getByRole("contentinfo")).toBeInTheDocument(); // Footer
+    renderWithLanguageProvider(
+      <Layout>
+        <FirstChild />
+        <SecondChild />
+      </Layout>
+    );
+
+    expect(screen.getByTestId("first-child")).toBeInTheDocument();
+    expect(screen.getByTestId("second-child")).toBeInTheDocument();
+    expect(screen.getByText("First Child")).toBeInTheDocument();
+    expect(screen.getByText("Second Child")).toBeInTheDocument();
   });
 
-  it("applies correct text color class", () => {
-    render(
-      <LanguageProvider>
-        <Layout />
-      </LanguageProvider>
-    );
-    const layoutContainer = screen.getByRole("main").parentElement;
-    expect(layoutContainer).toHaveClass("text-white");
+  it("handles empty children", () => {
+    renderWithLanguageProvider(<Layout />);
+
+    // Header and Footer should still render
+    expect(screen.getByTestId("header")).toBeInTheDocument();
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 });

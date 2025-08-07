@@ -127,6 +127,7 @@ const Header = () => {
 
   return (
     <header
+      role="banner"
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       } text-black`}
