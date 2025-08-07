@@ -40,3 +40,11 @@
 - 31.07.2025
     - Added User Review Section
     - Made some fixes to UI as per customer request
+- 04.08.2025
+    - Add Another Service-option to PricingCalendar-component
+- 05.08.2025
+    - Fix animation bug, Change Calendar-animation + fix scrolling animation to bottom sections on large screens, update terms & conditions
+- 06.08.2025
+    - Fix About-section width
+- 07.08.2025
+    - Add Contact-us form to Footer-component + Add tests to new features

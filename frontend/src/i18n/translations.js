@@ -33,13 +33,22 @@ export const translations = {
         instagram: "Instagram",
         tiktok: "TikTok",
       },
+      contactUs: {
+        title: "Ota Yhteyttä",
+        placeholder: "Kirjoita viestisi tähän (max 150 merkkiä)",
+        submit: "Lähetä",
+        success: "Viesti lähetetty onnistuneesti!",
+        error: "Viestin lähetys epäonnistui. Yritä uudelleen.",
+      },
       copyright: "Workday-Vacuumers. Kaikki oikeudet pidätetään.",
     },
     // About section
     about: {
       title: "Mitä on WOCUUMING?",
-      description:
-        "WOCUUMING eli Workday-Vacuuming on nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Samalla, kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.\n\nPalaat töistä raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
+      descriptionFirst:
+        "Nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
+      descriptionSecond:
+        "Palaat raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
       valueProposition:
         "Siivoamme autosi sisätilat työpäivän aikana – jotta voit ajaa kotiin puhtaalla autolla.",
       imagePlaceholder: "Siivouspalvelu työssä",
@@ -154,7 +163,7 @@ export const translations = {
         },
         helpTooltip: "Maksuehdot",
         helpContent:
-          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta viimeistään 24 h ennen varattua aikaa.\n• Alle 24 h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
+          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
         confirmPayment: "Vahvista Maksu",
         selectDateTime: "Valitse Päivä ja Aika",
         selectPaymentMethod: "Valitse Maksutapa",
@@ -205,13 +214,22 @@ export const translations = {
         instagram: "Instagram",
         tiktok: "TikTok",
       },
+      contactUs: {
+        title: "Contact Us",
+        placeholder: "Write your message here (max 150 characters)",
+        submit: "Send",
+        success: "Message sent successfully!",
+        error: "Failed to send message. Please try again.",
+      },
       copyright: "Workday-Vacuumers. All rights reserved.",
     },
     // About section
     about: {
       title: "What is WOCUUMING?",
-      description:
-        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.\n\nReturn from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
+      descriptionFirst:
+        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
+      descriptionSecond:
+        "Return from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
       valueProposition:
         "We clean your car interior during your workday – so you can drive home in a clean car.",
       imagePlaceholder: "Cleaning service at work",
@@ -327,7 +345,7 @@ export const translations = {
         },
         helpTooltip: "Payment Terms",
         helpContent:
-          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge up to 24 hours before the scheduled time.\n• For cancellations less than 24 hours in advance, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
+          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
         confirmPayment: "Confirm Payment",
         selectDateTime: "Select Date and Time",
         selectPaymentMethod: "Select Payment Method",

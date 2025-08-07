@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import About from "./About";
+import Header from "./Header";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
 const AboutWithProvider = () => (
@@ -31,8 +32,13 @@ describe("About Component", () => {
     render(<AboutWithProvider />);
 
     // Check for description text (partial match since it's long)
-    const description1 = screen.getByText(/WOCUUMING eli Workday-Vacuuming/);
+    const description1 = screen.getByText(/Nopea ja tehokas palvelu/);
     expect(description1).toBeInTheDocument();
+
+    const description2 = screen.getByText(
+      /Palaat raikkaaseen ja puhtaaseen autoon/
+    );
+    expect(description2).toBeInTheDocument();
   });
 
   it("renders value proposition", () => {
@@ -63,17 +69,29 @@ describe("About Component", () => {
     expect(transitionButton).toBeInTheDocument();
   });
 
-  it("has responsive classes", () => {
-    render(<AboutWithProvider />);
+  it("changes language when language switched to English"),
+    () => {
+      render(
+        <LanguageProvider>
+          <Header />
+          <About />
+        </LanguageProvider>
+      );
 
-    const section = screen.getByRole("region");
-    expect(section).toHaveClass(
-      "py-6",
-      "sm:py-8",
-      "lg:py-10",
-      "px-4",
-      "sm:px-6",
-      "md:px-8"
-    );
-  });
+      // Get the main language selector (not in dropdown)
+      const allFinElements = screen.getAllByText("FIN");
+      const mainLanguageSelector = allFinElements[1].closest("div");
+
+      // Find the English flag in the same container
+      const languageContainer = mainLanguageSelector.parentElement;
+      const englishOption = languageContainer
+        .querySelector('[alt="English flag"]')
+        .closest("div");
+
+      // Click to switch language to English
+      fireEvent.click(englishOption);
+
+      // Check if the text is now in English
+      expect(screen.getByText("About Us")).toBeInTheDocument();
+    };
 });

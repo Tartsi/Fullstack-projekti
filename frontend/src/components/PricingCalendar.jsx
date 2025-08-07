@@ -30,6 +30,9 @@ import CreditCardIcon from "../assets/icons/credit-card-svgrepo-com.svg";
 import MobilepayIcon from "../assets/icons/mobilepay-svgrepo-com.svg";
 import ThinkingIcon from "../assets/icons/thinking-consider-ponder-think-svgrepo-com.svg";
 import WalletArrowIcon from "../assets/icons/wallet-arrow-right-svgrepo-com.svg";
+import LeftArrowIcon from "../assets/icons/left-arrow-svgrepo-com.svg";
+import RightArrowIcon from "../assets/icons/right-arrow-svgrepo-com.svg";
+import UndoIcon from "../assets/icons/undo-left-svgrepo-com.svg";
 
 /**
  * PricingCalendar - Booking interface component
@@ -109,6 +112,10 @@ const PricingCalendar = () => {
   const [showPaymentTooltip, setShowPaymentTooltip] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Service selection state
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
+  const [selectedServiceIndex, setSelectedServiceIndex] = useState(null);
+
   // Refs for cleanup and DOM manipulation
   const timeoutRef = useRef(null);
   const sectionRef = useRef(null);
@@ -119,17 +126,23 @@ const PricingCalendar = () => {
     setCurrentWeekStart(getWeekStart(today));
   }, []);
 
-  // Intersection Observer: Trigger animations when 90% of component is visible
+  // Intersection Observer: Trigger animations with 0.5 s delay
   useEffect(() => {
+    let timerId;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Stop observing once triggered to prevent re-animations
+          timerId = setTimeout(() => {
+            setIsVisible(true);
+          }, 500);
+
+          observer.disconnect();
         }
       },
       {
-        threshold: 0.9, // Trigger when 90% of the section is visible
+        threshold: 0.1, // Trigger when 10% of the section is visible
+        rootMargin: "0px 0px -100px 0px", // Trigger when element is 100px from bottom of viewport
       }
     );
 
@@ -137,7 +150,10 @@ const PricingCalendar = () => {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timerId) clearTimeout(timerId);
+    };
   }, []);
 
   // Initialize placeholder data (TODO: Replace with API call)
@@ -219,6 +235,7 @@ const PricingCalendar = () => {
    * Handle price container selection to start booking flow
    */
   const handlePriceSelect = () => {
+    setSelectedServiceIndex(currentServiceIndex);
     setIsPriceSelected(true);
     // Clear any existing timeout to prevent memory leaks
     if (timeoutRef.current) {
@@ -228,6 +245,35 @@ const PricingCalendar = () => {
     timeoutRef.current = setTimeout(() => {
       setShowDateSection(true);
     }, 100);
+  };
+
+  /**
+   * Handle service navigation
+   */
+  const handlePreviousService = () => {
+    if (selectedServiceIndex === null) {
+      setCurrentServiceIndex(currentServiceIndex === 0 ? 1 : 0);
+    }
+  };
+
+  const handleNextService = () => {
+    if (selectedServiceIndex === null) {
+      setCurrentServiceIndex(currentServiceIndex === 1 ? 0 : 1);
+    }
+  };
+
+  /**
+   * Handle undo selection
+   */
+  const handleUndoSelection = () => {
+    setSelectedServiceIndex(null);
+    setIsPriceSelected(false);
+    setShowDateSection(false);
+    setShowTimeSection(false);
+    setShowPaymentSection(false);
+    setSelectedDate(null);
+    setSelectedTimeSlot(null);
+    setSelectedPaymentMethod(null);
   };
 
   /**
@@ -276,6 +322,48 @@ const PricingCalendar = () => {
     };
   }, []);
 
+  // Service options data
+  const services = [
+    {
+      title: t("services.title"),
+      price: t("pricing.price"),
+      vatIncluded: t("pricing.vatIncluded"),
+      perCleaning: t("pricing.perCleaning"),
+      explanation: t("pricing.explanation"),
+      services: [
+        {
+          icon: VacuumCleanerIcon,
+          label: t("pricing.services.vacuuming"),
+        },
+        { icon: WipingIcon, label: t("pricing.services.wiping") },
+        {
+          icon: TintingIcon,
+          label: t("pricing.services.windowCleaning"),
+        },
+        { icon: CarSeatIcon, label: t("pricing.services.seatCleaning") },
+      ],
+    },
+    {
+      title: t("services.title"),
+      price: "19.99€",
+      vatIncluded: t("pricing.vatIncluded"),
+      perCleaning: t("pricing.perCleaning"),
+      explanation: t("pricing.explanation"),
+      services: [
+        {
+          icon: VacuumCleanerIcon,
+          label: "TBD",
+        },
+        { icon: WipingIcon, label: "TBD" },
+        {
+          icon: TintingIcon,
+          label: "TBD",
+        },
+        { icon: CarSeatIcon, label: "TBD" },
+      ],
+    },
+  ];
+
   return (
     <motion.section
       ref={sectionRef}
@@ -294,22 +382,106 @@ const PricingCalendar = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-3xl sm:text-4xl lg:text-5xl font-cottage italic tracking-wide text-brand-dark underline mb-12 text-center"
         >
-          {t("services.title")}
+          {services[currentServiceIndex].title}
         </motion.h2>
+
+        {/* Navigation Controls */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={
+            isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
+          }
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="flex justify-center items-center gap-8 mb-8"
+        >
+          {/* Left Arrow */}
+          <motion.button
+            onClick={handlePreviousService}
+            disabled={selectedServiceIndex !== null}
+            initial={{ opacity: 1 }}
+            animate={{
+              opacity: selectedServiceIndex !== null ? 0.3 : 1,
+              cursor: selectedServiceIndex !== null ? "not-allowed" : "pointer",
+            }}
+            whileHover={
+              selectedServiceIndex === null
+                ? { scale: 1.1, backgroundColor: "#f3f4f6" }
+                : {}
+            }
+            whileTap={selectedServiceIndex === null ? { scale: 0.95 } : {}}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-brand-dark"
+          >
+            <img
+              src={LeftArrowIcon}
+              alt="Previous service"
+              className="w-6 h-6"
+            />
+          </motion.button>
+
+          {/* Undo Button */}
+          <motion.button
+            onClick={handleUndoSelection}
+            disabled={selectedServiceIndex === null}
+            initial={{ opacity: 0.3, scale: 0.8 }}
+            animate={{
+              opacity: selectedServiceIndex !== null ? 1 : 0.3,
+              scale: selectedServiceIndex !== null ? 1 : 0.8,
+              cursor: selectedServiceIndex !== null ? "pointer" : "not-allowed",
+            }}
+            whileHover={
+              selectedServiceIndex !== null
+                ? { scale: 1.1, backgroundColor: "#fef2f2" }
+                : {}
+            }
+            whileTap={selectedServiceIndex !== null ? { scale: 0.95 } : {}}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-b-neutral-500"
+          >
+            <img src={UndoIcon} alt="Undo selection" className="w-6 h-6" />
+          </motion.button>
+
+          {/* Right Arrow */}
+          <motion.button
+            onClick={handleNextService}
+            disabled={selectedServiceIndex !== null}
+            initial={{ opacity: 1 }}
+            animate={{
+              opacity: selectedServiceIndex !== null ? 0.3 : 1,
+              cursor: selectedServiceIndex !== null ? "not-allowed" : "pointer",
+            }}
+            whileHover={
+              selectedServiceIndex === null
+                ? { scale: 1.1, backgroundColor: "#f3f4f6" }
+                : {}
+            }
+            whileTap={selectedServiceIndex === null ? { scale: 0.95 } : {}}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-brand-dark"
+          >
+            <img src={RightArrowIcon} alt="Next service" className="w-6 h-6" />
+          </motion.button>
+        </motion.div>
 
         {/* Large centered Price Container */}
         <motion.div
-          initial={{ scale: 0.9 }}
+          key={currentServiceIndex} // Force re-render when service changes
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{
             scale: isPriceSelected ? 1.06 : 1,
+            opacity: 1,
           }}
           whileHover={{ scale: isPriceSelected ? 1.06 : 1.03 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          onClick={handlePriceSelect}
-          className={`bg-white rounded-lg shadow-sm border-2 py-12 px-5 mb-8 text-center max-w-xs mx-auto font-sans cursor-pointer transition-all duration-700 ${
-            isPriceSelected
-              ? "border-black shadow-lg"
-              : "border-gray-300 hover:border-black hover:shadow-md"
+          transition={{ duration: 1, ease: "easeInOut" }}
+          onClick={currentServiceIndex === 0 ? handlePriceSelect : undefined}
+          className={`bg-white rounded-lg shadow-sm border-2 py-12 px-5 mb-8 text-center max-w-xs mx-auto font-sans transition-all duration-700 ${
+            currentServiceIndex === 0
+              ? `cursor-pointer ${
+                  isPriceSelected
+                    ? "border-black shadow-lg"
+                    : "border-gray-300 hover:border-black hover:shadow-md"
+                }`
+              : "cursor-not-allowed border-gray-400 opacity-75"
           }`}
           style={{
             fontFamily: "Arial, sans-serif",
@@ -317,16 +489,16 @@ const PricingCalendar = () => {
         >
           <div className="p-2 mb-4 bg-gray-100 mx-auto w-1/2 border-2 border-black rounded-b-2xl">
             <h2 className="text-lg font-normal text-gray-800 mb-2 underline">
-              {t("pricing.title")}
+              {currentServiceIndex === 0 ? t("pricing.title") : "TBD"}
             </h2>
             <div className="text-4xl text-gray-900 mb-1 font-bold">
-              {t("pricing.price")}
+              {services[currentServiceIndex].price}
             </div>
             <p className="text-sm text-gray-600 font-normal">
-              {t("pricing.vatIncluded")}
+              {services[currentServiceIndex].vatIncluded}
             </p>
             <p className="text-sm text-gray-600 font-normal underline">
-              {t("pricing.perCleaning")}
+              {services[currentServiceIndex].perCleaning}
             </p>
           </div>
 
@@ -335,33 +507,27 @@ const PricingCalendar = () => {
 
           {/* Explanation on its own line + underline */}
           <p className="text-gray-600 text-lg font-normal underline mb-4">
-            {t("pricing.explanation")}
+            {services[currentServiceIndex].explanation}
           </p>
 
           {/* Services list */}
           <div className="space-y-2">
-            {[
-              {
-                icon: VacuumCleanerIcon,
-                label: t("pricing.services.vacuuming"),
-              },
-              { icon: WipingIcon, label: t("pricing.services.wiping") },
-              {
-                icon: TintingIcon,
-                label: t("pricing.services.windowCleaning"),
-              },
-              { icon: CarSeatIcon, label: t("pricing.services.seatCleaning") },
-            ].map(({ icon, label }) => (
-              <div key={label} className="flex items-start space-x-4">
-                <img src={icon} alt="" className="w-14 h-6 flex-shrink-0" />
-                <p className="text-gray-600 text-lg font-normal">{label}</p>
-              </div>
-            ))}
+            {services[currentServiceIndex].services.map(
+              ({ icon, label }, index) => (
+                <div
+                  key={`${currentServiceIndex}-${index}`}
+                  className="flex items-start space-x-4"
+                >
+                  <img src={icon} alt="" className="w-14 h-6 flex-shrink-0" />
+                  <p className="text-gray-600 text-lg font-normal">{label}</p>
+                </div>
+              )
+            )}
           </div>
         </motion.div>
 
         {/* Date Selection Calendar */}
-        {isPriceSelected && (
+        {isPriceSelected && selectedServiceIndex === 0 && (
           <AnimatePresence initial={false}>
             {showDateSection && (
               <motion.div
@@ -369,7 +535,7 @@ const PricingCalendar = () => {
                 initial={{ opacity: 0, scaleY: 0 }}
                 animate={{ opacity: 1, scaleY: 1 }}
                 exit={{ opacity: 0, scaleY: 0 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
                 className={`bg-white rounded-lg shadow-md p-4 mt-16 max-w-md mx-auto font-sans border-2 transition-all duration-700 ${
                   isPriceSelected ? "border-black shadow-lg" : "border-gray-400"
                 }`}
@@ -662,257 +828,265 @@ const PricingCalendar = () => {
         )}
 
         {/* Payment Section - Animate in when date is selected */}
-        {isPriceSelected && showPaymentSection && (
-          <motion.div
-            initial={{ opacity: 0, y: -50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.9 }}
-            transition={{
-              duration: 1.44,
-              ease: "easeOut",
-              delay: 0.2,
-            }}
-            className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md mx-auto border-2 transition-all duration-700 font-sans ${
-              selectedDate && selectedTimeSlot
-                ? "border-black shadow-lg"
-                : "border-gray-100"
-            }`}
-            style={{
-              fontFamily: "Arial, sans-serif",
-            }}
-          >
+        {isPriceSelected &&
+          selectedServiceIndex === 0 &&
+          showPaymentSection && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 1.64 }}
+              initial={{ opacity: 0, y: -50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -50, scale: 0.9 }}
+              transition={{
+                duration: 1.44,
+                ease: "easeOut",
+                delay: 0.2,
+              }}
+              className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md mx-auto border-2 transition-all duration-700 font-sans ${
+                selectedDate && selectedTimeSlot
+                  ? "border-black shadow-lg"
+                  : "border-gray-100"
+              }`}
+              style={{
+                fontFamily: "Arial, sans-serif",
+              }}
             >
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                  {t("pricing.payment.title")}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  {t("pricing.payment.subtitle")}
-                </p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 1.64 }}
+              >
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                    {t("pricing.payment.title")}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {t("pricing.payment.subtitle")}
+                  </p>
+                </div>
 
-              {/* Payment Method Selection */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[
-                  {
-                    id: "card",
-                    label: t("pricing.payment.methods.card"),
-                    icon: CreditCardIcon,
-                  },
-                  {
-                    id: "mobilepay",
-                    label: t("pricing.payment.methods.mobilepay"),
-                    icon: MobilepayIcon,
-                  },
-                  {
-                    id: "bank",
-                    label: t("pricing.payment.methods.bank"),
-                    icon: BankIcon,
-                  },
-                  {
-                    id: "cash",
-                    label: t("pricing.payment.methods.cash"),
-                    icon: CashIcon,
-                  },
-                ].map((method) => (
+                {/* Payment Method Selection */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {[
+                    {
+                      id: "card",
+                      label: t("pricing.payment.methods.card"),
+                      icon: CreditCardIcon,
+                    },
+                    {
+                      id: "mobilepay",
+                      label: t("pricing.payment.methods.mobilepay"),
+                      icon: MobilepayIcon,
+                    },
+                    {
+                      id: "bank",
+                      label: t("pricing.payment.methods.bank"),
+                      icon: BankIcon,
+                    },
+                    {
+                      id: "cash",
+                      label: t("pricing.payment.methods.cash"),
+                      icon: CashIcon,
+                    },
+                  ].map((method) => (
+                    <motion.button
+                      key={method.id}
+                      onClick={() =>
+                        selectedDate && selectedTimeSlot
+                          ? handlePaymentMethodSelect(method.id)
+                          : null
+                      }
+                      disabled={!(selectedDate && selectedTimeSlot)}
+                      initial={{ scale: 1 }}
+                      whileHover={
+                        selectedDate && selectedTimeSlot ? { scale: 1.05 } : {}
+                      }
+                      whileTap={
+                        selectedDate && selectedTimeSlot ? { scale: 0.95 } : {}
+                      }
+                      animate={{
+                        opacity: selectedDate && selectedTimeSlot ? 1 : 0.3, // Gray when uninteractable
+                        cursor:
+                          selectedDate && selectedTimeSlot
+                            ? "pointer"
+                            : "not-allowed",
+                      }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-center ${
+                        selectedPaymentMethod === method.id &&
+                        selectedDate &&
+                        selectedTimeSlot
+                          ? "border-brand-dark bg-brand-dark/10 text-brand-dark"
+                          : selectedDate && selectedTimeSlot
+                          ? "border-gray-200 hover:border-brand-dark/50 text-gray-600"
+                          : "border-gray-300 text-gray-400"
+                      }`}
+                    >
+                      <img
+                        src={method.icon}
+                        alt={method.label}
+                        className="w-8 h-8 mx-auto mb-2"
+                      />
+                      <div className="text-sm font-medium">{method.label}</div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/*  Help Tooltip  */}
+                <motion.div className="relative mb-6">
+                  {/* Toggle Button (Arrow)*/}
                   <motion.button
-                    key={method.id}
+                    type="button"
                     onClick={() =>
                       selectedDate && selectedTimeSlot
-                        ? handlePaymentMethodSelect(method.id)
+                        ? setShowPaymentTooltip(!showPaymentTooltip)
                         : null
                     }
                     disabled={!(selectedDate && selectedTimeSlot)}
-                    initial={{ scale: 1 }}
-                    whileHover={
-                      selectedDate && selectedTimeSlot ? { scale: 1.05 } : {}
-                    }
-                    whileTap={
-                      selectedDate && selectedTimeSlot ? { scale: 0.95 } : {}
-                    }
-                    animate={{
-                      opacity: selectedDate && selectedTimeSlot ? 1 : 0.3, // Gray when uninteractable
-                      cursor:
-                        selectedDate && selectedTimeSlot
-                          ? "pointer"
-                          : "not-allowed",
-                    }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className={`p-4 rounded-xl border-2 transition-all duration-300 text-center ${
-                      selectedPaymentMethod === method.id &&
-                      selectedDate &&
-                      selectedTimeSlot
-                        ? "border-brand-dark bg-brand-dark/10 text-brand-dark"
-                        : selectedDate && selectedTimeSlot
-                        ? "border-gray-200 hover:border-brand-dark/50 text-gray-600"
-                        : "border-gray-300 text-gray-400"
-                    }`}
+                    className="w-full text-left text-sm text-brand-dark hover:text-brand-dark/80 transition-colors duration-200 flex items-center justify-between p-2"
                   >
-                    <img
-                      src={method.icon}
-                      alt={method.label}
-                      className="w-8 h-8 mx-auto mb-2"
-                    />
-                    <div className="text-sm font-medium">{method.label}</div>
+                    <span className="flex items-center">
+                      <motion.div layout className="w-4 h-4 mr-2">
+                        <img
+                          src={ThinkingIcon}
+                          alt="Help"
+                          className="w-4 h-4"
+                        />
+                      </motion.div>
+                      <motion.span layout>
+                        {t("pricing.payment.helpTooltip")}
+                      </motion.span>
+                    </span>
+                    <motion.span
+                      animate={{ rotate: showPaymentTooltip ? 180 : 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                    >
+                      ▼
+                    </motion.span>
                   </motion.button>
-                ))}
-              </div>
 
-              {/*  Help Tooltip  */}
-              <motion.div className="relative mb-6">
-                {/* Toggle Button (Arrow)*/}
+                  {/* Animated container + delayed text */}
+                  <motion.div
+                    animate={showPaymentTooltip ? "expanded" : "collapsed"}
+                    variants={{
+                      collapsed: {
+                        height: 0,
+                        opacity: 0,
+                        marginTop: 0,
+                        transition: { duration: 0.7, ease: "easeInOut" },
+                      },
+                      expanded: {
+                        height: "auto",
+                        opacity: 1,
+                        marginTop: 12,
+                        transition: {
+                          duration: 0.9,
+                          ease: "easeInOut",
+                          when: "beforeChildren",
+                        },
+                      },
+                    }}
+                    className="overflow-hidden mt-3 rounded-lg bg-gray-50"
+                    style={{
+                      pointerEvents: showPaymentTooltip ? "auto" : "none",
+                    }}
+                  >
+                    <motion.p
+                      animate={
+                        showPaymentTooltip
+                          ? { opacity: 1, y: 0 }
+                          : { opacity: 0, y: 8 }
+                      }
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="p-4 text-sm text-gray-600 whitespace-pre-line"
+                    >
+                      {t("pricing.payment.helpContent")}
+                    </motion.p>
+                  </motion.div>
+                </motion.div>
+
+                {/*  Payment Confirmation Button  */}
                 <motion.button
-                  type="button"
-                  onClick={() =>
-                    selectedDate && selectedTimeSlot
-                      ? setShowPaymentTooltip(!showPaymentTooltip)
+                  layout
+                  onClick={
+                    selectedDate && selectedTimeSlot && selectedPaymentMethod
+                      ? handlePaymentConfirmation
                       : null
                   }
-                  disabled={!(selectedDate && selectedTimeSlot)}
-                  className="w-full text-left text-sm text-brand-dark hover:text-brand-dark/80 transition-colors duration-200 flex items-center justify-between p-2"
+                  disabled={
+                    !(selectedDate && selectedTimeSlot && selectedPaymentMethod)
+                  }
+                  initial={{ scale: 1 }}
+                  whileHover={
+                    selectedDate && selectedTimeSlot && selectedPaymentMethod
+                      ? { scale: 1.05 }
+                      : {}
+                  }
+                  whileTap={
+                    selectedDate && selectedTimeSlot && selectedPaymentMethod
+                      ? { scale: 0.95 }
+                      : {}
+                  }
+                  animate={{
+                    backgroundColor:
+                      selectedDate && selectedTimeSlot && selectedPaymentMethod
+                        ? "#2563eb"
+                        : "#9ca3af",
+                    opacity: selectedDate && selectedTimeSlot ? 1 : 0.4,
+                    cursor:
+                      selectedDate && selectedTimeSlot && selectedPaymentMethod
+                        ? "pointer"
+                        : "not-allowed",
+                  }}
+                  transition={{
+                    layout: {
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 30,
+                      bounce: 0,
+                    },
+                    backgroundColor: { duration: 1.2, ease: "easeInOut" },
+                    opacity: { duration: 1.2, ease: "easeInOut" },
+                    scale: { duration: 0.4, ease: "easeOut" },
+                  }}
+                  className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white relative overflow-hidden"
                 >
-                  <span className="flex items-center">
-                    <motion.div layout className="w-4 h-4 mr-2">
-                      <img src={ThinkingIcon} alt="Help" className="w-4 h-4" />
-                    </motion.div>
-                    <motion.span layout>
-                      {t("pricing.payment.helpTooltip")}
-                    </motion.span>
+                  <span className="relative z-10">
+                    {selectedDate && selectedTimeSlot && selectedPaymentMethod
+                      ? t("pricing.payment.confirmPayment")
+                      : !(selectedDate && selectedTimeSlot)
+                      ? t("pricing.payment.selectDateTime")
+                      : t("pricing.payment.selectPaymentMethod")}
                   </span>
-                  <motion.span
-                    animate={{ rotate: showPaymentTooltip ? 180 : 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                  >
-                    ▼
-                  </motion.span>
+
+                  {/* Animated Wallet Icon - slides in from text end when payment method is selected */}
+                  {selectedDate &&
+                    selectedTimeSlot &&
+                    selectedPaymentMethod && (
+                      <motion.img
+                        src={WalletArrowIcon}
+                        alt="Proceed"
+                        className="w-5 h-5 ml-2 relative z-10"
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                      />
+                    )}
+
+                  {/* Lock Icon for disabled state */}
+                  {!(
+                    selectedDate &&
+                    selectedTimeSlot &&
+                    selectedPaymentMethod
+                  ) && (
+                    <img
+                      src={LockSlashIcon}
+                      alt="Locked"
+                      className="w-5 h-5 ml-6"
+                    />
+                  )}
                 </motion.button>
-
-                {/* Animated container + delayed text */}
-                <motion.div
-                  animate={showPaymentTooltip ? "expanded" : "collapsed"}
-                  variants={{
-                    collapsed: {
-                      height: 0,
-                      opacity: 0,
-                      marginTop: 0,
-                      transition: { duration: 0.7, ease: "easeInOut" },
-                    },
-                    expanded: {
-                      height: "auto",
-                      opacity: 1,
-                      marginTop: 12,
-                      transition: {
-                        duration: 0.9,
-                        ease: "easeInOut",
-                        when: "beforeChildren",
-                      },
-                    },
-                  }}
-                  className="overflow-hidden mt-3 rounded-lg bg-gray-50"
-                  style={{
-                    pointerEvents: showPaymentTooltip ? "auto" : "none",
-                  }}
-                >
-                  <motion.p
-                    animate={
-                      showPaymentTooltip
-                        ? { opacity: 1, y: 0 }
-                        : { opacity: 0, y: 8 }
-                    }
-                    transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="p-4 text-sm text-gray-600 whitespace-pre-line"
-                  >
-                    {t("pricing.payment.helpContent")}
-                  </motion.p>
-                </motion.div>
               </motion.div>
-
-              {/*  Payment Confirmation Button  */}
-              <motion.button
-                layout
-                onClick={
-                  selectedDate && selectedTimeSlot && selectedPaymentMethod
-                    ? handlePaymentConfirmation
-                    : null
-                }
-                disabled={
-                  !(selectedDate && selectedTimeSlot && selectedPaymentMethod)
-                }
-                initial={{ scale: 1 }}
-                whileHover={
-                  selectedDate && selectedTimeSlot && selectedPaymentMethod
-                    ? { scale: 1.05 }
-                    : {}
-                }
-                whileTap={
-                  selectedDate && selectedTimeSlot && selectedPaymentMethod
-                    ? { scale: 0.95 }
-                    : {}
-                }
-                animate={{
-                  backgroundColor:
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? "#2563eb"
-                      : "#9ca3af",
-                  opacity: selectedDate && selectedTimeSlot ? 1 : 0.4,
-                  cursor:
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? "pointer"
-                      : "not-allowed",
-                }}
-                transition={{
-                  layout: {
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 30,
-                    bounce: 0,
-                  },
-                  backgroundColor: { duration: 1.2, ease: "easeInOut" },
-                  opacity: { duration: 1.2, ease: "easeInOut" },
-                  scale: { duration: 0.4, ease: "easeOut" },
-                }}
-                className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white relative overflow-hidden"
-              >
-                <span className="relative z-10">
-                  {selectedDate && selectedTimeSlot && selectedPaymentMethod
-                    ? t("pricing.payment.confirmPayment")
-                    : !(selectedDate && selectedTimeSlot)
-                    ? t("pricing.payment.selectDateTime")
-                    : t("pricing.payment.selectPaymentMethod")}
-                </span>
-
-                {/* Animated Wallet Icon - slides in from text end when payment method is selected */}
-                {selectedDate && selectedTimeSlot && selectedPaymentMethod && (
-                  <motion.img
-                    src={WalletArrowIcon}
-                    alt="Proceed"
-                    className="w-5 h-5 ml-2 relative z-10"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                  />
-                )}
-
-                {/* Lock Icon for disabled state */}
-                {!(
-                  selectedDate &&
-                  selectedTimeSlot &&
-                  selectedPaymentMethod
-                ) && (
-                  <img
-                    src={LockSlashIcon}
-                    alt="Locked"
-                    className="w-5 h-5 ml-6"
-                  />
-                )}
-              </motion.button>
             </motion.div>
-          </motion.div>
-        )}
+          )}
       </div>
     </motion.section>
   );

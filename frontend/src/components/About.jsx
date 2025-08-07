@@ -20,6 +20,11 @@ import { scrollAnimations } from "../utils/scrollUtils";
 const About = () => {
   const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
+  const [isFirstDescVisible, setIsFirstDescVisible] = useState(false);
+  const [isFirstLineVisible, setIsFirstLineVisible] = useState(false);
+  const [isSecondDescVisible, setIsSecondDescVisible] = useState(false);
+  const [isSecondLineVisible, setIsSecondLineVisible] = useState(false);
+  const [isValuePropVisible, setIsValuePropVisible] = useState(false);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -40,11 +45,13 @@ const About = () => {
         if (entry.isIntersecting) {
           setIsVisible(true);
 
-          // Show arrow after Value Proposition animation completes
-          // Value Proposition delay is 1750ms + 1000ms duration = 2750ms
-          setTimeout(() => {
-            setIsArrowVisible(true);
-          }, 3000); // 250ms extra buffer for safety
+          // Staggered animation sequence
+          setTimeout(() => setIsFirstDescVisible(true), 500); // First description container
+          setTimeout(() => setIsFirstLineVisible(true), 1500); // First connecting line
+          setTimeout(() => setIsSecondDescVisible(true), 2000); // Second description container
+          setTimeout(() => setIsSecondLineVisible(true), 3000); // Second connecting line
+          setTimeout(() => setIsValuePropVisible(true), 3500); // Value proposition
+          setTimeout(() => setIsArrowVisible(true), 5000); // Arrow
 
           observer.disconnect(); // Stop observing once triggered
         }
@@ -81,28 +88,83 @@ const About = () => {
           {t("about.title")}
         </h2>
 
-        {/* Description */}
-        <div className="max-w-3xl mx-auto mb-8">
-          <p
-            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-1000 delay-[700ms] whitespace-pre-line ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
-          >
-            {t("about.description")}
-          </p>
-        </div>
-
-        {/* Value Proposition Highlight */}
+        {/* First Description Container */}
         <div
-          className={`p-4 sm:p-6 bg-white/80 rounded-lg border-l-4 border-brand-purple shadow-md max-w-2xl mx-auto transition-all duration-1000 delay-[1750ms] ${
-            isVisible
+          className={`p-6 sm:p-7 lg:p-1 rounded-lg max-w-2xl mx-auto mb-4 h-32 sm:h-28 lg:h-24 flex items-center transition-all duration-1000 ${
+            isFirstDescVisible
               ? "opacity-100 translate-y-0 scale-100"
               : "opacity-0 translate-y-8 scale-95"
           }`}
         >
-          <p className="text-lg sm:text-xl font-cottage italic text-brand-dark leading-relaxed">
+          <p
+            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
+              isFirstDescVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
+            {t("about.descriptionFirst")}
+          </p>
+        </div>
+
+        {/* First Connecting Line */}
+        <div className="flex justify-center mb-4">
+          <div
+            className={`w-0.5 h-8 bg- transition-all bg-brand-dark duration-800 ${
+              isFirstLineVisible
+                ? "opacity-100 scale-y-100"
+                : "opacity-0 scale-y-0"
+            }`}
+            style={{ transformOrigin: "top" }}
+          ></div>
+        </div>
+
+        {/* Second Description Container */}
+        <div
+          className={`p-6 sm:p-7 lg:p-10 rounded-lg max-w-2xl mx-auto mb-4 h-32 sm:h-28 lg:h-24 flex items-center transition-all duration-1000 ${
+            isSecondDescVisible
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-8 scale-95"
+          }`}
+        >
+          <p
+            className={`text-base sm:text-lg font-body text-gray-700 font-bold leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
+              isSecondDescVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
+            {t("about.descriptionSecond")}
+          </p>
+        </div>
+
+        {/* Second Connecting Line */}
+        <div className="flex justify-center mb-8">
+          <div
+            className={`w-0.5 h-8 bg-brand-dark transition-all duration-800 ${
+              isSecondLineVisible
+                ? "opacity-100 scale-y-100"
+                : "opacity-0 scale-y-0"
+            }`}
+            style={{ transformOrigin: "top" }}
+          ></div>
+        </div>
+
+        {/* Value Proposition Highlight */}
+        <div
+          className={`p-4 sm:p-6 bg-white rounded-lg border-l-4 border-brand-purple shadow-lg max-w-2xl mx-auto mb-8 transition-all duration-1000 ${
+            isValuePropVisible
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-8 scale-95"
+          }`}
+        >
+          <p
+            className={`text-lg sm:text-xl font-cottage italic text-brand-dark leading-relaxed transition-all duration-800 delay-500 ${
+              isValuePropVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
+          >
             "{t("about.valueProposition")}"
           </p>
         </div>

@@ -54,17 +54,27 @@ const Hero = () => {
   }, []);
 
   /**
-   * Scroll to the services section (pricing calendar)
+   * Scroll to the services section (pricing calendar) with ultra-slow animation on large screens
    */
   const scrollToServices = useCallback(() => {
-    scrollAnimations.medium("pricing");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("pricing");
+    } else {
+      scrollAnimations.medium("pricing");
+    }
   }, []);
 
   /**
-   * Scroll to the contact section (footer)
+   * Scroll to the contact section (footer) with ultra-slow animation on large screens
    */
   const scrollToContact = useCallback(() => {
-    scrollAnimations.medium("footer");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("footer");
+    } else {
+      scrollAnimations.medium("footer");
+    }
   }, []);
 
   /**
@@ -89,7 +99,10 @@ const Hero = () => {
   }, [handleScroll]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section
+      role="region"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
       {/* Main Hero Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         {/* Language Selector */}

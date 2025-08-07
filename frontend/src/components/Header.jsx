@@ -81,16 +81,27 @@ const Header = () => {
   /**
    * Scroll to the services section (pricing calendar) with proper positioning
    * Shows the services title and makes pricing selectable while keeping reviews visible
+   * Uses ultra-slow scrolling on large screens for better UX
    */
   const scrollToServices = useCallback(() => {
-    scrollAnimations.medium("pricing");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("pricing");
+    } else {
+      scrollAnimations.medium("pricing");
+    }
   }, []);
 
   /**
-   * Scroll to the contact section (footer)
+   * Scroll to the contact section (footer) with ultra-slow animation on large screens
    */
   const scrollToContact = useCallback(() => {
-    scrollAnimations.medium("footer");
+    // Use ultra-slow scrolling on large screens for better UX
+    if (window.innerHeight >= 1024) {
+      scrollAnimations.ultraSlow("footer");
+    } else {
+      scrollAnimations.medium("footer");
+    }
   }, []);
 
   /**
@@ -116,6 +127,7 @@ const Header = () => {
 
   return (
     <header
+      role="banner"
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
       } text-black`}
