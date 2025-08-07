@@ -38,8 +38,10 @@ export const translations = {
     // About section
     about: {
       title: "Mitä on WOCUUMING?",
-      description:
-        "WOCUUMING eli Workday-Vacuuming on nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Samalla, kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.\n\nPalaat töistä raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
+      descriptionFirst:
+        "Nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
+      descriptionSecond:
+        "Palaat raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
       valueProposition:
         "Siivoamme autosi sisätilat työpäivän aikana – jotta voit ajaa kotiin puhtaalla autolla.",
       imagePlaceholder: "Siivouspalvelu työssä",
@@ -210,8 +212,10 @@ export const translations = {
     // About section
     about: {
       title: "What is WOCUUMING?",
-      description:
-        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.\n\nReturn from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
+      descriptionFirst:
+        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
+      descriptionSecond:
+        "Return from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
       valueProposition:
         "We clean your car interior during your workday – so you can drive home in a clean car.",
       imagePlaceholder: "Cleaning service at work",
