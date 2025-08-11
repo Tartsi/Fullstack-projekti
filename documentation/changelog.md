@@ -48,3 +48,5 @@
     - Fix About-section width
 - 07.08.2025
     - Add Contact-us form to Footer-component + Add tests to new features
+- 11.08.2025
+    - Add initial Backend-setup + Database connection (Neon + Prisma), Start Fly-deployment

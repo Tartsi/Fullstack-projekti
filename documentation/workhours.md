@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 73 hours
+## Total hours: 77 hours
 
 ###  Large review number #1 15.07.2025 (Through port-forwarding)
 - Total hours with customer: 3 hours
@@ -52,3 +52,6 @@
 - 07.08.2025:
     - 1 hour: Contact-us section new form
     - 3 hours: Add new tests
+- 11.08.2025:
+    - 2 hour: Self-study related to new technologies
+    - 2 hours: Add initial Backend-setup + Database connection (Neon + Prisma), Start Fly-deployment
