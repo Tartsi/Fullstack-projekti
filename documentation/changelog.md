@@ -52,3 +52,4 @@
     - Add initial Backend-setup + Database connection (Neon + Prisma), Start Fly-deployment
 - 12.08.2025
     - Deploy the first version of the application into Fly.io
+    - Customer requested UI-changes + Bugfixes regarding menu-scaling on small screens (Font change on About-section, Explanation-section carousel rotation speed up, animated icon + text on Pricing Container)
