@@ -110,11 +110,11 @@ export const translations = {
       },
       calendar: {
         bookingInstructions:
-          "Varaa sinulle sopiva päivämäärä ja 2 tunnin kellonaika klo 9 – 17 väliltä, jona aikana siivous tapahtuu.",
+          "Varaa sinulle sopiva päivämäärä ja 2 tunnin kellonaika kello 9–17 väliltä, milloin siivous tapahtuu.",
         bookingNote:
-          "Huom! Aikaisin varaus on mahdollista kolmen päivän kulottua tilaushetkestä.",
-        selectDate: "Valitse Päivämäärä",
-        selectTimeSlot: "Valitse Aika",
+          "Huom! Aikaisin varaus on mahdollista kahden päivän päästä tästä päivästä.",
+        selectDate: "Valitse päivämäärä",
+        selectTimeSlot: "Valitse aika",
         legend: {
           fourSlots: "4 aikaa",
           threeSlots: "3 aikaa",
@@ -292,11 +292,11 @@ export const translations = {
       },
       calendar: {
         bookingInstructions:
-          "Book a suitable date and 2-hour time slot between 9 AM – 5 PM during which the cleaning will take place.",
+          "Book a suitable date and 2-hour time slot between 9AM–5PM during which the cleaning will take place.",
         bookingNote:
-          "Note! The earliest booking is possible three days after the order date.",
-        selectDate: "Select Date",
-        selectTimeSlot: "Select Time Slot",
+          "Note! The earliest booking is possible two days from today!",
+        selectDate: "Select date",
+        selectTimeSlot: "Select time",
         legend: {
           fourSlots: "4 slots",
           threeSlots: "3 slots",
