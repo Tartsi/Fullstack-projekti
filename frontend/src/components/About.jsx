@@ -97,7 +97,7 @@ const About = () => {
           }`}
         >
           <p
-            className={`text-base sm:text-lg font-body text-black leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
+            className={`text-base sm:text-lg font-body text-black italic leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
               isFirstDescVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"
@@ -128,7 +128,7 @@ const About = () => {
           }`}
         >
           <p
-            className={`text-base sm:text-lg font-body text-black leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
+            className={`text-base sm:text-lg font-body text-black italic leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
               isSecondDescVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"

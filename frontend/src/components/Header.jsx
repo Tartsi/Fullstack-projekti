@@ -29,6 +29,20 @@ const Header = () => {
   const { language, changeLanguage, t } = useLanguage();
 
   /**
+   * Toggle hamburger menu visibility
+   */
+  const toggleHamburgerMenu = useCallback(() => {
+    setIsHovered(!isHovered);
+  }, [isHovered]);
+
+  /**
+   * Toggle language menu visibility
+   */
+  const toggleLanguageMenu = useCallback(() => {
+    setIsLanguageHovered(!isLanguageHovered);
+  }, [isLanguageHovered]);
+
+  /**
    * Optimized scroll handler using useCallback to prevent unnecessary re-renders
    */
   const handleScroll = useCallback(() => {
@@ -121,9 +135,9 @@ const Header = () => {
     { key: "contact", onClick: scrollToContact },
   ];
 
-  // Common CSS classes for hover effects
+  // Common CSS classes for hover effects - Responsive text sizing
   const navItemClasses =
-    "block cursor-pointer hover:opacity-100 hover:scale-110 hover:underline opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-xs sm:text-xs md:text-sm";
+    "block cursor-pointer hover:opacity-100 hover:scale-110 hover:underline opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium text-[10px] xs:text-xs sm:text-xs md:text-sm";
 
   return (
     <header
@@ -150,9 +164,9 @@ const Header = () => {
             }`}
           />
 
-          {/* Language Hover Menu */}
+          {/* Language Hover Menu - Dropped by 3.5% */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 left-16 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
+            className={`absolute top-[53.5%] -translate-y-1/2 left-16 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
                                             ${
                                               isLanguageHovered
                                                 ? "opacity-100 translate-x-0"
@@ -185,6 +199,7 @@ const Header = () => {
 
           {/* Language Toggle Button */}
           <div
+            onClick={toggleLanguageMenu}
             className={`flex items-center space-x-1 text-xs sm:text-sm font-cottage italic hover:opacity-100 opacity-70 transition-all duration-200 cursor-pointer select-none ${
               isLanguageChanging
                 ? "scale-110 text-brand-purple opacity-100"
@@ -215,27 +230,27 @@ const Header = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Hover Zone for Hamburger Menu */}
+          {/* Hover Zone for Hamburger Menu - Responsive width */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-0 w-96 h-16 transition-all duration-700 z-40 ${
+            className={`absolute top-1/2 -translate-y-1/2 right-0 w-72 xs:w-80 sm:w-96 h-16 transition-all duration-700 z-40 ${
               isHovered ? "pointer-events-auto" : "pointer-events-none"
             }`}
           />
 
-          {/* Hover-menu */}
+          {/* Hover-menu - Responsive positioning and scaling */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-12 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
+            className={`absolute top-1/2 -translate-y-1/2 right-8 xs:right-10 sm:right-12 transition-all duration-700 z-50
                                             ${
                                               isHovered
                                                 ? "opacity-100 translate-x-0"
                                                 : "opacity-0 translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg">
+            <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-2 xs:px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg text-xs xs:text-xs sm:text-sm font-light tracking-wide uppercase">
               {navItems.map((item, index) => (
                 <React.Fragment key={item.key}>
                   {item.separated && index > 0 && (
-                    <div className="w-px h-6 bg-black mx-2"></div>
+                    <div className="w-px h-4 xs:h-5 sm:h-6 bg-black mx-1 xs:mx-2"></div>
                   )}
                   <span onClick={item.onClick} className={navItemClasses}>
                     {t(`nav.${item.key}`)}
@@ -246,7 +261,10 @@ const Header = () => {
           </div>
 
           {/* Hamburger-symbol */}
-          <div className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer select-none leading-none -mt-2 relative z-10">
+          <div
+            onClick={toggleHamburgerMenu}
+            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer select-none leading-none -mt-2 relative z-10"
+          >
             ≡
           </div>
         </div>
