@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { languageOptions } from "../utils/languageUtils";
 import { scrollAnimations } from "../utils/scrollUtils";
+import { testBackendConnection, checkBackendHealth } from "../services/login";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
 
@@ -23,6 +24,8 @@ const Hero = () => {
   const { t, language, changeLanguage } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState(null);
 
   /**
    * Optimized scroll handler using useCallback
@@ -78,11 +81,64 @@ const Hero = () => {
   }, []);
 
   /**
-   * Login function placeholder
+   * Login function that tests backend connection
    */
-  const handleLogin = useCallback(() => {
-    // TODO: Implement login functionality
-    console.log("Login clicked");
+  const handleLogin = useCallback(async () => {
+    setIsConnecting(true);
+    setConnectionStatus(null);
+
+    try {
+      // Test both login endpoint and health check
+      const [loginResult, healthResult] = await Promise.all([
+        testBackendConnection(),
+        checkBackendHealth(),
+      ]);
+
+      if (loginResult.success && healthResult.success) {
+        setConnectionStatus({
+          type: "success",
+          message: `✅ ${loginResult.data.message}`,
+          details: {
+            login: loginResult.data,
+            health: healthResult.data,
+            timestamp: new Date().toLocaleString(),
+          },
+        });
+
+        console.log("Backend connection test results:", {
+          login: loginResult,
+          health: healthResult,
+        });
+      } else {
+        setConnectionStatus({
+          type: "warning",
+          message: "⚠️ Partial connection issues detected",
+          details: {
+            loginSuccess: loginResult.success,
+            healthSuccess: healthResult.success,
+            loginMessage: loginResult.message,
+            healthMessage: healthResult.message,
+          },
+        });
+      }
+    } catch (error) {
+      setConnectionStatus({
+        type: "error",
+        message: "❌ Failed to connect to backend",
+        details: {
+          error: error.message,
+          timestamp: new Date().toLocaleString(),
+        },
+      });
+      console.error("Connection test failed:", error);
+    } finally {
+      setIsConnecting(false);
+
+      // Auto-clear status after 10 seconds
+      setTimeout(() => {
+        setConnectionStatus(null);
+      }, 10000);
+    }
   }, []);
 
   useEffect(() => {
@@ -198,14 +254,54 @@ const Hero = () => {
 
             <button
               onClick={handleLogin}
-              className="group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
-              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer"
+              disabled={isConnecting}
+              className={`group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
+              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer
+              ${
+                isConnecting
+                  ? "opacity-50 cursor-not-allowed transform-none hover:scale-100"
+                  : ""
+              }`}
             >
               <span className="flex items-center space-x-2">
-                <span>{t("hero.login")}</span>
+                <span>
+                  {isConnecting ? "Testing Connection..." : t("hero.login")}
+                </span>
+                {isConnecting && (
+                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                )}
               </span>
             </button>
           </div>
+
+          {/* Connection Status Display (TEMPORARY!)*/}
+          {connectionStatus && (
+            <div
+              className={`mb-6 mx-auto max-w-2xl p-4 rounded-lg shadow-lg transition-all duration-500 ${
+                connectionStatus.type === "success"
+                  ? "bg-green-100 border-2 border-green-500 text-green-800"
+                  : connectionStatus.type === "warning"
+                  ? "bg-yellow-100 border-2 border-yellow-500 text-yellow-800"
+                  : "bg-red-100 border-2 border-red-500 text-red-800"
+              }`}
+            >
+              <div className="text-center">
+                <p className="font-cottage text-lg mb-2">
+                  {connectionStatus.message}
+                </p>
+                {connectionStatus.details && (
+                  <details className="text-sm text-left cursor-pointer">
+                    <summary className="font-semibold hover:underline">
+                      View Details
+                    </summary>
+                    <pre className="mt-2 bg-white/50 p-2 rounded text-xs overflow-auto">
+                      {JSON.stringify(connectionStatus.details, null, 2)}
+                    </pre>
+                  </details>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Navigation Links */}
           <div className="flex justify-center items-center space-x-6 sm:space-x-8 md:space-x-12">

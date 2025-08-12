@@ -17,28 +17,19 @@ It is built with **React + Vite**, styled with **Tailwind CSS**, enhanced with *
 
 ---
 
-## Running the Project locally
+# Quick Setup Guide for Frontend
+
+# Clone the repository
 
 ```bash
-# Clone the repository
 git clone https://github.com/Tartsi/Fullstack-projekti
-
-# Navigate to the frontend-folder from the root
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start local dev server
-npm run dev
 ```
 
----
+# From the projects root-folder, change to frontend directory, install dependencies and run development server
+```bash
+cd frontend && npm install && npm run dev
+```
 
-## Linting & Formatting
-ESLint shipped via the Vite React template.
-
-Prettier for opinionated code formatting.
 ### Recommended VS Code Settings
 
 To ensure consistent formatting and linting, add the following settings to your `.vscode/settings.json` file:
@@ -54,7 +45,3 @@ To ensure consistent formatting and linting, add the following settings to your 
     }
 }
 ```
-
-## License
-For educational & portfolio purposes only.
-© 2025 Workday Vacuumers

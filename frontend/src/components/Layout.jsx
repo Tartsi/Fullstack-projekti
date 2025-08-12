@@ -6,6 +6,7 @@ import Explanation from "./Explanation";
 import PricingCalendar from "./PricingCalendar";
 import UserReviewSection from "./UserReviewSection";
 import Footer from "./Footer";
+import backgroundImage from "../assets/background/blob-scene-haikei.svg";
 
 /**
  * Layout component that serves as the main structure for the application.
@@ -23,14 +24,18 @@ import Footer from "./Footer";
  */
 const Layout = ({ children }) => {
   return (
-    <div
-      className="min-h-screen flex flex-col text-white font-cottage"
-      style={{
-        backgroundImage: `url('./src/assets/background/blob-scene-haikei.svg')`,
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <div className="min-h-screen flex flex-col text-white font-cottage">
+      {/* Background image */}
+      <img
+        src={backgroundImage}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none select-none fixed inset-0 -z-10 w-full h-full object-cover"
+        loading="eager"
+        decoding="async"
+      />
+
+      {/* Current Layout Structure */}
       <Header />
       <Hero />
       <About />

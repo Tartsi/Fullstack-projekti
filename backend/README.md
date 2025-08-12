@@ -25,33 +25,6 @@ A minimal, secure-by-default backend for the project. Final version provides ses
 * Neon account: [https://neon.tech](https://neon.tech) (free tier is enough)
 * Optional: Postman or curl for testing
 
-## Environment Variables
-
-Create a file named **`.env`** inside `backend/` with the following content. Replace placeholders with values from Neon’s dashboard.
-
-```ini
-# Runtime
-NODE_ENV=development
-PORT=4000
-
-# Frontend origins allowed by CORS (comma-separated)
-# In development Vite uses http://localhost:5173
-CORS_ORIGIN=http://localhost:5173
-
-# Database URLs from Neon
-DATABASE_URL="postgresql://<user>:<password>@<pooled-host>/<db>?sslmode=require&pgbouncer=true&connect_timeout=10&connection_limit=1"
-
-PRISMA_MIGRATION_URL="postgresql://<user>:<password>@<direct-host>/<db>?sslmode=require&connect_timeout=10"
-
-# Session secret: a long random string (at least 32 characters)
-SESSION_SECRET="your_random_secret"
-```
-
-**Why two URLs?**
-
-* **Application (DATABASE\_URL)** uses Neon’s connection pooler (PgBouncer) to keep connections low and stable.
-* **Migrations (PRISMA\_MIGRATION\_URL)** use a direct connection which is more reliable for schema changes.
-
 ---
 
 ## Database Setup (Neon)
