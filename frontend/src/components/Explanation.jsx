@@ -6,6 +6,12 @@ import React, {
   useMemo,
 } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
+import CalendarIcon from "../assets/icons/calendar-lines-pen-svgrepo-com.svg";
+import LocationIcon from "../assets/icons/location-place-pin-svgrepo-com.svg";
+import CarKeyIcon from "../assets/icons/car-key-svgrepo-com.svg";
+import CleaningServiceIcon from "../assets/icons/cleaning-service-svgrepo-com.svg";
+import CheckCircleIcon from "../assets/icons/check-circle-svgrepo-com.svg";
+import JoyIcon from "../assets/icons/joy-joyful-enjoy-svgrepo-com.svg";
 
 /**
  * Explanation component that displays a step-by-step process of how the WOCUUMING service works.
@@ -53,37 +59,37 @@ const Explanation = () => {
         const icons = [
           <img
             key="calendar"
-            src="/src/assets/icons/calendar-lines-pen-svgrepo-com.svg"
+            src={CalendarIcon}
             alt="Calendar"
             className="w-full h-full"
           />,
           <img
             key="location"
-            src="/src/assets/icons/location-place-pin-svgrepo-com.svg"
+            src={LocationIcon}
             alt="Location"
             className="w-full h-full"
           />,
           <img
             key="car-key"
-            src="/src/assets/icons/car-key-svgrepo-com.svg"
+            src={CarKeyIcon}
             alt="Car Key"
             className="w-full h-full"
           />,
           <img
             key="cleaning-service"
-            src="/src/assets/icons/cleaning-service-svgrepo-com.svg"
+            src={CleaningServiceIcon}
             alt="Cleaning Service"
             className="w-full h-full"
           />,
           <img
             key="check-circle"
-            src="/src/assets/icons/check-circle-svgrepo-com.svg"
+            src={CheckCircleIcon}
             alt="Check Circle"
             className="w-full h-full"
           />,
           <img
             key="joy-joyful"
-            src="/src/assets/icons/joy-joyful-enjoy-svgrepo-com.svg"
+            src={JoyIcon}
             alt="Joy"
             className="w-full h-full"
           />,
