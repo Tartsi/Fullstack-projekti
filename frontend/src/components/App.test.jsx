@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import App from "../App";
+import backgroundImage from "../assets/background/blob-scene-haikei.svg";
 
 describe("App Component", () => {
   it("renders without crashing", () => {
@@ -27,15 +28,18 @@ describe("App Component", () => {
     expect(header).toBeInTheDocument();
   });
 
-  it("has correct background styling", () => {
-    render(<App />);
-    const appContainer = screen.getByRole("main").parentElement;
-    expect(appContainer).toHaveClass("text-white", "font-cottage");
-    // Check for background image in style attribute
-    expect(appContainer).toHaveStyle(
-      "background-image: url('./src/assets/background/blob-scene-haikei.svg')"
-    );
-  });
+  it("has the correct background styling"),
+    () => {
+      render(<App />);
+      expect(screen.getByRole("main").parentElement).toHaveClass(
+        "text-white",
+        "font-cottage"
+      );
+      // Check for background image in style attribute
+      expect(screen.getByRole("main").parentElement).toHaveStyle(
+        `background-image: url(${backgroundImage})`
+      );
+    };
 
   it("renders contact section in footer", () => {
     render(<App />);
