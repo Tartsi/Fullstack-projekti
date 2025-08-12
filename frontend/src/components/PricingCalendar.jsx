@@ -33,6 +33,7 @@ import WalletArrowIcon from "../assets/icons/wallet-arrow-right-svgrepo-com.svg"
 import LeftArrowIcon from "../assets/icons/left-arrow-svgrepo-com.svg";
 import RightArrowIcon from "../assets/icons/right-arrow-svgrepo-com.svg";
 import UndoIcon from "../assets/icons/undo-left-svgrepo-com.svg";
+import ClickIcon from "../assets/icons/click-svgrepo-com.svg";
 
 /**
  * PricingCalendar - Booking interface component
@@ -487,7 +488,46 @@ const PricingCalendar = () => {
             fontFamily: "Arial, sans-serif",
           }}
         >
-          <div className="p-2 mb-4 bg-gray-100 mx-auto w-1/2 border-2 border-black rounded-b-2xl">
+          <div className="p-2 mb-4 bg-gray-100 mx-auto w-1/2 border-2 border-black rounded-b-2xl relative">
+            {/* Pulsating icon and text - only visible when service is selectable and not selected */}
+            <AnimatePresence>
+              {currentServiceIndex === 0 && !isPriceSelected && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ duration: 1.2 }}
+                  className="absolute -top-8 -right-18 flex items-center space-x-3"
+                >
+                  {/* Pulsating text - spread horizontally */}
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="font-cottage text-sm text-gray-800 italic whitespace-nowrap tracking-wider"
+                  >
+                    {language === "fi" ? "tilaa tästä" : "order here"}
+                  </motion.div>
+
+                  {/* Pulsating icon */}
+                  <motion.img
+                    src={ClickIcon}
+                    alt="Click here"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="w-5 h-5"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <h2 className="text-lg font-normal text-gray-800 mb-2 underline">
               {currentServiceIndex === 0 ? t("pricing.title") : "TBD"}
             </h2>

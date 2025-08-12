@@ -116,7 +116,7 @@ const Explanation = () => {
 
     intervalRef.current = setInterval(() => {
       setActiveStep((prevStep) => (prevStep + 1) % processSteps.length);
-    }, 7500); // Change every 7.5 seconds
+    }, 3000); // Change every 3 seconds (60% faster than 7.5 seconds)
   }, [processSteps.length]);
 
   // Start auto progression only after section becomes visible and animations complete

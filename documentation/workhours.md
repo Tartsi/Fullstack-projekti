@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 79 hours 30 minutes
+## Total hours: 80 hours 30 minutes
 
 ###  Large review number #1 15.07.2025 (Through port-forwarding)
 - Total hours with customer: 3 hours 30 minutes
@@ -57,3 +57,4 @@
     - 2 hours: Add initial Backend-setup + Database connection (Neon + Prisma), Start Fly-deployment
 - 12.08.2025:
     - 2 hours: Fly.io-deployment
+    - 1 hour: Customer requested UI-changes

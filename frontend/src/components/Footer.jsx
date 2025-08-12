@@ -202,7 +202,7 @@ const Footer = () => {
 
           {/* Vertical Separator Pillar - Only visible on large screens */}
           <div
-            className={`hidden lg:block w-px bg-black opacity-30 self-stretch min-h-[200px] transition-all duration-[1250ms] delay-[375ms] ${
+            className={`hidden lg:block w-px bg-black self-stretch min-h-[200px] transition-all duration-[1250ms] delay-[975ms] ${
               isVisible ? "opacity-30" : "opacity-0"
             }`}
           ></div>
