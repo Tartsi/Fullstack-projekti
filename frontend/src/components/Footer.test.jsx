@@ -26,7 +26,7 @@ describe("Footer Component", () => {
         <Footer />
       </LanguageProvider>
     );
-    expect(screen.getByText("Ota Yhteyttä")).toBeInTheDocument();
+    expect(screen.getByText("Anna palautetta")).toBeInTheDocument();
   });
 
   it("renders the contact information header", () => {
@@ -368,6 +368,6 @@ describe("Footer Component", () => {
     fireEvent.click(englishOption);
 
     // Check if language has changed
-    expect(screen.getByText("Contact Us")).toBeInTheDocument();
+    expect(screen.getByText("Feedback")).toBeInTheDocument();
   });
 });

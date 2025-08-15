@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { languageOptions } from "../utils/languageUtils";
 import { scrollAnimations } from "../utils/scrollUtils";
-import { testBackendConnection, checkBackendHealth } from "../services/login";
+import { checkBackendHealth } from "../services/users";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
 
@@ -88,25 +88,20 @@ const Hero = () => {
     setConnectionStatus(null);
 
     try {
-      // Test both login endpoint and health check
-      const [loginResult, healthResult] = await Promise.all([
-        testBackendConnection(),
-        checkBackendHealth(),
-      ]);
+      // health check
+      const healthResult = await checkBackendHealth();
 
-      if (loginResult.success && healthResult.success) {
+      if (healthResult.success) {
         setConnectionStatus({
           type: "success",
-          message: `✅ ${loginResult.data.message}`,
+          message: `✅ Health-check working!`,
           details: {
-            login: loginResult.data,
             health: healthResult.data,
             timestamp: new Date().toLocaleString(),
           },
         });
 
         console.log("Backend connection test results:", {
-          login: loginResult,
           health: healthResult,
         });
       } else {
@@ -114,9 +109,7 @@ const Hero = () => {
           type: "warning",
           message: "⚠️ Partial connection issues detected",
           details: {
-            loginSuccess: loginResult.success,
             healthSuccess: healthResult.success,
-            loginMessage: loginResult.message,
             healthMessage: healthResult.message,
           },
         });
@@ -133,7 +126,6 @@ const Hero = () => {
       console.error("Connection test failed:", error);
     } finally {
       setIsConnecting(false);
-
       // Auto-clear status after 10 seconds
       setTimeout(() => {
         setConnectionStatus(null);

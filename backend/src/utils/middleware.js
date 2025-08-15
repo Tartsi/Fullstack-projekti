@@ -1,0 +1,66 @@
+import logger from "./logger.js";
+
+// Request logging middleware
+export const requestLogger = (req, res, next) => {
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(
+      {
+        method: req.method,
+        url: req.url,
+        status: res.statusCode,
+        duration: `${duration}ms`,
+        userAgent: req.get("User-Agent"),
+        ip: req.ip,
+      },
+      "HTTP Request"
+    );
+  });
+
+  next();
+};
+
+// Error logging middleware
+export const errorLogger = (err, req, res, next) => {
+  logger.error(
+    {
+      error: err.message,
+      stack: err.stack,
+      method: req.method,
+      url: req.url,
+      ip: req.ip,
+    },
+    "Error occurred"
+  );
+
+  next(err);
+};
+
+// Authentication logging
+export const authLogger = {
+  loginAttempt: (username, ip) => {
+    logger.info({ username, ip }, "Login attempt");
+  },
+
+  loginSuccess: (username, ip) => {
+    logger.info({ username, ip }, "Login successful");
+  },
+
+  loginFailure: (username, ip, reason) => {
+    logger.warn({ username, ip, reason }, "Login failed");
+  },
+
+  logout: (username, ip) => {
+    logger.info({ username, ip }, "User logged out");
+  },
+
+  registration: (username, email, ip) => {
+    logger.info({ username, email, ip }, "User registered");
+  },
+
+  userDeleted: (username, ip) => {
+    logger.warn({ username, ip }, "User account deleted");
+  },
+};
