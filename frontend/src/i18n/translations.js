@@ -34,7 +34,7 @@ export const translations = {
         tiktok: "TikTok",
       },
       contactUs: {
-        title: "Ota Yhteyttä",
+        title: "Anna palautetta",
         placeholder: "Kirjoita viestisi tähän (max 150 merkkiä)",
         submit: "Lähetä",
         success: "Viesti lähetetty onnistuneesti!",
@@ -215,7 +215,7 @@ export const translations = {
         tiktok: "TikTok",
       },
       contactUs: {
-        title: "Contact Us",
+        title: "Feedback",
         placeholder: "Write your message here (max 150 characters)",
         submit: "Send",
         success: "Message sent successfully!",

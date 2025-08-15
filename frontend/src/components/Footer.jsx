@@ -70,7 +70,8 @@ const Footer = () => {
     "flex flex-col items-center hover:scale-110 transform transition-transform duration-[625ms] opacity-70 hover:opacity-100";
 
   // Check if submit button should be disabled
-  const isButtonDisabled = isSubmitting || !message.trim();
+  const isButtonDisabled =
+    isSubmitting || !message.trim() || submitStatus !== null;
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -88,12 +89,86 @@ const Footer = () => {
       return;
     }
 
-    // Basic XSS protection - remove potentially dangerous characters
+    // Enhanced XSS and injection protection
     const sanitizedMessage = trimmedMessage
+      // Remove script tags and their content (case insensitive)
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      // Remove all HTML tags
       .replace(/<[^>]*>/g, "")
+      // Remove javascript: protocol
       .replace(/javascript:/gi, "")
-      .replace(/on\w+\s*=/gi, "");
+      // Remove event handlers (onclick, onload, etc.)
+      .replace(/on\w+\s*=/gi, "")
+      // Remove data: protocol (potential for data URLs)
+      .replace(/data:/gi, "")
+      // Remove vbscript: protocol
+      .replace(/vbscript:/gi, "")
+      // Remove file: protocol
+      .replace(/file:/gi, "")
+      // Remove expression() CSS function
+      .replace(/expression\s*\(/gi, "")
+      // Remove @import CSS directive
+      .replace(/@import/gi, "")
+      // Remove url() CSS function
+      .replace(/url\s*\(/gi, "")
+      // Remove SQL injection keywords (basic protection)
+      .replace(
+        /\b(union|select|insert|update|delete|drop|create|alter|exec|execute)\b/gi,
+        ""
+      )
+      // Remove potential NoSQL injection patterns
+      .replace(/\$\w+/g, "")
+      // Remove potential template injection patterns
+      .replace(/\{\{.*\}\}/g, "")
+      .replace(/\$\{.*\}/g, "")
+      // Remove null bytes
+      .replace(/\0/g, "")
+      // Remove control characters except newlines and tabs
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+      // Limit consecutive special characters
+      .replace(/[!@#$%^&*()_+=\[\]{}|;':",./<>?`~]{4,}/g, "...")
+      // Remove potential path traversal attempts
+      .replace(/\.\./g, "");
+
+    // Additional validation: Check for suspicious patterns
+    const suspiciousPatterns = [
+      /eval\s*\(/i,
+      /function\s*\(/i,
+      /setTimeout\s*\(/i,
+      /setInterval\s*\(/i,
+      /alert\s*\(/i,
+      /confirm\s*\(/i,
+      /prompt\s*\(/i,
+      /document\./i,
+      /window\./i,
+      /location\./i,
+      /history\./i,
+      /navigator\./i,
+      /\.innerHTML/i,
+      /\.outerHTML/i,
+      /\.write/i,
+      /\.writeln/i,
+    ];
+
+    const containsSuspiciousContent = suspiciousPatterns.some((pattern) =>
+      pattern.test(sanitizedMessage)
+    );
+
+    if (containsSuspiciousContent) {
+      setSubmitStatus("error");
+      return;
+    }
+
+    // Check for excessive special characters or numbers (potential bot behavior)
+    const specialCharCount = (
+      sanitizedMessage.match(/[^a-zA-ZåäöÅÄÖ\s.,!?]/g) || []
+    ).length;
+    const totalLength = sanitizedMessage.length;
+
+    if (totalLength > 0 && specialCharCount / totalLength > 0.3) {
+      setSubmitStatus("error");
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitStatus(null);
@@ -110,6 +185,8 @@ const Footer = () => {
       setTimeout(() => setSubmitStatus(null), 3000);
     } catch (error) {
       setSubmitStatus("error");
+      // Clear error message after 3 seconds
+      setTimeout(() => setSubmitStatus(null), 3000);
     } finally {
       setIsSubmitting(false);
     }
@@ -130,10 +207,10 @@ const Footer = () => {
     <footer ref={sectionRef} id="footer" className="text-black py-8 font-light">
       <div className="max-w-screen-xl mx-auto px-8">
         {/* Main Content Container - Responsive Layout */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 lg:gap-12">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-center gap-8 lg:gap-6">
           {/* Contact Us Form - Left side on large screens, top on small screens */}
           <div
-            className={`flex-1 lg:max-w-md w-1/2 mx-auto lg:mx-0 transition-all duration-[1250ms] ${
+            className={`flex-1 lg:max-w-sm w-1/2 mx-auto lg:mx-0 lg:mr-3 transition-all duration-[1250ms] ${
               isVisible
                 ? "opacity-100 translate-y-0 lg:translate-x-0"
                 : "opacity-0 translate-y-8 lg:translate-x-[-50px]"
@@ -146,57 +223,109 @@ const Footer = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 w-full">
-              <div className="relative">
+              <div
+                className={`relative transition-all duration-1000 ease-in-out ${
+                  submitStatus
+                    ? "pointer-events-none select-none"
+                    : "pointer-events-auto select-auto"
+                }`}
+              >
+                {/* Overlay for grayed-out effect - only over textarea */}
+                <div
+                  className={`absolute inset-0 bg-gray-500 bg-opacity-50 rounded-lg z-10 flex items-center justify-center transition-all duration-1000 ease-in-out ${
+                    submitStatus ? "opacity-100 visible" : "opacity-0 invisible"
+                  }`}
+                  style={{ pointerEvents: submitStatus ? "all" : "none" }}
+                >
+                  {/* Status Message in center of textarea overlay */}
+                  <div
+                    className={`text-center text-lg font-medium transition-all duration-1000 ease-in-out transform ${
+                      submitStatus
+                        ? "opacity-100 scale-100 translate-y-0"
+                        : "opacity-0 scale-75 translate-y-4"
+                    } ${
+                      submitStatus === "success"
+                        ? "text-green-100 bg-green-600 bg-opacity-90"
+                        : "text-red-100 bg-red-600 bg-opacity-90"
+                    } px-6 py-4 rounded-lg shadow-lg border-2 ${
+                      submitStatus === "success"
+                        ? "border-green-300"
+                        : "border-red-300"
+                    }`}
+                  >
+                    {submitStatus === "success"
+                      ? t("footer.contactUs.success")
+                      : submitStatus === "error"
+                      ? t("footer.contactUs.error")
+                      : ""}
+                  </div>
+                </div>
+
                 <textarea
                   value={message}
                   onChange={handleMessageChange}
                   placeholder={t("footer.contactUs.placeholder")}
-                  className="w-full h-32 px-4 py-3 bg-gray-100 border-2 border-black rounded-lg resize-none 
+                  className={`w-full h-32 px-4 py-3 bg-gray-100 border-2 border-black rounded-lg resize-none 
                            focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent
-                           transition-all duration-[375ms] text-sm font-body
-                           placeholder:opacity-60 placeholder:italic"
-                  disabled={isSubmitting}
+                           transition-all duration-1000 text-sm font-body
+                           placeholder:opacity-60 placeholder:italic ${
+                             submitStatus ? "opacity-50" : "opacity-100"
+                           }`}
+                  disabled={isSubmitting || submitStatus !== null}
                 />
-                <div className="absolute bottom-2 right-2 text-xs opacity-60">
+                <div
+                  className={`absolute bottom-2 right-2 text-xs transition-opacity duration-1000 ${
+                    submitStatus ? "opacity-30" : "opacity-60"
+                  }`}
+                >
                   {message.length}/150
                 </div>
               </div>
 
+              {/* Submit button for feedback */}
               <button
                 type="submit"
-                disabled={isButtonDisabled}
-                className={`w-full py-3 px-6 bg-black text-white rounded-lg relative
-                         transition-all duration-[625ms] text-sm font-cottage tracking-wide uppercase
-                         ${
-                           !isButtonDisabled
-                             ? "hover:bg-gray-800 transform hover:scale-105"
-                             : "bg-gray-400 cursor-not-allowed"
-                         }`}
+                disabled={isButtonDisabled || submitStatus !== null}
+                className={`w-full py-3 px-6 rounded-lg relative
+                         transition-all duration-1500 ease-out text-sm font-cottage tracking-wide uppercase ${
+                           !isButtonDisabled && submitStatus === null
+                             ? "bg-blue-600 text-white hover:bg-brand-purple transform hover:scale-105 cursor-pointer"
+                             : "bg-gray-400 text-white cursor-not-allowed"
+                         } ${
+                  submitStatus
+                    ? "opacity-50 pointer-events-none"
+                    : "opacity-100"
+                }`}
               >
                 <span className="flex items-center justify-center">
                   {isSubmitting ? "..." : t("footer.contactUs.submit")}
                   <img
-                    src={isButtonDisabled ? lockSlashIcon : unlockIcon}
-                    alt={isButtonDisabled ? "Locked" : "Unlocked"}
-                    className="absolute right-3 w-4 h-4 transition-all duration-[375ms] filter invert"
+                    src={
+                      isButtonDisabled || submitStatus !== null
+                        ? lockSlashIcon
+                        : unlockIcon
+                    }
+                    alt={
+                      isButtonDisabled || submitStatus !== null
+                        ? "Locked"
+                        : "Unlocked"
+                    }
+                    className={`absolute right-3 w-4 h-4 filter invert transition-all duration-1500 ease-out ${
+                      !isButtonDisabled && submitStatus === null
+                        ? "animate-bounce"
+                        : ""
+                    }`}
+                    style={{
+                      animationDuration:
+                        isButtonDisabled || submitStatus !== null ? "0s" : "2s",
+                      animationIterationCount:
+                        isButtonDisabled || submitStatus !== null
+                          ? "0"
+                          : "infinite",
+                    }}
                   />
                 </span>
               </button>
-
-              {/* Status Messages */}
-              {submitStatus && (
-                <div
-                  className={`text-center text-sm italic transition-opacity duration-[375ms] ${
-                    submitStatus === "success"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }`}
-                >
-                  {submitStatus === "success"
-                    ? t("footer.contactUs.success")
-                    : t("footer.contactUs.error")}
-                </div>
-              )}
             </form>
           </div>
 
@@ -209,7 +338,7 @@ const Footer = () => {
 
           {/* Contact Information and Social Media - Right side on large screens, bottom on small screens */}
           <div
-            className={`flex-1 lg:max-w-md w-1/2 mx-auto lg:mx-0 transition-all duration-[1250ms] delay-[625ms] ${
+            className={`flex-1 lg:max-w-sm w-1/2 mx-auto lg:mx-0 lg:ml-3 transition-all duration-[1250ms] delay-[625ms] ${
               isVisible
                 ? "opacity-100 translate-y-0 lg:translate-x-0"
                 : "opacity-0 translate-y-8 lg:translate-x-[50px]"
@@ -260,7 +389,7 @@ const Footer = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <div className="w-1/2 lg:w-full mx-auto border-t border-black border-opacity-20 pt-6">
+          <div className="w-1/2 lg:w-216 mx-auto border-t border-black border-opacity-20 pt-6">
             <div className="inline-block text-xs tracking-wide opacity-60 font-body">
               © {new Date().getFullYear()} {t("footer.copyright")}
             </div>

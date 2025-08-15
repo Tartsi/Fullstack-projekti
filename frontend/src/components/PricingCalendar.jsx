@@ -376,7 +376,7 @@ const PricingCalendar = () => {
       className="py-20 px-4"
     >
       <div className="max-w-4xl mx-auto">
-        {/* Section Title */}
+        {/* Pricing Title */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -466,7 +466,7 @@ const PricingCalendar = () => {
 
         {/* Large centered Price Container */}
         <motion.div
-          key={currentServiceIndex} // Force re-render when service changes
+          key={currentServiceIndex}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{
             scale: isPriceSelected ? 1.06 : 1,
@@ -488,8 +488,22 @@ const PricingCalendar = () => {
             fontFamily: "Arial, sans-serif",
           }}
         >
+          {/* Smaller Gray-container */}
           <div className="p-2 mb-4 bg-gray-100 mx-auto w-1/2 border-2 border-black rounded-b-2xl relative">
-            {/* Pulsating icon and text - only visible when service is selectable and not selected */}
+            {/* Pricing info */}
+            <h2 className="text-lg font-normal text-gray-800 mb-2 underline">
+              {currentServiceIndex === 0 ? t("pricing.title") : "TBD"}
+            </h2>
+            <div className="text-4xl text-gray-900 mb-1 font-bold">
+              {services[currentServiceIndex].price}
+            </div>
+            <p className="text-sm text-gray-600 font-normal">
+              {services[currentServiceIndex].vatIncluded}
+            </p>
+            <p className="text-sm text-gray-600 font-normal underline">
+              {services[currentServiceIndex].perCleaning}
+            </p>
+            {/* Pulsating text and icon */}
             <AnimatePresence>
               {currentServiceIndex === 0 && !isPriceSelected && (
                 <motion.div
@@ -497,9 +511,9 @@ const PricingCalendar = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                   transition={{ duration: 1.2 }}
-                  className="absolute -top-8 -right-18 flex items-center space-x-3"
+                  className="absolute -top-8 flex items-center space-x-3"
                 >
-                  {/* Pulsating text - spread horizontally */}
+                  {/* Pulsating text */}
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{
@@ -527,19 +541,6 @@ const PricingCalendar = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <h2 className="text-lg font-normal text-gray-800 mb-2 underline">
-              {currentServiceIndex === 0 ? t("pricing.title") : "TBD"}
-            </h2>
-            <div className="text-4xl text-gray-900 mb-1 font-bold">
-              {services[currentServiceIndex].price}
-            </div>
-            <p className="text-sm text-gray-600 font-normal">
-              {services[currentServiceIndex].vatIncluded}
-            </p>
-            <p className="text-sm text-gray-600 font-normal underline">
-              {services[currentServiceIndex].perCleaning}
-            </p>
           </div>
 
           {/* Separator Line */}
