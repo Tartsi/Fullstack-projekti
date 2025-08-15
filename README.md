@@ -4,6 +4,8 @@
 
 [![Frontend CI](https://github.com/Tartsi/Fullstack-projekti/actions/workflows/frontend.yml/badge.svg)](https://github.com/Tartsi/Fullstack-projekti/actions/workflows/frontend.yml)
 
+[![Fly-deploy](https://github.com/Tartsi/Fullstack-projekti/actions/workflows/fly-deploy.yml/badge.svg)](https://github.com/Tartsi/Fullstack-projekti/actions/workflows/fly-deploy.yml)
+
 [Application](https://fullstack-projekti.fly.dev/)
 
 ### Content

@@ -53,3 +53,6 @@
 - 12.08.2025
     - Deploy the first version of the application into Fly.io
     - Customer requested UI-changes + Bugfixes regarding menu-scaling on small screens (Font change on About-section, Explanation-section carousel rotation speed up, animated icon + text on Pricing Container)
+- 15.08.2025
+    - Add backend solutions for user registration, login, logout and deletion
+    - Fix customer requested UI-elements (Pulsing 'Tilaa tästä' button placement, Contact-us to Feedback)

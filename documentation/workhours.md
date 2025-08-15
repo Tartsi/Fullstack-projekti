@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
 
-## Total hours: 80 hours 30 minutes
+## Total hours: 83 hours 30 minutes
 
 ###  Large review number #1 15.07.2025 (Through port-forwarding)
 - Total hours with customer: 3 hours 30 minutes
@@ -58,3 +58,5 @@
 - 12.08.2025:
     - 2 hours: Fly.io-deployment
     - 1 hour: Customer requested UI-changes
+- 15.08.2025:
+    - 3 hours: Add backend solutions for user registration, login, logout and deletion and fix customer requested UI-elements (Pulsing 'Tilaa tästä' button placement, Footer-component changes )
