@@ -9,14 +9,13 @@ const prisma = new PrismaClient();
 
 // Validation schemas
 const registerSchema = z.object({
-  username: z.string().min(3).max(30),
   email: z.string().email(),
   password: z.string().min(6),
   fullName: z.string(),
 });
 
 const loginSchema = z.object({
-  username: z.string(),
+  email: z.string().email(),
   password: z.string(),
 });
 
@@ -24,20 +23,20 @@ const loginSchema = z.object({
 export const register = async (req, res) => {
   try {
     const validatedData = registerSchema.parse(req.body);
-    const { username, email, password, fullName } = validatedData;
+    const { email, password, fullName } = validatedData;
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [{ username }, { email }],
+        email: email,
       },
     });
 
     if (existingUser) {
-      authLogger.loginFailure(username, req.ip, "User already exists");
+      authLogger.loginFailure(email, req.ip, "User already exists");
       return res.status(409).json({
         ok: false,
-        message: "User with this username or email already exists",
+        message: "User with this email already exists",
       });
     }
 
@@ -47,14 +46,12 @@ export const register = async (req, res) => {
     // Create user
     const user = await prisma.user.create({
       data: {
-        username,
         email,
         passwordHash,
         fullName: fullName || null,
       },
       select: {
         id: true,
-        username: true,
         email: true,
         fullName: true,
         role: true,
@@ -62,7 +59,7 @@ export const register = async (req, res) => {
       },
     });
 
-    authLogger.registration(username, email, req.ip);
+    authLogger.registration(email, email, req.ip);
 
     res.status(201).json({
       ok: true,
@@ -90,17 +87,17 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const validatedData = loginSchema.parse(req.body);
-    const { username, password } = validatedData;
+    const { email, password } = validatedData;
 
-    authLogger.loginAttempt(username, req.ip);
+    authLogger.loginAttempt(email, req.ip);
 
-    // Find user
+    // Find user by email
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
 
     if (!user) {
-      authLogger.loginFailure(username, req.ip, "User not found");
+      authLogger.loginFailure(email, req.ip, "User not found");
       return res.status(401).json({
         ok: false,
         message: "User not found!",
@@ -111,7 +108,7 @@ export const login = async (req, res) => {
     const isValidPassword = await argon2.verify(user.passwordHash, password);
 
     if (!isValidPassword) {
-      authLogger.loginFailure(username, req.ip, "Invalid password");
+      authLogger.loginFailure(email, req.ip, "Invalid password");
       return res.status(401).json({
         ok: false,
         message: "Invalid password!",
@@ -120,17 +117,16 @@ export const login = async (req, res) => {
 
     // Create session (using express-session)
     req.session.userId = user.id;
-    req.session.username = user.username;
+    req.session.email = user.email;
     req.session.role = user.role;
 
-    authLogger.loginSuccess(username, req.ip);
+    authLogger.loginSuccess(email, req.ip);
 
     res.json({
       ok: true,
       message: "Login successful",
       user: {
         id: user.id,
-        username: user.username,
         email: user.email,
         fullName: user.fullName,
         role: user.role,
@@ -156,7 +152,7 @@ export const login = async (req, res) => {
 // Logout endpoint
 export const logout = async (req, res) => {
   try {
-    const username = req.session.username;
+    const email = req.session.email;
 
     req.session.destroy((err) => {
       if (err) {
@@ -167,7 +163,7 @@ export const logout = async (req, res) => {
         });
       }
 
-      authLogger.logout(username, req.ip);
+      authLogger.logout(email, req.ip);
       res.clearCookie("connect.sid"); // Clear session cookie
 
       res.json({
@@ -188,7 +184,7 @@ export const logout = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const userId = req.session.userId;
-    const username = req.session.username;
+    const email = req.session.email;
 
     if (!userId) {
       return res.status(401).json({
@@ -209,7 +205,7 @@ export const deleteUser = async (req, res) => {
       }
     });
 
-    authLogger.userDeleted(username, req.ip);
+    authLogger.userDeleted(email, req.ip);
 
     res.json({
       ok: true,
@@ -240,7 +236,6 @@ export const getCurrentUser = async (req, res) => {
       where: { id: userId },
       select: {
         id: true,
-        username: true,
         email: true,
         fullName: true,
         role: true,

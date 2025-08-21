@@ -4,7 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import userAddIcon from "../assets/icons/user-add-svgrepo-com.svg";
 import userCheckIcon from "../assets/icons/user-check-svgrepo-com.svg";
-import emailCheckIcon from "../assets/icons/email-envelope-letter-message-check-confirm-svgrepo-com.svg";
+import emailIcon from "../assets/icons/email-envelope-letter-message-fast-svgrepo-com.svg";
 import NotificationMessage from "./NotificationMessage";
 
 /**
@@ -182,7 +182,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       case "register":
         return userAddIcon;
       case "forgot":
-        return emailCheckIcon;
+        return emailIcon;
       default:
         return userCheckIcon;
     }

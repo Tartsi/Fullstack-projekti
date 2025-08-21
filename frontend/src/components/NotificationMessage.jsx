@@ -4,7 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import userCheckIcon from "../assets/icons/user-check-svgrepo-com.svg";
 import verifiedIcon from "../assets/icons/verified-svgrepo-com.svg";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
-import emailCheckIcon from "../assets/icons/email-envelope-letter-message-check-confirm-svgrepo-com.svg";
+import emailIcon from "../assets/icons/email-envelope-letter-message-check-confirm-svgrepo-com.svg";
 
 /**
  * NotificationMessage component for displaying success and error messages
@@ -38,11 +38,9 @@ const NotificationMessage = ({
     return context === "register"
       ? verifiedIcon
       : context === "forgot"
-      ? emailCheckIcon
+      ? emailIcon
       : userCheckIcon;
-  };
-
-  // Get appropriate styling based on type
+  }; // Get appropriate styling based on type
   const getStyles = () => {
     if (type === "error") {
       return {
