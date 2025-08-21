@@ -45,12 +45,12 @@ body {
 /* Language change animation */
 @keyframes languageChange {
   0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
 
 .language-change-animation {
-  animation: languageChange 0.6s ease-in-out;
+  animation: languageChange 1s ease-in-out;
 }
 
 /* Brand color utilities */

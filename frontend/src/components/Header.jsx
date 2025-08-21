@@ -118,17 +118,8 @@ const Header = () => {
     }
   }, []);
 
-  /**
-   * Login function placeholder
-   */
-  const handleLogin = useCallback(() => {
-    // TODO: Implement login functionality
-    console.log("Login clicked");
-  }, []);
-
   // Navigation items to reduce repetition
   const navItems = [
-    { key: "login", onClick: handleLogin, separated: true },
     { key: "about", onClick: scrollToAbout },
     { key: "process", onClick: scrollToProcess },
     { key: "order", onClick: scrollToServices },

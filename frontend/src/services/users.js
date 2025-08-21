@@ -38,6 +38,67 @@ export const checkBackendHealth = async () => {
   }
 };
 
+/**
+ * Register a new user
+ * @param {Object} userData - User registration data
+ * @param {string} userData.email - Email address
+ * @param {string} userData.password - Password
+ * @param {string} userData.fullName - Full name
+ */
+export const registerUser = async (userData) => {
+  try {
+    // For now, just return success without backend connection
+    // This will be connected to backend later
+    console.log("Registration attempt for:", userData.email);
+
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    return {
+      success: true,
+      message: "Registration successful!",
+    };
+  } catch (error) {
+    console.error("User registration failed:", error);
+
+    return {
+      success: false,
+      message: "Registration failed. Please try again.",
+    };
+  }
+};
+
+/**
+ * Login user
+ * @param {Object} loginData - User login data
+ * @param {string} loginData.email - Email address
+ * @param {string} loginData.password - Password
+ */
+export const loginUser = async (loginData) => {
+  try {
+    // For now, just return success without backend connection
+    // This will be connected to backend later
+    console.log("Login attempt for:", loginData.email);
+
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    return {
+      success: true,
+      message: "Login successful!",
+    };
+  } catch (error) {
+    console.error("User login failed:", error);
+
+    return {
+      success: false,
+      message: "Login failed. Please check your credentials.",
+    };
+  }
+};
+
 export default {
   checkBackendHealth,
+  registerUser,
+  loginUser,
 };
