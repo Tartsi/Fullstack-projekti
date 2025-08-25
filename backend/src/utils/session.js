@@ -20,14 +20,14 @@ export const createSessionTableIfNotExists = async () => {
       ) WITH (OIDS=FALSE);
     `;
 
-    // Try to add primary key constraint (might already exist)
+    // Add primary key constraint
     try {
       await prisma.$executeRaw`
         ALTER TABLE "session" ADD CONSTRAINT "session_pkey"
         PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
       `;
     } catch (pkError) {
-      // Primary key constraint might already exist, which is fine
+      // Primary key constraint might already exist
       if (
         !pkError.message.includes("already exists") &&
         !pkError.message.includes("multiple primary key")
@@ -36,7 +36,7 @@ export const createSessionTableIfNotExists = async () => {
       }
     }
 
-    // Try to create index (might already exist)
+    // Try to create index
     try {
       await prisma.$executeRaw`
         CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
@@ -65,10 +65,12 @@ export const configureSession = () => {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    name: "connect.sid", // Explicitly set cookie name
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
     },
   });
 };

@@ -17,6 +17,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT || 4000);
 
+// Trust proxy if behind one (for session cookies to work correctly)
+if (process.env.NODE_ENV === "development") {
+  app.set("trust proxy", 1);
+}
+
 // Security middleware
 app.use(helmet());
 

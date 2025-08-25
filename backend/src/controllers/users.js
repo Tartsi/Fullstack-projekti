@@ -19,11 +19,27 @@ const loginSchema = z.object({
   password: z.string(),
 });
 
+const resetPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
 // Registration endpoint
 export const register = async (req, res) => {
   try {
     const validatedData = registerSchema.parse(req.body);
     const { email, password, fullName } = validatedData;
+
+    // Check total number of users (temporary limitation to one user)
+    const userCount = await prisma.user.count();
+
+    if (userCount >= 1) {
+      authLogger.loginFailure(email, req.ip, "Maximum number of users reached");
+      return res.status(403).json({
+        ok: false,
+        message:
+          "Registration is currently limited. Maximum number of users has been reached.",
+      });
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
@@ -97,10 +113,10 @@ export const login = async (req, res) => {
     });
 
     if (!user) {
-      authLogger.loginFailure(email, req.ip, "User not found");
+      authLogger.loginFailure(email, req.ip, "Invalid username or password!");
       return res.status(401).json({
         ok: false,
-        message: "User not found!",
+        message: "Invalid username or password!",
       });
     }
 
@@ -108,10 +124,10 @@ export const login = async (req, res) => {
     const isValidPassword = await argon2.verify(user.passwordHash, password);
 
     if (!isValidPassword) {
-      authLogger.loginFailure(email, req.ip, "Invalid password");
+      authLogger.loginFailure(email, req.ip, "Invalid username or password!");
       return res.status(401).json({
         ok: false,
-        message: "Invalid password!",
+        message: "Invalid username or password!",
       });
     }
 
@@ -142,6 +158,58 @@ export const login = async (req, res) => {
     }
 
     console.error("Login error:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+// Password reset request endpoint
+export const requestPasswordReset = async (req, res) => {
+  try {
+    const validatedData = resetPasswordSchema.parse(req.body);
+    const { email } = validatedData;
+
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      authLogger.loginFailure(
+        email,
+        req.ip,
+        "Password reset request for non-existing user"
+      );
+      return res.status(404).json({
+        ok: false,
+        message: "No user found with this email address",
+      });
+    }
+
+    // If project goes further:
+    // 1. Generate a secure reset token
+    // 2. Store it in database with expiration
+    // 3. Send email with reset link
+    // This project will just return success
+
+    authLogger.loginAttempt(email, req.ip, "Password reset requested");
+
+    res.json({
+      ok: true,
+      message: "Email found in our db, password reset instructions sent!",
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        ok: false,
+        message: "Invalid email format",
+        errors: error.errors,
+      });
+    }
+
+    console.error("Password reset request error:", error);
     res.status(500).json({
       ok: false,
       message: "Internal server error",
@@ -227,7 +295,7 @@ export const getCurrentUser = async (req, res) => {
 
     if (!userId) {
       return res.status(401).json({
-        ok: false,
+        ok: true,
         message: "Not authenticated",
       });
     }
@@ -278,7 +346,8 @@ export const requireAuth = (req, res, next) => {
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
+router.post("/reset-password", requestPasswordReset);
 router.delete("/delete", requireAuth, deleteUser);
-router.get("/me", requireAuth, getCurrentUser);
+router.get("/me", getCurrentUser);
 
 export default router;

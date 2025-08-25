@@ -11,10 +11,20 @@ const prisma = new PrismaClient();
  * @param {Object} app - Express app instance
  */
 export const configureCors = (app) => {
-  if (process.env.NODE_ENV === "development" && process.env.CORS_ORIGIN) {
+  if (process.env.NODE_ENV === "development") {
     app.use(
       cors({
-        origin: process.env.CORS_ORIGIN.split(",").map((s) => s.trim()),
+        origin: process.env.CORS_ORIGIN
+          ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+          : ["http://localhost:5173", "http://localhost:3000"],
+        credentials: true,
+      })
+    );
+  } else {
+    // In production, allow same origin requests
+    app.use(
+      cors({
+        origin: true, // Allow same origin
         credentials: true,
       })
     );

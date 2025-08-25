@@ -4,12 +4,20 @@ import logger from "./logger.js";
 export const requestLogger = (req, res, next) => {
   const start = Date.now();
 
+  // Save body for logging request 'payload'
+  const oldSend = res.send;
+  res.send = function (body) {
+    res.locals.body = body;
+    return oldSend.call(this, body);
+  };
+
   res.on("finish", () => {
     const duration = Date.now() - start;
     logger.info(
       {
         method: req.method,
         url: req.url,
+        data: res.locals.body, // log what was sent
         status: res.statusCode,
         duration: `${duration}ms`,
         userAgent: req.get("User-Agent"),

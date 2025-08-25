@@ -15,7 +15,3 @@ DELETE FROM "session"
 WHERE "expire" < NOW();
 END;
 $$ LANGUAGE plpgsql;
--- Create a scheduled job to run cleanup every hour (if you have pg_cron extension)
--- SELECT cron.schedule('cleanup-sessions', '0 * * * *', 'SELECT cleanup_expired_sessions();');
--- Alternative: Manual cleanup command (run this periodically or call from your app)
--- SELECT cleanup_expired_sessions();
