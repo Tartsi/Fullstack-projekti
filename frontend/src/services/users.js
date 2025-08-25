@@ -13,6 +13,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Cookies for session management
 });
 
 /**
@@ -47,19 +48,29 @@ export const checkBackendHealth = async () => {
  */
 export const registerUser = async (userData) => {
   try {
-    // For now, just return success without backend connection
-    // This will be connected to backend later
-    console.log("Registration attempt for:", userData.email);
+    const response = await apiClient.post("/api/users/register", userData);
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    return {
-      success: true,
-      message: "Registration successful!",
-    };
+    if (response.data.ok) {
+      return {
+        success: true,
+        message: response.data.message,
+        user: response.data.user,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
   } catch (error) {
     console.error("User registration failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
 
     return {
       success: false,
@@ -76,19 +87,29 @@ export const registerUser = async (userData) => {
  */
 export const loginUser = async (loginData) => {
   try {
-    // For now, just return success without backend connection
-    // This will be connected to backend later
-    console.log("Login attempt for:", loginData.email);
+    const response = await apiClient.post("/api/users/login", loginData);
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    return {
-      success: true,
-      message: "Login successful!",
-    };
+    if (response.data.ok) {
+      return {
+        success: true,
+        message: response.data.message,
+        user: response.data.user,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
   } catch (error) {
     console.error("User login failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
 
     return {
       success: false,
@@ -97,8 +118,138 @@ export const loginUser = async (loginData) => {
   }
 };
 
+/**
+ * Request password reset
+ * @param {Object} resetData - Password reset data
+ * @param {string} resetData.email - Email address
+ */
+export const requestPasswordReset = async (resetData) => {
+  try {
+    const response = await apiClient.post(
+      "/api/users/reset-password",
+      resetData
+    );
+
+    if (response.data.ok) {
+      return {
+        success: true,
+        message: response.data.message,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    console.error("Password reset request failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Password reset request failed. Please try again.",
+    };
+  }
+};
+
+/**
+ * Logout current user
+ */
+export const logoutUser = async () => {
+  try {
+    const response = await apiClient.post("/api/users/logout");
+
+    if (response.data.ok) {
+      return {
+        success: true,
+        message: response.data.message,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    console.error("User logout failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Logout failed. Please try again.",
+    };
+  }
+};
+
+/**
+ * Get current user info
+ * NOTE: This function should only be called when you actually need to verify auth status,
+ * not automatically on app startup
+ */
+export const getCurrentUser = async () => {
+  try {
+    const response = await apiClient.get("/api/users/me");
+
+    if (response.data.ok) {
+      return {
+        success: true,
+        user: response.data.user,
+      };
+    } else if (response.data.status === 401) {
+      return {
+        success: true,
+        user: null,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    // Handle 401 silently - it's normal when user isn't authenticated
+    if (error.response?.status === 401) {
+      return {
+        success: false,
+        message: "Not authenticated",
+        notAuthenticated: true,
+      };
+    }
+
+    // Log other errors
+    console.error("Get current user failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Failed to get user information.",
+    };
+  }
+};
+
 export default {
   checkBackendHealth,
   registerUser,
   loginUser,
+  requestPasswordReset,
+  logoutUser,
+  getCurrentUser,
 };

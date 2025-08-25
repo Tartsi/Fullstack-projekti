@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  registerUser,
+  loginUser,
+  requestPasswordReset,
+} from "../services/users";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import userAddIcon from "../assets/icons/user-add-svgrepo-com.svg";
 import userCheckIcon from "../assets/icons/user-check-svgrepo-com.svg";
@@ -26,6 +32,7 @@ import NotificationMessage from "./NotificationMessage";
  */
 const AuthModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
+  const { login } = useAuth();
   const [currentView, setCurrentView] = useState("login"); // 'login', 'register', 'forgot'
   const [formData, setFormData] = useState({
     fullName: "",
@@ -74,8 +81,9 @@ const AuthModal = ({ isOpen, onClose }) => {
     "border-red-500 text-red-600 placeholder-red-500 animate-pulse";
   const normalClasses = "border-gray-300 text-black";
 
-  const buttonBaseClasses =
-    "text-sm transition-colors duration-300 font-cottage cursor-pointer";
+  // Create new account, Forgot your password links
+  const linkBaseClasses =
+    "text-sm transition-colors duration-300 font-cottage cursor-pointer hover:underline";
   const primaryButtonClasses = "text-brand-purple hover:text-brand-dark";
   const secondaryButtonClasses =
     "text-gray-600 hover:text-gray-800 transition-colors duration-150";
@@ -83,7 +91,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const submitButtonClasses = `block w-2/4
   mx-auto bg-brand-purple hover:bg-brand-dark text-black py-2 px-3 rounded-full
   font-cottage font-medium transition-colors duration-150 disabled:opacity-50
-  disabled:cursor-not-allowed border-2 border-transparent hover:border-brand-neon
+  disabled:cursor-not-allowed border-2 border-black hover:border-brand-neon
   shadow-lg hover:shadow-brand-purple/50 uppercase tracking-wider cursor-pointer`;
 
   // Reset form when modal opens/closes
@@ -228,7 +236,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     <div className="flex justify-center">
       <motion.button
         onClick={onClick}
-        className={`${buttonBaseClasses} ${
+        className={`${linkBaseClasses} ${
           isPrimary ? primaryButtonClasses : secondaryButtonClasses
         }`}
         whileHover={{
@@ -306,43 +314,69 @@ const AuthModal = ({ isOpen, onClose }) => {
     setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      let result;
 
       if (currentView === "register") {
-        setNotification({
-          isVisible: true,
-          message: t("auth.registrationSuccess"),
-          type: "success",
+        result = await registerUser({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
         });
-        clearFormFields();
-        setTimeout(() => {
-          setCurrentView("login");
-          setNotification((prev) => ({ ...prev, isVisible: false }));
-        }, 2000);
       } else if (currentView === "login") {
-        setNotification({
-          isVisible: true,
-          message: t("auth.loginSuccess"),
-          type: "success",
+        result = await loginUser({
+          email: formData.email,
+          password: formData.password,
         });
-        clearFormFields();
-        setTimeout(() => {
-          onClose();
-        }, 2000);
       } else if (currentView === "forgot") {
+        result = await requestPasswordReset({
+          email: formData.email,
+        });
+      }
+
+      if (result.success) {
+        // If login was successful, update the global auth state
+        if (currentView === "login" && result.user) {
+          login(result.user);
+        }
+
         setNotification({
           isVisible: true,
-          message: t("auth.passwordResetSuccess"),
+          message:
+            result.message ||
+            (currentView === "register"
+              ? t("auth.registrationSuccess")
+              : currentView === "login"
+              ? t("auth.loginSuccess")
+              : t("auth.passwordResetSuccess")),
           type: "success",
         });
+
         clearFormFields();
+
         setTimeout(() => {
-          setCurrentView("login");
-          setNotification((prev) => ({ ...prev, isVisible: false }));
+          if (currentView === "register" || currentView === "forgot") {
+            setCurrentView("login");
+            setNotification((prev) => ({ ...prev, isVisible: false }));
+          } else if (currentView === "login") {
+            onClose();
+            setNotification((prev) => ({ ...prev, isVisible: false }));
+          }
         }, 2000);
+      } else {
+        setNotification({
+          isVisible: true,
+          message:
+            result.message ||
+            (currentView === "register"
+              ? t("auth.errors.registrationFailed")
+              : currentView === "login"
+              ? t("auth.errors.loginFailed")
+              : t("auth.errors.networkError")),
+          type: "error",
+        });
       }
     } catch (error) {
+      console.error("Form submission error:", error);
       setNotification({
         isVisible: true,
         message:

@@ -9,6 +9,7 @@ export const translations = {
       cta: "Varaa Siivous",
       scrollText: "Lue Lisää",
       login: "Kirjaudu Sisään",
+      logout: "Kirjaudu Ulos",
     },
     // Header
     nav: {
@@ -226,6 +227,7 @@ export const translations = {
       cta: "Book Cleaning",
       scrollText: "Learn More",
       login: "Log In",
+      logout: "Log Out",
     },
     // Header
     nav: {

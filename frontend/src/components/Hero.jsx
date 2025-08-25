@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useAuth } from "../contexts/AuthContext";
 import { languageOptions } from "../utils/languageUtils";
 import { scrollAnimations } from "../utils/scrollUtils";
 import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
+import loginIcon from "../assets/icons/login-bracket-svgrepo-com.svg";
+import logoutIcon from "../assets/icons/logout-bracket-svgrepo-com.svg";
 import AuthModal from "./AuthModal";
 
 /**
@@ -22,9 +26,11 @@ import AuthModal from "./AuthModal";
  */
 const Hero = () => {
   const { t, language, changeLanguage } = useLanguage();
+  const { isAuthenticated, logout } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [logoutAnim, setLogoutAnim] = useState(false);
 
   /**
    * Optimized scroll handler using useCallback
@@ -80,11 +86,25 @@ const Hero = () => {
   }, []);
 
   /**
-   * Login function
+   * Login/Logout function with animation
    */
-  const handleLogin = useCallback(() => {
-    setIsAuthModalOpen(true);
-  }, []);
+  const handleLogin = useCallback(async () => {
+    if (isAuthenticated) {
+      // Trigger logout animation
+      setLogoutAnim(true);
+
+      try {
+        await logout();
+      } finally {
+        // Reset animation after logout completes
+        setTimeout(() => {
+          setLogoutAnim(false);
+        }, 800);
+      }
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  }, [isAuthenticated, logout]);
 
   useEffect(() => {
     // Trigger entrance animation after component mounts
@@ -187,7 +207,7 @@ const Hero = () => {
             <button
               onClick={scrollToContent}
               className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
-              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-transparent hover:border-brand-neon cursor-pointer"
+              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-neon cursor-pointer"
             >
               <span className="flex items-center space-x-2">
                 <span>{t("hero.scrollText")}</span>
@@ -197,14 +217,80 @@ const Hero = () => {
               </span>
             </button>
 
-            <button
+            {/* Animated Login/Logout Button */}
+            <motion.button
               onClick={handleLogin}
-              className="group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.6 }}
+              animate={
+                logoutAnim
+                  ? {
+                      scale: [1, 1.05, 1],
+                      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                    }
+                  : {}
+              }
+              className="relative group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl hover:shadow-brand-purple/50 transform transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer overflow-hidden"
             >
-              <span className="flex items-center space-x-2">
-                <span>{t("hero.login")}</span>
+              {/* Soft glow ring on logout */}
+              <motion.span
+                className="pointer-events-none absolute -inset-px rounded-full"
+                initial={false}
+                animate={{
+                  boxShadow: logoutAnim
+                    ? "0 0 0 10px rgba(157,255,249,0.25)"
+                    : "0 0 0 0 rgba(0,0,0,0)",
+                }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                style={{ borderRadius: 9999 }}
+              />
+
+              {/* Sheen sweep on logout */}
+              <span className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
+                <motion.span
+                  className="absolute inset-y-0 -left-1/3 w-1/2 bg-white/25 skew-x-12 blur-sm"
+                  initial={{ x: "-120%" }}
+                  animate={{ x: logoutAnim ? "220%" : "-120%" }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                />
               </span>
-            </button>
+
+              {/* Label + arrow with crossfade/slide between login/logout */}
+              <span className="relative z-10 flex items-center space-x-2">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={isAuthenticated ? "logout" : "login"}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  >
+                    {isAuthenticated ? t("hero.logout") : t("hero.login")}
+                  </motion.span>
+                </AnimatePresence>
+
+                {/* Login icon - only show when not authenticated */}
+                {!isAuthenticated ? (
+                  <motion.img
+                    src={loginIcon}
+                    alt="Login"
+                    className="w-5 h-5 ml-2"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                ) : (
+                  <motion.img
+                    src={logoutIcon}
+                    alt="Logout"
+                    className="w-5 h-5 ml-2"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                )}
+              </span>
+            </motion.button>
           </div>
 
           {/* Navigation Links */}
