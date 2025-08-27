@@ -14,7 +14,6 @@ import backgroundImage from "../assets/background/blob-scene-haikei.svg";
  * and a footer
  *
  * @param {Object} props - The props object.
- * @param {React.ReactNode} props.children - The child components to be rendered inside the main content area.
  * @returns {JSX.Element} The rendered Layout component.
  *
  * @description
@@ -22,7 +21,7 @@ import backgroundImage from "../assets/background/blob-scene-haikei.svg";
  * - Includes background styling with CSS variables for better maintainability
  * - Responsive design that works across all device sizes
  */
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col text-white font-cottage">
       {/* Background image */}
@@ -42,8 +41,6 @@ const Layout = ({ children }) => {
       <Explanation />
       <UserReviewSection />
       <PricingCalendar />
-      {/* Main content area for future components */}
-      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

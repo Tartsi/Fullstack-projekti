@@ -9,18 +9,18 @@ const prisma = new PrismaClient();
 
 // Validation schemas
 const registerSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6),
   fullName: z.string(),
 });
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string(),
 });
 
 const resetPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 // Registration endpoint
@@ -248,6 +248,10 @@ export const logout = async (req, res) => {
   }
 };
 
+const deleteUserSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+});
+
 // Delete user account endpoint
 export const deleteUser = async (req, res) => {
   try {
@@ -261,7 +265,39 @@ export const deleteUser = async (req, res) => {
       });
     }
 
+    // Validate request body
+    const validatedData = deleteUserSchema.parse(req.body);
+    const { password } = validatedData;
+
+    // Find user to verify password
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        ok: false,
+        message: "User not found",
+      });
+    }
+
+    // Verify password
+    const isValidPassword = await argon2.verify(user.passwordHash, password);
+
+    if (!isValidPassword) {
+      authLogger.loginFailure(
+        email,
+        req.ip,
+        "Invalid password for account deletion"
+      );
+      return res.status(401).json({
+        ok: false,
+        message: "Invalid password",
+      });
+    }
+
     // Delete user and all related data
+    // NOTE: Prisma will handle cascade deletions!
     await prisma.user.delete({
       where: { id: userId },
     });
@@ -275,15 +311,25 @@ export const deleteUser = async (req, res) => {
 
     authLogger.userDeleted(email, req.ip);
 
+    res.clearCookie("connect.sid"); // Clear session cookie
+
     res.json({
       ok: true,
       message: "User account deleted successfully",
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        ok: false,
+        message: "Password is required",
+        errors: error.errors,
+      });
+    }
+
     console.error("Delete user error:", error);
     res.status(500).json({
       ok: false,
-      message: "Internal server error",
+      message: `Internal server error when deleting user: ${error}`,
     });
   }
 };
@@ -292,13 +338,6 @@ export const deleteUser = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.session.userId;
-
-    if (!userId) {
-      return res.status(401).json({
-        ok: true,
-        message: "Not authenticated",
-      });
-    }
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -342,12 +381,50 @@ export const requireAuth = (req, res, next) => {
   next();
 };
 
+// Get user bookings
+export const getUserBookings = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        ok: false,
+        message: "Not authenticated",
+      });
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: {
+        userId: userId,
+        status: {
+          in: ["CONFIRMED", "DRAFT"], // Only show active bookings
+        },
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+    res.json({
+      ok: true,
+      bookings,
+    });
+  } catch (error) {
+    console.error("Get user bookings error:", error);
+    res.status(500).json({
+      ok: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 // Routes
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
 router.post("/reset-password", requestPasswordReset);
 router.delete("/delete", requireAuth, deleteUser);
-router.get("/me", getCurrentUser);
+router.get("/info", requireAuth, getCurrentUser);
+router.get("/bookings", requireAuth, getUserBookings);
 
 export default router;

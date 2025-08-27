@@ -8,7 +8,10 @@ import carIcon from "../assets/icons/car-salesman-service-svgrepo-com.svg";
 import vacuumIcon from "../assets/icons/vacuum-cleaner-floor-svgrepo-com.svg";
 import loginIcon from "../assets/icons/login-bracket-svgrepo-com.svg";
 import logoutIcon from "../assets/icons/logout-bracket-svgrepo-com.svg";
+import lockIcon from "../assets/icons/lock-slash-svgrepo-com.svg";
+import unlockIcon from "../assets/icons/unlock-svgrepo-com.svg";
 import AuthModal from "./AuthModal";
+import UserModal from "./UserModal";
 
 /**
  * Hero component that displays a full-screen landing section with main message,
@@ -30,6 +33,7 @@ const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [logoutAnim, setLogoutAnim] = useState(false);
 
   /**
@@ -203,11 +207,14 @@ const Hero = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+          {/* Triangle Formation: Read More at top, User Profile and Login/Logout below */}
+          <div className="flex flex-col items-center space-y-6 mb-8">
+            {/* Read More Button - Top of triangle */}
             <button
               onClick={scrollToContent}
               className="group bg-brand-purple hover:bg-brand-dark text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
-              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-neon cursor-pointer"
+              hover:shadow-brand-purple/50 transform hover:scale-105 transition-all duration-300 uppercase
+              tracking-wider border-2 border-black hover:border-brand-neon cursor-pointer"
             >
               <span className="flex items-center space-x-2">
                 <span>{t("hero.scrollText")}</span>
@@ -217,99 +224,134 @@ const Hero = () => {
               </span>
             </button>
 
-            {/* Animated Login/Logout Button */}
-            <motion.button
-              onClick={handleLogin}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.6 }}
-              animate={
-                logoutAnim
-                  ? {
-                      scale: [1, 1.05, 1],
-                      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-                    }
-                  : {}
-              }
-              className="relative group bg-transparent hover:bg-brand-purple text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl hover:shadow-brand-purple/50 transform transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer overflow-hidden"
-            >
-              {/* Soft glow ring on logout */}
-              <motion.span
-                className="pointer-events-none absolute -inset-px rounded-full"
-                initial={false}
-                animate={{
-                  boxShadow: logoutAnim
-                    ? "0 0 0 10px rgba(157,255,249,0.25)"
-                    : "0 0 0 0 rgba(0,0,0,0)",
-                }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                style={{ borderRadius: 9999 }}
-              />
-
-              {/* Sheen sweep on logout */}
-              <span className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
+            {/* Bottom row of triangle - Login/Logout and User Profile */}
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+              {/* Login/Logout Button - Bottom left of triangle */}
+              <motion.button
+                onClick={handleLogin}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.6 }}
+                animate={
+                  logoutAnim
+                    ? {
+                        scale: [1, 1.05, 1],
+                        transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                      }
+                    : {}
+                }
+                className="relative group bg-transparent hover:bg-brand-purple text-black font-cottage
+                text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl hover:shadow-brand-purple/50
+                transform transition-all duration-300 uppercase tracking-wider border-2 border-black hover:border-brand-purple cursor-pointer overflow-hidden"
+              >
+                {/* Soft glow ring on logout */}
                 <motion.span
-                  className="absolute inset-y-0 -left-1/3 w-1/2 bg-white/25 skew-x-12 blur-sm"
-                  initial={{ x: "-120%" }}
-                  animate={{ x: logoutAnim ? "220%" : "-120%" }}
-                  transition={{ duration: 1, ease: "easeInOut" }}
+                  className="pointer-events-none absolute -inset-px rounded-full"
+                  initial={false}
+                  animate={{
+                    boxShadow: logoutAnim
+                      ? "0 0 0 10px rgba(157,255,249,0.25)"
+                      : "0 0 0 0 rgba(0,0,0,0)",
+                  }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  style={{ borderRadius: 9999 }}
                 />
-              </span>
 
-              {/* Label + arrow with crossfade/slide between login/logout */}
-              <span className="relative z-10 flex items-center space-x-2">
-                <AnimatePresence mode="popLayout" initial={false}>
+                {/* Sheen sweep on logout */}
+                <span className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
                   <motion.span
-                    key={isAuthenticated ? "logout" : "login"}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    {isAuthenticated ? t("hero.logout") : t("hero.login")}
-                  </motion.span>
-                </AnimatePresence>
+                    className="absolute inset-y-0 -left-1/3 w-1/2 bg-white/25 skew-x-12 blur-sm"
+                    initial={{ x: "-120%" }}
+                    animate={{ x: logoutAnim ? "220%" : "-120%" }}
+                    transition={{ duration: 1, ease: "easeInOut" }}
+                  />
+                </span>
 
-                {/* Login icon - only show when not authenticated */}
-                {!isAuthenticated ? (
-                  <motion.img
-                    src={loginIcon}
-                    alt="Login"
-                    className="w-5 h-5 ml-2"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
+                {/* Label + arrow with crossfade/slide between login/logout */}
+                <span className="relative z-10 flex items-center space-x-2">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    <motion.span
+                      key={isAuthenticated ? "logout" : "login"}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      {isAuthenticated ? t("hero.logout") : t("hero.login")}
+                    </motion.span>
+                  </AnimatePresence>
+
+                  {/* Login icon - only show when not authenticated */}
+                  {!isAuthenticated ? (
+                    <motion.img
+                      src={loginIcon}
+                      alt="Login"
+                      className="w-5 h-5 ml-2"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                  ) : (
+                    <motion.img
+                      src={logoutIcon}
+                      alt="Logout"
+                      className="w-5 h-5 ml-2"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                  )}
+                </span>
+              </motion.button>
+
+              {/* User Profile Button - Bottom right of triangle */}
+              <button
+                onClick={
+                  isAuthenticated ? () => setIsUserModalOpen(true) : undefined
+                }
+                disabled={!isAuthenticated}
+                className={`group ${
+                  isAuthenticated
+                    ? "bg-brand-blue hover:bg-brand-dark cursor-pointer"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-black font-cottage text-lg sm:text-xl px-8 py-4 sm:px-12 sm:py-6 rounded-full shadow-2xl
+                  transform transition-all duration-300 uppercase tracking-wider border-2 border-black ${
+                    isAuthenticated
+                      ? "hover:border-brand-neon hover:scale-105 hover:shadow-brand-blue/50"
+                      : ""
+                  }`}
+              >
+                <span className="flex items-center space-x-2">
+                  <span>{t("hero.userProfile")}</span>
+                  <img
+                    src={isAuthenticated ? unlockIcon : lockIcon}
+                    alt={isAuthenticated ? "Unlocked" : "Locked"}
+                    className="w-5 h-5"
                   />
-                ) : (
-                  <motion.img
-                    src={logoutIcon}
-                    alt="Logout"
-                    className="w-5 h-5 ml-2"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
-                )}
-              </span>
-            </motion.button>
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* Navigation Links */}
           <div className="flex justify-center items-center space-x-6 sm:space-x-8 md:space-x-12">
             <button
               onClick={scrollToProcess}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
               {t("nav.process")}
             </button>
             <button
               onClick={scrollToServices}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
               {t("nav.order")}
             </button>
             <button
               onClick={scrollToContact}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
               {t("nav.contact")}
             </button>
@@ -321,6 +363,12 @@ const Hero = () => {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* UserModal */}
+      <UserModal
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
       />
     </section>
   );

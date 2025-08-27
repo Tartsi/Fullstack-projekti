@@ -195,12 +195,10 @@ export const logoutUser = async () => {
 
 /**
  * Get current user info
- * NOTE: This function should only be called when you actually need to verify auth status,
- * not automatically on app startup
  */
 export const getCurrentUser = async () => {
   try {
-    const response = await apiClient.get("/api/users/me");
+    const response = await apiClient.get("/api/users/info");
 
     if (response.data.ok) {
       return {
@@ -219,7 +217,7 @@ export const getCurrentUser = async () => {
       };
     }
   } catch (error) {
-    // Handle 401 silently - it's normal when user isn't authenticated
+    // Handle 401 silently
     if (error.response?.status === 401) {
       return {
         success: false,
@@ -245,6 +243,93 @@ export const getCurrentUser = async () => {
   }
 };
 
+/**
+ * Delete current user account
+ * @param {Object} deleteData - User deletion data
+ * @param {string} deleteData.password - Password confirmation
+ */
+export const deleteUser = async (deleteData) => {
+  try {
+    const response = await apiClient.delete("/api/users/delete", {
+      data: { password: deleteData.password },
+    });
+
+    if (response.data.ok) {
+      return {
+        success: true,
+        message: response.data.message,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+      };
+    }
+  } catch (error) {
+    console.error("User deletion failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Account deletion failed. Please try again.",
+    };
+  }
+};
+
+/**
+ * Get user bookings
+ */
+export const getUserBookings = async () => {
+  try {
+    const response = await apiClient.get("/api/users/bookings");
+
+    if (response.data.ok) {
+      return {
+        success: true,
+        bookings: response.data.bookings,
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message,
+        bookings: [],
+      };
+    }
+  } catch (error) {
+    // Handle 401 silently
+    if (error.response?.status === 401) {
+      return {
+        success: false,
+        message: "Not authenticated",
+        notAuthenticated: true,
+        bookings: [],
+      };
+    }
+
+    console.error("Get user bookings failed:", error);
+
+    if (error.response?.data?.message) {
+      return {
+        success: false,
+        message: error.response.data.message,
+        bookings: [],
+      };
+    }
+
+    return {
+      success: false,
+      message: "Failed to get bookings.",
+      bookings: [],
+    };
+  }
+};
+
 export default {
   checkBackendHealth,
   registerUser,
@@ -252,4 +337,6 @@ export default {
   requestPasswordReset,
   logoutUser,
   getCurrentUser,
+  deleteUser,
+  getUserBookings,
 };

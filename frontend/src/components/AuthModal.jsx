@@ -134,8 +134,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   }, [notification.isVisible]);
 
   // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
     if (errors[name]) {
       setFormData((prev) => ({ ...prev, [name]: "" }));
@@ -306,8 +306,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -405,8 +405,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   // Backdrop click handler
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
+  const handleBackdropClick = (event) => {
+    if (event.target === event.currentTarget) onClose();
   };
 
   return (
