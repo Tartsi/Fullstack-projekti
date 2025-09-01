@@ -6,37 +6,36 @@
 ---
 
 ## Objective
-To provide a modern, visually appealing, and fast-loading landing page for the Workday-Vacuumers service. The site should clearly communicate how the service works, build trust with potential customers, and most importantly convert interest into concrete action through contact or booking.
+To provide a simple, easy-to-use and fast-loading landing page for the Workday-Vacuumers service. The site should clearly communicate how the service works, build trust with potential customers, and most importantly convert interest into concrete action through booking.
 
 ---
 
 ## Core Intended Features
-- **Hero Section**: with brand identity
+- **Hero Section**: with brand identity, cta-buttons, login
 - **About Section**: explaining what the business does
-- **Process Explanation**: to show how it works (e.g., step-by-step)
-- **Pricing Section**: with clear and simple plans
+- **Process Explanation**: step-by-step explanation how process works
 - **User Review Section**: including testimonials and ratings + a large overall rating
-- **Contact Form**: for any inquiries, placed next to the footer information
-
+- **Pricing Section**: with clear and simple plan(s)
+- **Contact Form**: feedback and contact information
 ---
 
 ## Scope
 ### Included
 - Full frontend implementation with React + Vite
+- Login + Registration
+- Hosting (Fly.io)
+- Database (Neon)
 - Component-based architecture
-- Visual polish using MUI + Framer Motion
-- Hosting
+- Animations through for example Framer Motion
 - Documentation and version control
 
-### Excluded (for MVP)
+### Excluded
 - Payment integrations
-- User accounts or login
-- Backend database or API
 
 ---
 
 ## Target Users
-- Busy professionals who park their car for workhours during the workday
+- Busy professionals who park their car for workhours during the workdays (Mon-Fri)
 - Office parks, city center workers, business districts even university students
 
 ---
@@ -45,4 +44,4 @@ To provide a modern, visually appealing, and fast-loading landing page for the W
 - Page loads quickly and functions without bugs
 - Visitors understand and trust the service concept
 - At least one call-to-action is visible and inviting in the hero section and later on, on the page
-- The layout and brand feel aligned with a modern tech service
+- The layout and brand feel unique and aligned
