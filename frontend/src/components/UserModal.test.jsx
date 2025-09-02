@@ -131,7 +131,7 @@ describe("UserModal", () => {
     document.body.style.overflow = "unset";
   });
 
-  it("renders modal when isOpen is true and user is logged in", async () => {
+  it("renders modal when isOpen is true and user is logged in and language is Finnish by default", async () => {
     renderWithProviders(<UserModal isOpen={true} onClose={mockOnClose} />);
 
     await waitFor(() => {
@@ -441,7 +441,7 @@ describe("UserModal", () => {
       </LanguageTestHelper>
     );
 
-    // Wait for user data to load and initially should show Finnish content
+    // Wait for user data to load
     await waitFor(() => {
       expect(screen.getByText("KÄYTTÄJÄSI")).toBeInTheDocument();
       expect(screen.getByText("Test User")).toBeInTheDocument();

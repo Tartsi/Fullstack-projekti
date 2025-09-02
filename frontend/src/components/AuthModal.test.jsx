@@ -67,7 +67,7 @@ describe("AuthModal", () => {
     document.body.style.overflow = "unset";
   });
 
-  it("renders modal when isOpen is true", () => {
+  it("renders modal when isOpen is true and shows Finnish text by default", () => {
     renderWithProviders(<AuthModal isOpen={true} onClose={mockOnClose} />);
 
     expect(screen.getByText("Kirjaudu")).toBeInTheDocument();
