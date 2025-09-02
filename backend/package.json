@@ -7,12 +7,12 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --env-file=.env src/index.js",
     "start": "node --env-file=.env src/index.js",
+    "dev": "nodemon --env-file=.env src/index.js",
+    "test": "vitest",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
-    "prisma:gen": "prisma generate",
-    "test": "vitest"
+    "prisma:gen": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",

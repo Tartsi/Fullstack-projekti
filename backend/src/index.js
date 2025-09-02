@@ -24,10 +24,8 @@ if (process.env.NODE_ENV === "development") {
 
 // Security middleware
 app.use(helmet());
-
 // Request logging
 app.use(requestLogger);
-
 app.use(express.json());
 
 // Session configuration

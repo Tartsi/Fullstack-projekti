@@ -54,12 +54,15 @@ export const createSessionTableIfNotExists = async () => {
 
 /**
  * Configure session middleware
+ * @param {string} dbUrl - Optional database URL to use (for testing)
  * @returns {Function} Express session middleware
  */
-export const configureSession = () => {
+export const configureSession = (dbUrl = null) => {
+  const connectionString = dbUrl || process.env.DATABASE_URL;
+
   return session({
     store: new PgSession({
-      conString: process.env.DATABASE_URL,
+      conString: connectionString,
       tableName: "session",
     }),
     secret: process.env.SESSION_SECRET,

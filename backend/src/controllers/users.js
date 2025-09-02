@@ -5,7 +5,13 @@ import { z } from "zod";
 import { authLogger } from "../utils/middleware.js";
 
 const router = Router();
-const prisma = new PrismaClient();
+// Default prisma instance, can be overridden for testing
+let prisma = new PrismaClient();
+
+// Function to set custom prisma instance (for testing)
+export const setPrismaInstance = (customPrisma) => {
+  prisma = customPrisma;
+};
 
 // Validation schemas
 const registerSchema = z.object({
