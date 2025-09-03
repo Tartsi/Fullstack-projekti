@@ -89,7 +89,7 @@ describe("UserReviewSection Component", () => {
     // Check for star SVG using data-testid approach would be better,
     // but for now just check for the rating text
     expect(screen.getAllByText("4.6 / 5")[0]).toBeInTheDocument();
-    expect(screen.getAllByText("Kokonaisarvosana")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Kokonaisarvosana!")[0]).toBeInTheDocument();
   });
 
   it("renders navigation arrows", () => {

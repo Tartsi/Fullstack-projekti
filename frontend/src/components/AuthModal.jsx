@@ -7,6 +7,7 @@ import {
   loginUser,
   requestPasswordReset,
 } from "../services/users";
+import { validateAuthForm } from "../services/validation";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import userAddIcon from "../assets/icons/user-add-svgrepo-com.svg";
 import userCheckIcon from "../assets/icons/user-check-svgrepo-com.svg";
@@ -253,56 +254,19 @@ const AuthModal = ({ isOpen, onClose }) => {
     </div>
   );
 
-  // Form validation
+  // Form validation using the validation service
   const validateForm = () => {
-    const newErrors = {};
-
-    if (currentView === "register") {
-      if (!formData.fullName.trim())
-        newErrors.fullName = t("auth.errors.fullNameRequired");
-      else if (formData.fullName.length < 4)
-        newErrors.fullName = t("auth.errors.fullNameShort");
-      if (!formData.email.trim())
-        newErrors.email = t("auth.errors.emailRequired");
-      else if (!/\S+@\S+\.\S+/.test(formData.email))
-        newErrors.email = t("auth.errors.emailInvalid");
-      if (!formData.password)
-        newErrors.password = t("auth.errors.passwordRequired");
-      else if (formData.password.length < 6)
-        newErrors.password = t("auth.errors.passwordMinLength");
-      if (!formData.confirmPassword)
-        newErrors.confirmPassword = t("auth.errors.passwordRequired");
-      else if (formData.password !== formData.confirmPassword)
-        newErrors.confirmPassword = t("auth.errors.passwordMismatch");
-    }
-
-    if (currentView === "login") {
-      if (!formData.email.trim())
-        newErrors.email = t("auth.errors.emailRequired");
-      else if (!/\S+@\S+\.\S+/.test(formData.email))
-        newErrors.email = t("auth.errors.emailInvalid");
-      if (!formData.password)
-        newErrors.password = t("auth.errors.passwordRequired");
-      else if (formData.password.length < 6)
-        newErrors.password = t("auth.errors.passwordMinLength");
-    }
-
-    if (currentView === "forgot") {
-      if (!formData.email.trim())
-        newErrors.email = t("auth.errors.emailRequired");
-      else if (!/\S+@\S+\.\S+/.test(formData.email))
-        newErrors.email = t("auth.errors.emailInvalid");
-    }
+    const validation = validateAuthForm(formData, currentView, t);
 
     // Clear fields that have errors
-    if (Object.keys(newErrors).length > 0) {
-      Object.keys(newErrors).forEach((field) => {
+    if (!validation.isValid) {
+      Object.keys(validation.errors).forEach((field) => {
         setFormData((prev) => ({ ...prev, [field]: "" }));
       });
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(validation.errors);
+    return validation.isValid;
   };
 
   // Handle form submission

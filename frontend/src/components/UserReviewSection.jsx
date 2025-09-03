@@ -172,7 +172,7 @@ const UserReviewSection = () => {
    * Generate star SVG with proportional fill
    */
   const renderStar = () => {
-    const fillPercentage = (averageRating / 5) * 100;
+    const fillPercentage = (averageRating / 5) * 90;
 
     return (
       <svg

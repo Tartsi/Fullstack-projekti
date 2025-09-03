@@ -165,35 +165,19 @@ export const requestPasswordReset = async (req, res) => {
     const validatedData = resetPasswordSchema.parse(req.body);
     const { email } = validatedData;
 
-    // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    authLogger.loginAttempt(email, req.ip, "Password reset requested");
 
-    if (!user) {
-      authLogger.loginFailure(
-        email,
-        req.ip,
-        "Password reset request for non-existing user"
-      );
-      return res.status(404).json({
-        ok: false,
-        message: "No user found with this email address",
-      });
-    }
+    // Always send reset instructions for security purposes
+    res.json({
+      ok: true,
+      message: "Password reset instructions sent!",
+    });
 
     // If project goes further:
     // 1. Generate a secure reset token
     // 2. Store it in database with expiration
     // 3. Send email with reset link
     // This project will just return success
-
-    authLogger.loginAttempt(email, req.ip, "Password reset requested");
-
-    res.json({
-      ok: true,
-      message: "Email found in our db, password reset instructions sent!",
-    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({

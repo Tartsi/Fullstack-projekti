@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import { getCurrentUser, deleteUser, getUserBookings } from "../services/users";
+import { sanitizeInput } from "../services/validation";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import accountIcon from "../assets/icons/account-manage-personal-svgrepo-com.svg";
 import NotificationMessage from "./NotificationMessage";
@@ -204,7 +205,9 @@ const UserModal = ({ isOpen, onClose }) => {
 
   // Handle account deletion
   const handleDeleteAccount = async () => {
-    if (!deletePassword.trim()) {
+    const sanitizedPassword = sanitizeInput(deletePassword);
+
+    if (!sanitizedPassword.trim()) {
       setNotification({
         isVisible: true,
         message: t("userProfile.enterPassword"),
@@ -217,7 +220,7 @@ const UserModal = ({ isOpen, onClose }) => {
 
     try {
       const result = await deleteUser({
-        password: deletePassword,
+        password: sanitizedPassword,
       });
 
       if (result.success) {

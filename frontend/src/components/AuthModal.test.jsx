@@ -174,7 +174,7 @@ describe("AuthModal", () => {
     const submitButton = screen.getByRole("button", { name: /kirjaudu/i });
 
     fireEvent.change(emailInput, { target: { value: "invalid-email" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.change(passwordInput, { target: { value: "Password123" } });
     fireEvent.click(submitButton);
 
     // Test makes sure form is not submitted with an invalid email
@@ -196,9 +196,7 @@ describe("AuthModal", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByPlaceholderText(
-          "Salasanan tulee olla vähintään 6 merkkiä pitkä"
-        )
+        screen.getByPlaceholderText("Tarvitaan vähintään 6 merkkiä")
       ).toBeInTheDocument();
     });
   });
@@ -214,7 +212,7 @@ describe("AuthModal", () => {
     });
 
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.change(passwordInput, { target: { value: "Password123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -256,9 +254,9 @@ describe("AuthModal", () => {
     const confirmPasswordInput =
       screen.getByPlaceholderText("Vahvista Salasana");
 
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.change(passwordInput, { target: { value: "Password123" } });
     fireEvent.change(confirmPasswordInput, {
-      target: { value: "differentpassword" },
+      target: { value: "DifferentPassword456" },
     });
 
     const submitButton = screen.getByRole("button", { name: /luo tili/i });
@@ -288,9 +286,9 @@ describe("AuthModal", () => {
 
     fireEvent.change(nameInput, { target: { value: "Test User" } });
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    fireEvent.change(passwordInput, { target: { value: "Password123" } });
     fireEvent.change(confirmPasswordInput, {
-      target: { value: "password123" },
+      target: { value: "Password123" },
     });
     fireEvent.click(submitButton);
 
@@ -338,7 +336,7 @@ describe("AuthModal", () => {
     });
 
     fireEvent.change(emailInput, { target: { value: "invalid@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "wrongpassword" } });
+    fireEvent.change(passwordInput, { target: { value: "WrongPassword123" } });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
