@@ -150,7 +150,7 @@ const Explanation = () => {
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <div
-          className={`text-center mb-8 sm:mb-12 transition-all duration-1000 delay-[350ms] ${
+          className={`uppercase text-center mb-8 sm:mb-12 transition-all duration-1000 delay-[350ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -207,7 +207,7 @@ const Explanation = () => {
 
                     {/* Step Content - Center */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-cottage text-base sm:text-lg lg:text-xl xl:text-2xl font-medium mb-1 sm:mb-2 text-gray-700">
+                      <h3 className="uppercase underline font-cottage text-base sm:text-lg lg:text-xl xl:text-2xl font-medium mb-1 sm:mb-2 text-gray-700">
                         {step.title}
                       </h3>
                       <p className="text-xs sm:text-sm lg:text-base xl:text-lg font-body leading-relaxed text-gray-600">

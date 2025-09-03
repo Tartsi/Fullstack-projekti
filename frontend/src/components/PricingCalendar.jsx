@@ -381,7 +381,7 @@ const PricingCalendar = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-3xl sm:text-4xl lg:text-5xl font-cottage italic tracking-wide text-brand-dark underline mb-12 text-center"
+          className="uppercase text-3xl sm:text-4xl lg:text-5xl font-cottage italic tracking-wide text-brand-dark underline mb-12 text-center"
         >
           {services[currentServiceIndex].title}
         </motion.h2>
@@ -511,7 +511,7 @@ const PricingCalendar = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                   transition={{ duration: 1.2 }}
-                  className="absolute -top-8 flex items-center space-x-3"
+                  className="uppercase absolute -top-8 flex items-center space-x-3"
                 >
                   {/* Pulsating text */}
                   <motion.div

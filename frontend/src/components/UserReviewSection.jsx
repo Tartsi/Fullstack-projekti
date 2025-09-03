@@ -248,7 +248,7 @@ const UserReviewSection = () => {
       {/* Section Headline */}
       <h2
         id="reviews-title"
-        className={`text-3xl md:text-4xl font-light text-center mb-4 font-cottage text-brand-dark transition-all duration-[1500ms] delay-[350ms] underline decoration-2 underline-offset-4 ${
+        className={`uppercase text-3xl md:text-4xl font-light text-center mb-4 font-cottage text-brand-dark transition-all duration-[1500ms] delay-[350ms] underline decoration-2 underline-offset-4 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
@@ -324,9 +324,9 @@ const UserReviewSection = () => {
         <div className="text-center">
           <div className="text-4xl font-bold text-brand-dark font-cottage">
             {averageRating.toFixed(1)} / 5
-          </div>
-          <div className="text-base text-gray-600 mt-2">
-            {t("reviews.overall")}
+            <div className="uppercase text-base text-gray-600 mt-2">
+              {t("reviews.overall")}!
+            </div>
           </div>
         </div>
       </div>

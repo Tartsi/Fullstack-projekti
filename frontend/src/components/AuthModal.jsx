@@ -452,7 +452,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   <div className="text-center mb-6" aria-live="polite">
                     <h2
                       id="auth-modal-title"
-                      className="text-2xl font-bold text-gray-900 mb-2 font-cottage"
+                      className="text-2xl font-bold underline text-gray-900 mb-2 font-cottage"
                     >
                       {currentView === "register"
                         ? t("auth.createAccount")

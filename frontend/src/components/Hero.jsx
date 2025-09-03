@@ -10,10 +10,13 @@ import loginIcon from "../assets/icons/login-bracket-svgrepo-com.svg";
 import logoutIcon from "../assets/icons/logout-bracket-svgrepo-com.svg";
 import lockIcon from "../assets/icons/lock-slash-svgrepo-com.svg";
 import unlockIcon from "../assets/icons/unlock-svgrepo-com.svg";
+import processIcon from "../assets/icons/process-arrows-svgrepo-com.svg";
+import orderIcon from "../assets/icons/order-1-svgrepo-com.svg";
+import contactIcon from "../assets/icons/contact-us-svgrepo-com.svg";
 import AuthModal from "./AuthModal";
 import UserModal from "./UserModal";
 
-/**
+/**frontend/src/
  * Hero component that displays a full-screen landing section with main message,
  * call-to-action, and animated elements.
  *
@@ -173,7 +176,7 @@ const Hero = () => {
             alt="Car"
             className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 filter drop-shadow-lg"
           />
-          <div className="text-2xl sm:text-3xl lg:text-4xl font-cottage italic underline text-black">
+          <div className="text-2xl uppercase sm:text-3xl lg:text-4xl font-cottage italic underline text-black">
             Workday-Vacuumers
           </div>
           <img
@@ -185,7 +188,7 @@ const Hero = () => {
 
         {/* Main Headline */}
         <h1
-          className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-cottage font-bold text-black mb-6 leading-tight transition-all duration-1000 delay-700 ${
+          className={`uppercase text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-cottage font-bold text-black mb-6 leading-tight transition-all duration-1000 delay-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -336,24 +339,45 @@ const Hero = () => {
           <div className="flex justify-center items-center space-x-6 sm:space-x-8 md:space-x-12">
             <button
               onClick={scrollToProcess}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
               underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
-              {t("nav.process")}
+              <span className="flex items-center space-x-2">
+                <span>{t("nav.process")}</span>
+                <img
+                  src={processIcon}
+                  alt="Process"
+                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+              </span>
             </button>
             <button
               onClick={scrollToServices}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
               underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
-              {t("nav.order")}
+              <span className="flex items-center space-x-2">
+                <span>{t("nav.order")}</span>
+                <img
+                  src={orderIcon}
+                  alt="Order"
+                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+              </span>
             </button>
             <button
               onClick={scrollToContact}
-              className="text-black font-cottage text-sm sm:text-base md:text-lg italic
+              className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
               underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
             >
-              {t("nav.contact")}
+              <span className="flex items-center space-x-2">
+                <span>{t("nav.contact")}</span>
+                <img
+                  src={contactIcon}
+                  alt="Contact"
+                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+              </span>
             </button>
           </div>
         </div>

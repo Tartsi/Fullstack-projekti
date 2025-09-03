@@ -81,7 +81,7 @@ const About = () => {
         {/* Title */}
         <h2
           id="about-title"
-          className={`text-2xl sm:text-3xl lg:text-4xl font-cottage italic tracking-wide text-brand-dark underline mb-8 transition-all duration-1000 delay-[350ms] ${
+          className={`text-2xl uppercase sm:text-3xl lg:text-4xl font-cottage italic tracking-wide text-brand-dark underline mb-8 transition-all duration-1000 delay-[350ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -152,7 +152,7 @@ const About = () => {
 
         {/* Value Proposition Highlight */}
         <div
-          className={`p-4 sm:p-6 bg-white rounded-lg border-l-4 border-brand-purple shadow-lg max-w-2xl mx-auto mb-8 transition-all duration-1000 ${
+          className={`uppercase p-4 sm:p-6 bg-white rounded-lg border-l-4 border-brand-purple shadow-lg max-w-2xl mx-auto mb-8 transition-all duration-1000 ${
             isValuePropVisible
               ? "opacity-100 translate-y-0 scale-100"
               : "opacity-0 translate-y-8 scale-95"
