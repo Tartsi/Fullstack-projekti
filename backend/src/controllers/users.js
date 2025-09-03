@@ -35,18 +35,6 @@ export const register = async (req, res) => {
     const validatedData = registerSchema.parse(req.body);
     const { email, password, fullName } = validatedData;
 
-    // Check total number of users (temporary limitation to one user)
-    const userCount = await prisma.user.count();
-
-    if (userCount >= 1) {
-      authLogger.loginFailure(email, req.ip, "Maximum number of users reached");
-      return res.status(403).json({
-        ok: false,
-        message:
-          "Registration is currently limited. Maximum number of users has been reached.",
-      });
-    }
-
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {

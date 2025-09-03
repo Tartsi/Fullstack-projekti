@@ -49,6 +49,73 @@ describe("Users API", () => {
       expect(userInDb.passwordHash).not.toBe(userData.password); // Password must be hashed
     });
 
+    it("should register multiple users", async () => {
+      const firstRegisterData = {
+        email: "test@example.com",
+        password: "Password123",
+        fullName: "Test User",
+      };
+
+      // Expect 201 for first register
+      await request(app)
+        .post("/users/register")
+        .send(firstRegisterData)
+        .expect(201);
+
+      const secondRegisterData = {
+        email: "second@example.com",
+        password: "Password123",
+        fullName: "Second User",
+      };
+
+      // Expect 201 for second register
+      const response = await request(app)
+        .post("/users/register")
+        .send(secondRegisterData)
+        .expect(201);
+
+      // Check response
+      expect(response.body.ok).toBe(true);
+      expect(response.body.message).toBe("User registered successfully");
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.email).toBe(secondRegisterData.email);
+      expect(response.body.user.fullName).toBe(secondRegisterData.fullName);
+      expect(response.body.user.id).toBeDefined();
+      expect(response.body.user.role).toBe("USER");
+
+      // Check that 2 users really exist in the database
+      const usersInDb = await testPrisma.user.count();
+      expect(usersInDb).toEqual(2);
+    });
+
+    it("should reject duplicate email during registration", async () => {
+      const userData = {
+        email: "duplicate@example.com",
+        password: "testpassword123",
+        fullName: "Duplicate User",
+      };
+
+      // Register the user for the first time
+      await request(app).post("/users/register").send(userData).expect(201);
+
+      // Attempt to register the same user again
+      // Expect 409 - Conflict
+      const response = await request(app)
+        .post("/users/register")
+        .send(userData)
+        .expect(409);
+
+      // Check response
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe("User with this email already exists");
+
+      // Verify only one user exists in the database
+      const usersInDb = await testPrisma.user.findMany({
+        where: { email: userData.email },
+      });
+      expect(usersInDb).toHaveLength(1);
+    });
+
     it("should reject invalid user email during registration", async () => {
       const userData = {
         email: "invalid-email",
@@ -69,37 +136,6 @@ describe("Users API", () => {
       });
 
       expect(userInDb).toBeNull(); // Ensure no user is created in the database
-    });
-
-    // THIS TEST IS ONLY DURING DEVELOPMENT
-    // TODO: REPLACE THIS TEST WITH CHECK FOR DUPLICATE EMAIL REGISTRATION
-    it("should reject when maximum users limit reached", async () => {
-      const userData = {
-        email: "duplicate@example.com",
-        password: "testpassword123",
-        fullName: "First User",
-      };
-
-      // Register first user
-      await request(app).post("/users/register").send(userData).expect(201);
-
-      // Register second user - should fail now because of the registration limitation
-      const secondUserData = {
-        email: "second@example.com",
-        fullName: "Second User",
-        password: "testpassword123",
-      };
-
-      const response = await request(app)
-        .post("/users/register")
-        .send(secondUserData)
-        .expect(403);
-
-      expect(response.body.ok).toBe(false);
-      // Check correct error-message
-      expect(response.body.message).toBe(
-        "Registration is currently limited. Maximum number of users has been reached."
-      );
     });
   });
 
