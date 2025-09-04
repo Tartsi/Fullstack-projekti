@@ -132,6 +132,7 @@ export const translations = {
     // Services section
     services: {
       title: "Palvelut",
+      comingSoon: "TULOSSA PIAN!",
     },
     // Explanation/Process section
     explanation: {
@@ -240,9 +241,18 @@ export const translations = {
         helpTooltip: "Maksuehdot",
         helpContent:
           "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
+        location: {
+          title: "Sijainti",
+          subtitle: "Valitse kaupunki ja anna osoite",
+          cities: {
+            helsinki: "Helsinki",
+            vantaa: "Vantaa",
+            espoo: "Espoo",
+          },
+          addressPlaceholder: 'Muoto: "Esimerkkitie 14 A, 00750"',
+        },
         confirmPayment: "Vahvista Maksu",
         selectDateTime: "Valitse Päivä ja Aika",
-        selectPaymentMethod: "Valitse Maksutapa",
       },
     },
     // Reviews section
@@ -265,7 +275,7 @@ export const translations = {
         "Professional car interior cleaning while you focus on work. Return home with a clean car.",
       cta: "Book Cleaning",
       scrollText: "Learn More",
-      userProfile: "User Profile",
+      userProfile: "Profile",
       login: "Log In",
       logout: "Log Out",
     },
@@ -389,6 +399,7 @@ export const translations = {
     // Services section
     services: {
       title: "Services",
+      comingSoon: "COMING SOON!",
     },
     // Explanation/Process section
     explanation: {
@@ -498,9 +509,18 @@ export const translations = {
         helpTooltip: "Payment Terms",
         helpContent:
           "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
+        location: {
+          title: "Location",
+          subtitle: "Select city and exact address",
+          cities: {
+            helsinki: "Helsinki",
+            vantaa: "Vantaa",
+            espoo: "Espoo",
+          },
+          addressPlaceholder: 'Format: "Example Street 14 A, 00750"',
+        },
         confirmPayment: "Confirm Payment",
         selectDateTime: "Select Date and Time",
-        selectPaymentMethod: "Select Payment Method",
       },
     },
     // Reviews section

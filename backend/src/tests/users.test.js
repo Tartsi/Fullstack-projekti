@@ -278,21 +278,17 @@ describe("Users API", () => {
         .expect(200);
 
       expect(response.body.ok).toBe(true);
-      expect(response.body.message).toBe(
-        "Email found in our db, password reset instructions sent!"
-      );
+      expect(response.body.message).toBe("Password reset instructions sent!");
     });
 
     it("should accept password reset request for non-existing user (security)", async () => {
       const response = await request(app)
         .post("/users/reset-password")
         .send({ email: "nonexistent@example.com" })
-        .expect(404);
+        .expect(200);
 
-      expect(response.body.ok).toBe(false);
-      expect(response.body.message).toBe(
-        "No user found with this email address"
-      );
+      expect(response.body.ok).toBe(true);
+      expect(response.body.message).toBe("Password reset instructions sent!");
     });
 
     it("should reject invalid email format for password reset", async () => {

@@ -78,17 +78,6 @@ import ClickIcon from "../assets/icons/click-svgrepo-com.svg";
  * - Payment processing handled externally
  *
  * @returns {JSX.Element} The rendered booking interface
- *
- * @example
- * // Basic usage in a page component
- * <PricingCalendar />
- *
- * @todo
- * - Integrate with backend API for real availability data
- * - Implement actual payment processing
- * - Add form validation for user inputs
- * - Add booking confirmation flow
- * - Implement calendar accessibility improvements
  */
 const PricingCalendar = () => {
   const { t, language } = useLanguage();
@@ -97,6 +86,8 @@ const PricingCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [address, setAddress] = useState("");
 
   // Data state (TODO: Replace with API calls)
   const [availableDates, setAvailableDates] = useState([]);
@@ -120,6 +111,36 @@ const PricingCalendar = () => {
   // Refs for cleanup and DOM manipulation
   const timeoutRef = useRef(null);
   const sectionRef = useRef(null);
+
+  // Animation configurations (optimized for responsiveness)
+  const fastButtonSpring = { type: "spring", stiffness: 520, damping: 26 };
+  const microTween = { type: "tween", duration: 0.15, ease: "easeOut" };
+  const quickScale = { duration: 0.15, ease: "easeOut" };
+
+  // Shared animation values
+  const buttonHoverScale = 1.1;
+  const buttonTapScale = 0.75;
+  const disabledOpacity = 0.3;
+  const enabledOpacity = 1;
+
+  // Common class strings to reduce repetition
+  const navigationButtonClasses =
+    "w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-200 hover:border-brand-dark";
+  const priceContainerClasses =
+    "bg-white rounded-lg shadow-sm border-2 py-12 px-5 mb-8 text-center max-w-xs mx-auto font-sans transition-all duration-300";
+  const sectionContainerClasses =
+    "bg-white rounded-lg shadow-md p-4 mt-16 max-w-md mx-auto font-sans border-2 transition-all duration-300";
+
+  // Common conditions
+  const isServiceSelected = selectedServiceIndex !== null;
+  const isServiceUnselected = selectedServiceIndex === null;
+  const isCurrentServiceDisabled = currentServiceIndex !== 0;
+  const isPaymentReady =
+    selectedDate &&
+    selectedTimeSlot &&
+    selectedPaymentMethod &&
+    selectedCity &&
+    address.trim();
 
   // Initialize current week to start of this week on component mount
   useEffect(() => {
@@ -218,7 +239,6 @@ const PricingCalendar = () => {
 
   /**
    * Handle time slot selection
-   * TODO: Add validation for business hours and slot availability
    */
   const handleTimeSlotSelect = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
@@ -226,10 +246,23 @@ const PricingCalendar = () => {
 
   /**
    * Handle payment method selection
-   * TODO: Integrate with payment processor validation
    */
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
+  };
+
+  /**
+   * Handle city selection
+   */
+  const handleCitySelect = (city) => {
+    setSelectedCity(city);
+  };
+
+  /**
+   * Handle address input change
+   */
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
   };
 
   /**
@@ -290,27 +323,23 @@ const PricingCalendar = () => {
 
   /**
    * Handle payment confirmation
-   * TODO: Replace with secure payment processing integration
-   * SECURITY: Never expose payment data in console/alerts in production
    */
   const handlePaymentConfirmation = () => {
-    if (selectedDate && selectedTimeSlot && selectedPaymentMethod) {
-      // TODO: Implement secure payment processing
-      // This should:
-      // 1. Validate all selections server-side
-      // 2. Create secure payment session
-      // 3. Redirect to payment processor
-      // 4. Handle success/failure callbacks
-
+    if (
+      selectedDate &&
+      selectedTimeSlot &&
+      selectedPaymentMethod &&
+      selectedCity &&
+      address.trim()
+    ) {
       console.log("Booking confirmation initiated:", {
         date: selectedDate.toISOString().split("T")[0], // Safe date format
         timeSlot: selectedTimeSlot.id, // Use ID instead of full object
         paymentMethod: selectedPaymentMethod, // This should be sanitized
+        city: selectedCity,
+        address: address.trim(),
         timestamp: new Date().toISOString(),
       });
-
-      // Placeholder: In production, this would redirect to payment processor
-      // Example: window.location.href = `/checkout?session=${secureSessionId}`;
     }
   };
 
@@ -346,7 +375,7 @@ const PricingCalendar = () => {
     },
     {
       title: t("services.title"),
-      price: "19.99€",
+      price: "TBD",
       vatIncluded: t("pricing.vatIncluded"),
       perCleaning: t("pricing.perCleaning"),
       explanation: t("pricing.explanation"),
@@ -372,7 +401,7 @@ const PricingCalendar = () => {
       data-pricing-section
       initial={{ opacity: 0, y: 50 }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 1.4 }}
       className="py-20 px-4"
     >
       <div className="max-w-4xl mx-auto">
@@ -381,7 +410,8 @@ const PricingCalendar = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="uppercase text-3xl sm:text-4xl lg:text-5xl font-cottage italic tracking-wide text-brand-dark underline mb-12 text-center"
+          className="uppercase text-3xl sm:text-4xl lg:text-5xl font-cottage
+          italic tracking-wide text-brand-dark underline mb-12 text-center"
         >
           {services[currentServiceIndex].title}
         </motion.h2>
@@ -392,26 +422,26 @@ const PricingCalendar = () => {
           animate={
             isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
           }
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="flex justify-center items-center gap-8 mb-8"
         >
           {/* Left Arrow */}
           <motion.button
             onClick={handlePreviousService}
-            disabled={selectedServiceIndex !== null}
-            initial={{ opacity: 1 }}
+            disabled={isServiceSelected}
+            initial={{ opacity: enabledOpacity }}
             animate={{
-              opacity: selectedServiceIndex !== null ? 0.3 : 1,
-              cursor: selectedServiceIndex !== null ? "not-allowed" : "pointer",
+              opacity: isServiceSelected ? disabledOpacity : enabledOpacity,
+              cursor: isServiceSelected ? "not-allowed" : "pointer",
             }}
             whileHover={
-              selectedServiceIndex === null
-                ? { scale: 1.1, backgroundColor: "#f3f4f6" }
+              isServiceUnselected
+                ? { scale: buttonHoverScale, backgroundColor: "#f3f4f6" }
                 : {}
             }
-            whileTap={selectedServiceIndex === null ? { scale: 0.95 } : {}}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-brand-dark"
+            whileTap={isServiceUnselected ? { scale: buttonTapScale } : {}}
+            transition={fastButtonSpring}
+            className={navigationButtonClasses}
           >
             <img
               src={LeftArrowIcon}
@@ -423,21 +453,21 @@ const PricingCalendar = () => {
           {/* Undo Button */}
           <motion.button
             onClick={handleUndoSelection}
-            disabled={selectedServiceIndex === null}
-            initial={{ opacity: 0.3, scale: 0.8 }}
+            disabled={isServiceUnselected}
+            initial={{ opacity: disabledOpacity, scale: 0.8 }}
             animate={{
-              opacity: selectedServiceIndex !== null ? 1 : 0.3,
-              scale: selectedServiceIndex !== null ? 1 : 0.8,
-              cursor: selectedServiceIndex !== null ? "pointer" : "not-allowed",
+              opacity: isServiceSelected ? enabledOpacity : disabledOpacity,
+              scale: isServiceSelected ? 1 : 0.8,
+              cursor: isServiceSelected ? "pointer" : "not-allowed",
             }}
             whileHover={
-              selectedServiceIndex !== null
-                ? { scale: 1.1, backgroundColor: "#fef2f2" }
+              isServiceSelected
+                ? { scale: buttonHoverScale, backgroundColor: "#fef2f2" }
                 : {}
             }
-            whileTap={selectedServiceIndex !== null ? { scale: 0.95 } : {}}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-b-neutral-500"
+            whileTap={isServiceSelected ? { scale: buttonTapScale } : {}}
+            transition={fastButtonSpring}
+            className={navigationButtonClasses}
           >
             <img src={UndoIcon} alt="Undo selection" className="w-6 h-6" />
           </motion.button>
@@ -445,20 +475,20 @@ const PricingCalendar = () => {
           {/* Right Arrow */}
           <motion.button
             onClick={handleNextService}
-            disabled={selectedServiceIndex !== null}
-            initial={{ opacity: 1 }}
+            disabled={isServiceSelected}
+            initial={{ opacity: enabledOpacity }}
             animate={{
-              opacity: selectedServiceIndex !== null ? 0.3 : 1,
-              cursor: selectedServiceIndex !== null ? "not-allowed" : "pointer",
+              opacity: isServiceSelected ? disabledOpacity : enabledOpacity,
+              cursor: isServiceSelected ? "not-allowed" : "pointer",
             }}
             whileHover={
-              selectedServiceIndex === null
-                ? { scale: 1.1, backgroundColor: "#f3f4f6" }
+              isServiceUnselected
+                ? { scale: buttonHoverScale, backgroundColor: "#f3f4f6" }
                 : {}
             }
-            whileTap={selectedServiceIndex === null ? { scale: 0.95 } : {}}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all duration-1000 hover:border-brand-dark"
+            whileTap={isServiceUnselected ? { scale: buttonTapScale } : {}}
+            transition={fastButtonSpring}
+            className={navigationButtonClasses}
           >
             <img src={RightArrowIcon} alt="Next service" className="w-6 h-6" />
           </motion.button>
@@ -467,15 +497,16 @@ const PricingCalendar = () => {
         {/* Large centered Price Container */}
         <motion.div
           key={currentServiceIndex}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{
-            scale: isPriceSelected ? 1.06 : 1,
-            opacity: 1,
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: isPriceSelected ? 1.1 : 1, opacity: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 180,
+            damping: 12,
+            mass: 1,
           }}
-          whileHover={{ scale: isPriceSelected ? 1.06 : 1.03 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
           onClick={currentServiceIndex === 0 ? handlePriceSelect : undefined}
-          className={`bg-white rounded-lg shadow-sm border-2 py-12 px-5 mb-8 text-center max-w-xs mx-auto font-sans transition-all duration-700 ${
+          className={`${priceContainerClasses} relative ${
             currentServiceIndex === 0
               ? `cursor-pointer ${
                   isPriceSelected
@@ -488,6 +519,29 @@ const PricingCalendar = () => {
             fontFamily: "Arial, sans-serif",
           }}
         >
+          {/* Gray overlay with diagonal stripes for disabled service */}
+          {isCurrentServiceDisabled && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={microTween}
+              className="absolute inset-0 bg-gray-300 bg-opacity-60 rounded-lg z-10 flex items-center justify-center"
+              style={{
+                backgroundImage: `repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 10px,
+                  rgba(156, 163, 175, 0.3) 10px,
+                  rgba(156, 163, 175, 0.3) 20px
+                )`,
+              }}
+            >
+              <h3 className="text-3xl underline font-cottage uppercase italic text-gray-800 font-bold tracking-wider">
+                {t("services.comingSoon")}
+              </h3>
+            </motion.div>
+          )}
+
           {/* Smaller Gray-container */}
           <div className="p-2 mb-4 bg-gray-100 mx-auto w-1/2 border-2 border-black rounded-b-2xl relative">
             {/* Pricing info */}
@@ -576,8 +630,8 @@ const PricingCalendar = () => {
                 initial={{ opacity: 0, scaleY: 0 }}
                 animate={{ opacity: 1, scaleY: 1 }}
                 exit={{ opacity: 0, scaleY: 0 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                className={`bg-white rounded-lg shadow-md p-4 mt-16 max-w-md mx-auto font-sans border-2 transition-all duration-700 ${
+                transition={{ duration: 1, ease: "easeInOut" }}
+                className={`${sectionContainerClasses} ${
                   isPriceSelected ? "border-black shadow-lg" : "border-gray-400"
                 }`}
                 style={{
@@ -589,7 +643,7 @@ const PricingCalendar = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 1.44 }}
+                  transition={{ duration: 1, ease: "easeOut", delay: 0.8 }}
                 >
                   {/* Booking Instructions */}
                   <div className="mb-6 text-center px-4">
@@ -738,10 +792,10 @@ const PricingCalendar = () => {
                             disabled={!isAvailable}
                             initial={{ scale: 1 }}
                             animate={{ scale: 1 }}
-                            transition={{ duration: 0.8, ease: "easeInOut" }}
+                            transition={microTween}
                             className={`
-                      p-2 text-center text-sm transition-all duration-600 relative w-9 h-9 rounded-full flex items-center justify-center
-                      ${colorClass}`}
+                      p-2 text-center text-sm transition-all duration-300
+                      relative w-9 h-9 rounded-full flex items-center justify-center ${colorClass}`}
                           >
                             {isSelected && (
                               <motion.div
@@ -749,9 +803,9 @@ const PricingCalendar = () => {
                                 initial={{ scale: 0, borderWidth: 0 }}
                                 animate={{ scale: 1, borderWidth: 1.5 }}
                                 transition={{
-                                  scale: { duration: 1.2, ease: "easeOut" },
+                                  scale: { duration: 0.4, ease: "easeOut" },
                                   borderWidth: {
-                                    duration: 0.8,
+                                    duration: 0.3,
                                     ease: "easeOut",
                                   },
                                 }}
@@ -777,7 +831,8 @@ const PricingCalendar = () => {
                               delay: 0.2,
                             }}
                             style={{ transformOrigin: "bottom center" }}
-                            className={`absolute left-1/2 -translate-x-1/2 bottom-0 w-3 h-3 rounded border border-gray-200 ${availabilityBoxColorClass}`}
+                            className={`absolute left-1/2 -translate-x-1/2 bottom-0 w-3 h-3
+                            rounded border border-gray-200 ${availabilityBoxColorClass}`}
                           />
                         </div>
                       );
@@ -793,12 +848,12 @@ const PricingCalendar = () => {
                       y: showTimeSection ? 0 : -20,
                     }}
                     transition={{
-                      duration: 0.6,
+                      duration: 1,
                       ease: "easeOut",
-                      height: { duration: 0.5 },
+                      height: { duration: 0.6 },
                       opacity: {
-                        duration: 0.4,
-                        delay: showTimeSection ? 0.2 : 0,
+                        duration: 0.25,
+                        delay: showTimeSection ? 0.1 : 0,
                       },
                     }}
                     className="overflow-hidden"
@@ -877,15 +932,16 @@ const PricingCalendar = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -50, scale: 0.9 }}
               transition={{
-                duration: 1.44,
+                duration: 0.9,
                 ease: "easeOut",
-                delay: 0.2,
+                delay: 0.1,
               }}
-              className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 max-w-md mx-auto border-2 transition-all duration-700 font-sans ${
-                selectedDate && selectedTimeSlot
-                  ? "border-black shadow-lg"
-                  : "border-gray-100"
-              }`}
+              className={`mt-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8
+                max-w-md mx-auto border-2 transition-all duration-300 font-sans ${
+                  selectedDate && selectedTimeSlot
+                    ? "border-black shadow-lg"
+                    : "border-gray-100"
+                }`}
               style={{
                 fontFamily: "Arial, sans-serif",
               }}
@@ -893,7 +949,7 @@ const PricingCalendar = () => {
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 1.64 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 1 }}
               >
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-gray-800 mb-2">
@@ -938,7 +994,14 @@ const PricingCalendar = () => {
                       disabled={!(selectedDate && selectedTimeSlot)}
                       initial={{ scale: 1 }}
                       whileHover={
-                        selectedDate && selectedTimeSlot ? { scale: 1.05 } : {}
+                        selectedDate && selectedTimeSlot
+                          ? {
+                              scale:
+                                selectedPaymentMethod === method.id
+                                  ? 1.1
+                                  : 1.05,
+                            }
+                          : {}
                       }
                       whileTap={
                         selectedDate && selectedTimeSlot ? { scale: 0.95 } : {}
@@ -949,15 +1012,16 @@ const PricingCalendar = () => {
                           selectedDate && selectedTimeSlot
                             ? "pointer"
                             : "not-allowed",
+                        scale: selectedPaymentMethod === method.id ? 1.1 : 1,
                       }}
-                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
                       className={`p-4 rounded-xl border-2 transition-all duration-300 text-center ${
                         selectedPaymentMethod === method.id &&
                         selectedDate &&
                         selectedTimeSlot
-                          ? "border-brand-dark bg-brand-dark/10 text-brand-dark"
+                          ? "border-blue-500 bg-blue-50 text-blue-700"
                           : selectedDate && selectedTimeSlot
-                          ? "border-gray-200 hover:border-brand-dark/50 text-gray-600"
+                          ? "border-gray-200 hover:border-black text-gray-600"
                           : "border-gray-300 text-gray-400"
                       }`}
                     >
@@ -971,6 +1035,133 @@ const PricingCalendar = () => {
                   ))}
                 </div>
 
+                {/* Location Selection */}
+                <div className="mb-6">
+                  <div className="text-center mb-4">
+                    <h4 className="text-lg font-bold text-gray-800 mb-2">
+                      {t("pricing.payment.location.title")}
+                    </h4>
+                    <p className="text-gray-600 text-sm">
+                      {t("pricing.payment.location.subtitle")}
+                    </p>
+                  </div>
+
+                  {/* City Selection */}
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    {[
+                      {
+                        id: "helsinki",
+                        label: t("pricing.payment.location.cities.helsinki"),
+                      },
+                      {
+                        id: "vantaa",
+                        label: t("pricing.payment.location.cities.vantaa"),
+                      },
+                      {
+                        id: "espoo",
+                        label: t("pricing.payment.location.cities.espoo"),
+                      },
+                    ].map((city) => (
+                      <motion.button
+                        key={city.id}
+                        onClick={() =>
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod
+                            ? handleCitySelect(city.id)
+                            : null
+                        }
+                        disabled={
+                          !(
+                            selectedDate &&
+                            selectedTimeSlot &&
+                            selectedPaymentMethod
+                          )
+                        }
+                        initial={{ scale: 1 }}
+                        whileHover={
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod
+                            ? {
+                                scale: selectedCity === city.id ? 1.1 : 1.05,
+                              }
+                            : {}
+                        }
+                        whileTap={
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod
+                            ? { scale: 0.95 }
+                            : {}
+                        }
+                        animate={{
+                          opacity:
+                            selectedDate &&
+                            selectedTimeSlot &&
+                            selectedPaymentMethod
+                              ? 1
+                              : 0.3,
+                          cursor:
+                            selectedDate &&
+                            selectedTimeSlot &&
+                            selectedPaymentMethod
+                              ? "pointer"
+                              : "not-allowed",
+                          scale: selectedCity === city.id ? 1.1 : 1,
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className={`p-3 rounded-lg border-2 transition-all duration-300 text-center ${
+                          selectedCity === city.id &&
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod
+                            ? "border-blue-500 bg-blue-50 text-blue-700"
+                            : selectedDate &&
+                              selectedTimeSlot &&
+                              selectedPaymentMethod
+                            ? "border-gray-200 hover:border-black text-gray-600"
+                            : "border-gray-300 text-gray-400"
+                        }`}
+                      >
+                        <div className="text-sm font-medium">{city.label}</div>
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  {/* Address Input */}
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={handleAddressChange}
+                      disabled={
+                        !(
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod &&
+                          selectedCity
+                        )
+                      }
+                      placeholder={t(
+                        "pricing.payment.location.addressPlaceholder"
+                      )}
+                      className={`w-full p-3 border-2 rounded-lg transition-all duration-300 text-sm ${
+                        selectedDate &&
+                        selectedTimeSlot &&
+                        selectedPaymentMethod &&
+                        selectedCity
+                          ? "border-gray-200 focus:border-blue-500 text-gray-700 placeholder-gray-400"
+                          : "border-gray-300 text-gray-400 bg-gray-50 cursor-not-allowed"
+                      }`}
+                      style={{
+                        fontFamily: "Arial, sans-serif",
+                        fontStyle: address ? "normal" : "italic",
+                      }}
+                    />
+                  </div>
+                </div>
+
                 {/*  Help Tooltip  */}
                 <motion.div className="relative mb-6">
                   {/* Toggle Button (Arrow)*/}
@@ -982,7 +1173,8 @@ const PricingCalendar = () => {
                         : null
                     }
                     disabled={!(selectedDate && selectedTimeSlot)}
-                    className="w-full text-left text-sm text-brand-dark hover:text-brand-dark/80 transition-colors duration-200 flex items-center justify-between p-2"
+                    className="w-full text-left text-sm text-brand-dark hover:text-brand-dark/80
+                    transition-colors duration-200 flex items-center justify-between p-2"
                   >
                     <span className="flex items-center">
                       <motion.div layout className="w-4 h-4 mr-2">
@@ -1047,77 +1239,47 @@ const PricingCalendar = () => {
                 {/*  Payment Confirmation Button  */}
                 <motion.button
                   layout
-                  onClick={
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? handlePaymentConfirmation
-                      : null
-                  }
-                  disabled={
-                    !(selectedDate && selectedTimeSlot && selectedPaymentMethod)
-                  }
+                  onClick={isPaymentReady ? handlePaymentConfirmation : null}
+                  disabled={!isPaymentReady}
                   initial={{ scale: 1 }}
-                  whileHover={
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? { scale: 1.05 }
-                      : {}
-                  }
-                  whileTap={
-                    selectedDate && selectedTimeSlot && selectedPaymentMethod
-                      ? { scale: 0.95 }
-                      : {}
-                  }
+                  whileHover={isPaymentReady ? { scale: 1.05 } : {}}
+                  whileTap={isPaymentReady ? { scale: buttonTapScale } : {}}
                   animate={{
-                    backgroundColor:
-                      selectedDate && selectedTimeSlot && selectedPaymentMethod
-                        ? "#2563eb"
-                        : "#9ca3af",
+                    backgroundColor: isPaymentReady ? "#2563eb" : "#9ca3af",
                     opacity: selectedDate && selectedTimeSlot ? 1 : 0.4,
-                    cursor:
-                      selectedDate && selectedTimeSlot && selectedPaymentMethod
-                        ? "pointer"
-                        : "not-allowed",
+                    cursor: isPaymentReady ? "pointer" : "not-allowed",
                   }}
                   transition={{
-                    layout: {
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 30,
-                      bounce: 0,
-                    },
-                    backgroundColor: { duration: 1.2, ease: "easeInOut" },
-                    opacity: { duration: 1.2, ease: "easeInOut" },
-                    scale: { duration: 0.4, ease: "easeOut" },
+                    layout: fastButtonSpring,
+                    backgroundColor: { duration: 0.4, ease: "easeInOut" },
+                    opacity: { duration: 0.4, ease: "easeInOut" },
+                    scale: quickScale,
                   }}
-                  className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center justify-center text-white relative overflow-hidden"
+                  className="w-4/5 mx-auto py-4 rounded-xl font-bold text-lg flex items-center
+                  justify-center text-white relative overflow-hidden"
                 >
                   <span className="relative z-10">
-                    {selectedDate && selectedTimeSlot && selectedPaymentMethod
+                    {isPaymentReady
                       ? t("pricing.payment.confirmPayment")
                       : !(selectedDate && selectedTimeSlot)
                       ? t("pricing.payment.selectDateTime")
-                      : t("pricing.payment.selectPaymentMethod")}
+                      : t("pricing.payment.confirmPayment")}
                   </span>
 
                   {/* Animated Wallet Icon - slides in from text end when payment method is selected */}
-                  {selectedDate &&
-                    selectedTimeSlot &&
-                    selectedPaymentMethod && (
-                      <motion.img
-                        src={WalletArrowIcon}
-                        alt="Proceed"
-                        className="w-5 h-5 ml-2 relative z-10"
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                      />
-                    )}
+                  {isPaymentReady && (
+                    <motion.img
+                      src={WalletArrowIcon}
+                      alt="Proceed"
+                      className="w-5 h-5 ml-2 relative z-10"
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  )}
 
                   {/* Lock Icon for disabled state */}
-                  {!(
-                    selectedDate &&
-                    selectedTimeSlot &&
-                    selectedPaymentMethod
-                  ) && (
+                  {!isPaymentReady && (
                     <img
                       src={LockSlashIcon}
                       alt="Locked"

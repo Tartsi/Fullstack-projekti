@@ -11,7 +11,7 @@ import logoutIcon from "../assets/icons/logout-bracket-svgrepo-com.svg";
 import lockIcon from "../assets/icons/lock-slash-svgrepo-com.svg";
 import unlockIcon from "../assets/icons/unlock-svgrepo-com.svg";
 import processIcon from "../assets/icons/process-arrows-svgrepo-com.svg";
-import orderIcon from "../assets/icons/order-1-svgrepo-com.svg";
+import orderIcon from "../assets/icons/euro-svgrepo-com.svg";
 import contactIcon from "../assets/icons/contact-us-svgrepo-com.svg";
 import AuthModal from "./AuthModal";
 import UserModal from "./UserModal";
@@ -361,7 +361,7 @@ const Hero = () => {
                 <img
                   src={orderIcon}
                   alt="Order"
-                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                  className="w-3 h-3 sm:w-4 sm:h-4"
                 />
               </span>
             </button>
@@ -375,7 +375,7 @@ const Hero = () => {
                 <img
                   src={contactIcon}
                   alt="Contact"
-                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                  className="w-3 h-3 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5"
                 />
               </span>
             </button>

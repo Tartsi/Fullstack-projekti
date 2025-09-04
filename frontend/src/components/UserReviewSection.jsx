@@ -322,9 +322,9 @@ const UserReviewSection = () => {
 
         {/* Rating Text */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-brand-dark font-cottage">
+          <div className="text-4xl font-bold text-brand-dark font-body">
             {averageRating.toFixed(1)} / 5
-            <div className="uppercase text-base text-gray-600 mt-2">
+            <div className="uppercase text-base text-gray-600 mt-2 font-">
               {t("reviews.overall")}!
             </div>
           </div>
