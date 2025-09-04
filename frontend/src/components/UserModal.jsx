@@ -6,6 +6,8 @@ import { getCurrentUser, deleteUser, getUserBookings } from "../services/users";
 import { sanitizeInput } from "../services/validation";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import accountIcon from "../assets/icons/account-manage-personal-svgrepo-com.svg";
+import eyeVisibleIcon from "../assets/icons/eye-visible-svgrepo-com.svg";
+import eyeHiddenIcon from "../assets/icons/eye-hidden-svgrepo-com.svg";
 import NotificationMessage from "./NotificationMessage";
 
 /**
@@ -30,6 +32,7 @@ const UserModal = ({ isOpen, onClose }) => {
   const [isLoadingBookings, setIsLoadingBookings] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [notification, setNotification] = useState({
@@ -166,6 +169,7 @@ const UserModal = ({ isOpen, onClose }) => {
     if (isOpen) {
       setShowDeleteConfirm(false);
       setDeletePassword("");
+      setShowDeletePassword(false);
       setNotification({
         isVisible: false,
         message: "",
@@ -242,6 +246,7 @@ const UserModal = ({ isOpen, onClose }) => {
           type: "error",
         });
         setDeletePassword(""); // Clear password field on error
+        setShowDeletePassword(false);
       }
     } catch (error) {
       console.error("Delete account error:", error);
@@ -250,6 +255,8 @@ const UserModal = ({ isOpen, onClose }) => {
         message: t("userProfile.deleteError"),
         type: "error",
       });
+      setDeletePassword(""); // Clear password field on error
+      setShowDeletePassword(false);
     } finally {
       setIsDeleting(false);
     }
@@ -501,14 +508,34 @@ const UserModal = ({ isOpen, onClose }) => {
                   <label className="block text-sm text-center font-sans font-semibold text-gray-700 mb-2">
                     {t("userProfile.enterPassword")}
                   </label>
-                  <input
-                    type="password"
-                    value={deletePassword}
-                    onChange={(e) => setDeletePassword(e.target.value)}
-                    className={inputBaseClasses}
-                    placeholder={t("auth.password")}
-                    disabled={isDeleting}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showDeletePassword ? "text" : "password"}
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                      className={inputBaseClasses}
+                      placeholder={t("auth.password")}
+                      disabled={isDeleting}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowDeletePassword(!showDeletePassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1
+                    hover:bg-gray-100 rounded-full transition-colors duration-200"
+                      tabIndex={-1}
+                      disabled={isDeleting}
+                    >
+                      <img
+                        src={
+                          showDeletePassword ? eyeHiddenIcon : eyeVisibleIcon
+                        }
+                        alt={
+                          showDeletePassword ? "Hide password" : "Show password"
+                        }
+                        className="w-5 h-5 opacity-60 hover:opacity-80"
+                      />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -517,6 +544,7 @@ const UserModal = ({ isOpen, onClose }) => {
                     onClick={() => {
                       setShowDeleteConfirm(false);
                       setDeletePassword("");
+                      setShowDeletePassword(false);
                     }}
                     className={`${buttonBaseClasses} flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-200 hover:border-gray-300`}
                     whileHover={{ scale: prefersReducedMotion ? 1 : 1.02 }}

@@ -42,6 +42,12 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* Hide Microsoft Edge's built-in password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
 /* Language change animation */
 @keyframes languageChange {
   0% { transform: scale(1); }

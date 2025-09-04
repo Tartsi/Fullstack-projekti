@@ -12,6 +12,8 @@ import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import userAddIcon from "../assets/icons/user-add-svgrepo-com.svg";
 import userCheckIcon from "../assets/icons/user-check-svgrepo-com.svg";
 import emailIcon from "../assets/icons/email-envelope-letter-message-fast-svgrepo-com.svg";
+import eyeVisibleIcon from "../assets/icons/eye-visible-svgrepo-com.svg";
+import eyeHiddenIcon from "../assets/icons/eye-hidden-svgrepo-com.svg";
 import NotificationMessage from "./NotificationMessage";
 
 /**
@@ -48,6 +50,8 @@ const AuthModal = ({ isOpen, onClose }) => {
     message: "",
     type: "success",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const prefersReducedMotion = useReducedMotion();
 
@@ -361,6 +365,8 @@ const AuthModal = ({ isOpen, onClose }) => {
     setCurrentView(view);
     setErrors({});
     clearFormFields();
+    setShowPassword(false);
+    setShowConfirmPassword(false);
     setNotification({
       isVisible: false,
       message: "",
@@ -496,9 +502,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 
                     {/* Password field (Register + Login) */}
                     {currentView !== "forgot" && (
-                      <div>
+                      <div className="relative">
                         <input
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           name="password"
                           autoComplete={
                             currentView === "login"
@@ -511,14 +517,28 @@ const AuthModal = ({ isOpen, onClose }) => {
                           className={getInputClasses("password")}
                           style={getInputStyle("password")}
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                          tabIndex={-1}
+                        >
+                          <img
+                            src={showPassword ? eyeHiddenIcon : eyeVisibleIcon}
+                            alt={
+                              showPassword ? "Hide password" : "Show password"
+                            }
+                            className="w-5 h-5 opacity-60 hover:opacity-80"
+                          />
+                        </button>
                       </div>
                     )}
 
                     {/* Confirm password */}
                     {currentView === "register" && (
-                      <div>
+                      <div className="relative">
                         <input
-                          type="password"
+                          type={showConfirmPassword ? "text" : "password"}
                           name="confirmPassword"
                           autoComplete="new-password"
                           value={formData.confirmPassword}
@@ -529,6 +549,28 @@ const AuthModal = ({ isOpen, onClose }) => {
                           className={getInputClasses("confirmPassword")}
                           style={getInputStyle("confirmPassword")}
                         />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                          tabIndex={-1}
+                        >
+                          <img
+                            src={
+                              showConfirmPassword
+                                ? eyeHiddenIcon
+                                : eyeVisibleIcon
+                            }
+                            alt={
+                              showConfirmPassword
+                                ? "Hide password"
+                                : "Show password"
+                            }
+                            className="w-5 h-5 opacity-60 hover:opacity-80"
+                          />
+                        </button>
                       </div>
                     )}
 
