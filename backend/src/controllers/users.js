@@ -274,10 +274,17 @@ export const deleteUser = async (req, res) => {
       });
     }
 
-    // Delete user and all related data
-    // NOTE: Prisma will handle cascade deletions!
-    await prisma.user.delete({
-      where: { id: userId },
+    // Delete user and all related data in a transaction
+    await prisma.$transaction(async (tx) => {
+      // First, delete all bookings for this user
+      await tx.booking.deleteMany({
+        where: { userId: userId },
+      });
+
+      // Then delete the user
+      await tx.user.delete({
+        where: { id: userId },
+      });
     });
 
     // Destroy session
@@ -359,43 +366,6 @@ export const requireAuth = (req, res, next) => {
   next();
 };
 
-// Get user bookings
-export const getUserBookings = async (req, res) => {
-  try {
-    const userId = req.session.userId;
-
-    if (!userId) {
-      return res.status(401).json({
-        ok: false,
-        message: "Not authenticated",
-      });
-    }
-
-    const bookings = await prisma.booking.findMany({
-      where: {
-        userId: userId,
-        status: {
-          in: ["CONFIRMED", "DRAFT"], // Only show active bookings
-        },
-      },
-      orderBy: {
-        date: "asc",
-      },
-    });
-
-    res.json({
-      ok: true,
-      bookings,
-    });
-  } catch (error) {
-    console.error("Get user bookings error:", error);
-    res.status(500).json({
-      ok: false,
-      message: "Internal server error",
-    });
-  }
-};
-
 // Routes
 router.post("/register", register);
 router.post("/login", login);
@@ -403,6 +373,5 @@ router.post("/logout", logout);
 router.post("/reset-password", requestPasswordReset);
 router.delete("/delete", requireAuth, deleteUser);
 router.get("/info", requireAuth, getCurrentUser);
-router.get("/bookings", requireAuth, getUserBookings);
 
 export default router;

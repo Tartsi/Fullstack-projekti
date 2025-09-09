@@ -1,7 +1,7 @@
 import { beforeEach, afterAll } from "vitest";
 import { PrismaClient } from "@prisma/client";
 
-// Test-environment Prisma-client
+// Test-environment Prisma-client - single instance for all tests
 const prisma = new PrismaClient({
   datasources: {
     db: {
@@ -12,11 +12,23 @@ const prisma = new PrismaClient({
 
 // Setup database before each test
 export const setupTestDb = async () => {
-  // This uses TEST-PRISMA-MIGRATION-URL (Neon test-branch)
-  await prisma.$executeRaw`TRUNCATE TABLE "User", "Booking" RESTART IDENTITY CASCADE;`;
+  try {
+    // Clean up in order due to foreign key constraints
+    await prisma.booking.deleteMany({});
+    await prisma.user.deleteMany({});
+
+    // Reset auto-increment sequences if needed
+    await prisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1;`;
+    await prisma.$executeRaw`ALTER SEQUENCE "Booking_id_seq" RESTART WITH 1;`;
+  } catch (error) {
+    // If sequences don't exist (UUID primary keys), ignore the error
+    if (!error.message.includes("does not exist")) {
+      console.warn("Database cleanup warning:", error.message);
+    }
+  }
 };
 
-// Cleanup after test
+// Cleanup after all tests
 export const teardownTestDb = async () => {
   await prisma.$disconnect();
 };

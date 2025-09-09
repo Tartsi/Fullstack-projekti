@@ -72,3 +72,18 @@ export const authLogger = {
     logger.warn({ username, ip }, "User account deleted");
   },
 };
+
+// Authentication middleware for protected routes
+export const requireAuth = (req, res, next) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+
+  // Attach user info to request for downstream handlers
+  req.user = {
+    id: req.session.userId,
+    email: req.session.email,
+  };
+
+  next();
+};

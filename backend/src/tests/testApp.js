@@ -4,15 +4,22 @@ import {
   configureSession,
   createSessionTableIfNotExists,
 } from "../utils/session.js";
-import usersRouter, { setPrismaInstance } from "../controllers/users.js";
+import usersRouter, {
+  setPrismaInstance as setUsersPrisma,
+} from "../controllers/users.js";
+import bookingsRouter, {
+  setPrismaInstance as setBookingsPrisma,
+} from "../controllers/bookings.js";
 import { testPrisma } from "./testSetup.js";
 
-// Test-application that uses test-database
+// Test-application that uses single shared test-database instance
 export const createTestApp = () => {
   const app = express();
 
-  // Set the test Prisma instance for the users controller
-  setPrismaInstance(testPrisma);
+  // Set the shared test Prisma instance for both controllers
+  // This ensures all controllers use the same database connection
+  setUsersPrisma(testPrisma);
+  setBookingsPrisma(testPrisma);
 
   // Middleware
   app.use(express.json());
@@ -23,6 +30,7 @@ export const createTestApp = () => {
 
   // Routes
   app.use("/users", usersRouter);
+  app.use("/bookings", bookingsRouter);
 
   return app;
 };

@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import helmet from "helmet";
 
 import usersRouter from "./controllers/users.js";
+import bookingsRouter from "./controllers/bookings.js";
 import { requestLogger, errorLogger } from "./utils/middleware.js";
 import { startServer } from "./utils/server.js";
 import { configureSession } from "./utils/session.js";
@@ -35,6 +36,7 @@ app.use(configureSession());
 configureCors(app);
 
 app.use("/api/users", usersRouter);
+app.use("/api/bookings", bookingsRouter);
 
 // Error logging middleware
 app.use(errorLogger);
