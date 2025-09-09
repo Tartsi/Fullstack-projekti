@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
 import { useAuth } from "../contexts/AuthContext";
 import { getCurrentUser, deleteUser, getUserBookings } from "../services/users";
+import { deleteBooking } from "../services/bookings";
 import { sanitizeInput } from "../services/validation";
 import crossIcon from "../assets/icons/cross-svgrepo-com.svg";
 import accountIcon from "../assets/icons/account-manage-personal-svgrepo-com.svg";
@@ -35,6 +36,7 @@ const UserModal = ({ isOpen, onClose }) => {
   const [showDeletePassword, setShowDeletePassword] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [deletingBookingId, setDeletingBookingId] = useState(null);
   const [notification, setNotification] = useState({
     isVisible: false,
     message: "",
@@ -69,7 +71,7 @@ const UserModal = ({ isOpen, onClose }) => {
     modalOverlay:
       "fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50 p-2 md:p-4",
     modalContainer:
-      "bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[95vh] md:max-h-[90vh] mx-auto relative overflow-hidden border-2 border-black",
+      "bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[95vh] md:max-h-[90vh] mx-auto relative overflow-y-auto border-2 border-black",
     closeButton:
       "absolute top-4 right-4 p-2 z-10 cursor-pointer rounded-full hover:bg-gray-200 transition-colors",
     contentPadding: "p-8",
@@ -205,6 +207,39 @@ const UserModal = ({ isOpen, onClose }) => {
       onClose();
       setIsClosing(false);
     }, 375);
+  };
+
+  // Handle booking deletion
+  const handleDeleteBooking = async (bookingId) => {
+    if (!window.confirm(t("userProfile.deleteBookingConfirm"))) {
+      return;
+    }
+
+    setDeletingBookingId(bookingId);
+
+    try {
+      await deleteBooking(bookingId);
+
+      // Remove the booking from the local state
+      setUserBookings((prevBookings) =>
+        prevBookings.filter((booking) => booking.id !== bookingId)
+      );
+
+      setNotification({
+        isVisible: true,
+        message: t("userProfile.bookingDeleted"),
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Delete booking error:", error);
+      setNotification({
+        isVisible: true,
+        message: t("userProfile.bookingDeleteError"),
+        type: "error",
+      });
+    } finally {
+      setDeletingBookingId(null);
+    }
   };
 
   // Handle account deletion
@@ -430,23 +465,28 @@ const UserModal = ({ isOpen, onClose }) => {
                       {t("userProfile.loadingBookings")}
                     </div>
                   ) : userBookings.length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-3 ">
                       {userBookings.map((booking) => (
                         <div
                           key={booking.id}
                           className="bg-gray-50 px-4 py-3 rounded-lg border"
                         >
                           <div className="flex justify-between items-center">
-                            <div>
+                            <div className="flex-1">
                               <p className="font-sans font-semibold text-gray-800">
                                 {formatDate(booking.date)}
                               </p>
+                              {booking.timeSlot && (
+                                <p className="text-sm text-gray-600 font-sans">
+                                  {booking.timeSlot}
+                                </p>
+                              )}
                               <p className="text-sm text-gray-600 font-sans">
-                                {t("userProfile.bookingLocation")}
+                                {t("userProfile.bookingLocation")}{" "}
                                 {booking.location}
                               </p>
                             </div>
-                            <div className="text-right">
+                            <div className="text-right flex flex-col items-end space-y-2">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-sans underline uppercase tracking-wider ${
                                   booking.status === "CONFIRMED"
@@ -458,6 +498,15 @@ const UserModal = ({ isOpen, onClose }) => {
                               >
                                 {formatBookingStatus(booking.status)}
                               </span>
+                              <button
+                                onClick={() => handleDeleteBooking(booking.id)}
+                                disabled={deletingBookingId === booking.id}
+                                className="text-xs text-red-600 uppercase hover:text-red-800 font-sans cursor-pointer underline disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {deletingBookingId === booking.id
+                                  ? t("userProfile.deletingBooking")
+                                  : t("userProfile.deleteBooking")}
+                              </button>
                             </div>
                           </div>
                         </div>

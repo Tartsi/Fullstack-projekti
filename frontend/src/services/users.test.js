@@ -101,7 +101,7 @@ describe("Users Service", () => {
   });
 
   describe("loginUser", () => {
-    it("should login user successfully", async () => {
+    it("should login user successfully with correct credentials", async () => {
       const loginData = {
         email: "test@example.com",
         password: "password123",
@@ -236,10 +236,19 @@ describe("Users Service", () => {
       expect(result.bookings).toHaveLength(2);
       expect(result.bookings[0]).toEqual({
         id: "1",
-        date: "2025-08-30",
-        time: "10:00",
-        service: "Car Wash",
-        status: "confirmed",
+        date: "2025-08-30T10:00:00.000Z",
+        timeSlot: "10:00-12:00",
+        city: "Helsinki",
+        location: "Testikatu 1, Helsinki",
+        phoneNumber: "+358501234567",
+        paymentMethod: "card",
+        status: "CONFIRMED",
+        createdAt: "2025-08-25T12:00:00.000Z",
+        user: {
+          id: "1",
+          email: "test@example.com",
+          fullName: "Test User",
+        },
       });
     });
   });

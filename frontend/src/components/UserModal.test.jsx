@@ -151,6 +151,60 @@ describe("UserModal", () => {
     expect(document.body.style.overflow).toBe("hidden");
   });
 
+  it("handles language change and updates modal content", async () => {
+    let languageContext;
+    const handleLanguageChange = (context) => {
+      languageContext = context;
+    };
+
+    renderWithProviders(
+      <LanguageTestHelper onLanguageChange={handleLanguageChange}>
+        <UserModal isOpen={true} onClose={mockOnClose} />
+      </LanguageTestHelper>
+    );
+
+    // Wait for user data to load
+    await waitFor(() => {
+      expect(screen.getByText("KÄYTTÄJÄSI")).toBeInTheDocument();
+      expect(screen.getByText("Test User")).toBeInTheDocument();
+    });
+
+    expect(screen.getByText("PERUSTIEDOT")).toBeInTheDocument();
+    expect(screen.getByText("KOKO NIMI")).toBeInTheDocument();
+    expect(screen.getByText("SÄHKÖPOSTI")).toBeInTheDocument();
+    expect(screen.getByText("VARAUKSENI")).toBeInTheDocument();
+    expect(screen.getByText("POISTA TILI")).toBeInTheDocument();
+
+    // Change language to English
+    await waitFor(() => {
+      expect(languageContext).toBeDefined();
+    });
+
+    act(() => {
+      languageContext.changeLanguage("en");
+    });
+
+    // Should now show English content
+    await waitFor(() => {
+      expect(screen.getByText("YOUR PROFILE")).toBeInTheDocument();
+      expect(screen.getByText("BASIC INFO")).toBeInTheDocument();
+      expect(screen.getByText("FULL NAME")).toBeInTheDocument();
+      expect(screen.getByText("EMAIL")).toBeInTheDocument();
+      expect(screen.getByText("My Bookings")).toBeInTheDocument();
+      expect(screen.getByText("DELETE ACCOUNT")).toBeInTheDocument();
+    });
+
+    // Test delete confirmation dialog language change
+    const deleteButton = screen.getByText("DELETE ACCOUNT");
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("CONFIRM ACCOUNT DELETION")).toBeInTheDocument();
+      expect(screen.getByText("Cancel")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Deletion")).toBeInTheDocument();
+    });
+  });
+
   it("restores body scroll when modal is closed", () => {
     const { rerender } = renderWithProviders(
       <UserModal isOpen={true} onClose={mockOnClose} />
@@ -205,11 +259,24 @@ describe("UserModal", () => {
     renderWithProviders(<UserModal isOpen={true} onClose={mockOnClose} />);
 
     await waitFor(() => {
-      // Check for multiple bookings by using getAllByText
-      const locationTexts = screen.getAllByText(/Varauksen sijainti/);
-      expect(locationTexts.length).toBeGreaterThan(0);
-      expect(screen.getByText("Vahvistettu")).toBeInTheDocument();
+      // Check if bookings section exists
+      expect(screen.getByText("VARAUKSENI")).toBeInTheDocument();
     });
+
+    // Check for bookings being displayed
+    await waitFor(
+      () => {
+        // Look for booking location text (use getAllByText since there are multiple bookings)
+        const locationTexts = screen.getAllByText(/Varauksen sijainti:/);
+        expect(locationTexts).toHaveLength(2); // We expect 2 bookings
+        // Look for confirmed status
+        expect(screen.getAllByText("Vahvistettu")).toHaveLength(2);
+        // Look for specific booking locations - use regex to handle multi-line text
+        expect(screen.getByText(/Testikatu 1, Helsinki/)).toBeInTheDocument();
+        expect(screen.getByText(/Esimerkkitie 5, Espoo/)).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("shows loading state initially", () => {
@@ -344,11 +411,8 @@ describe("UserModal", () => {
   it("displays empty bookings state", async () => {
     // Override MSW handler to return empty bookings
     server.use(
-      http.get(`${API_BASE_URL}/api/users/bookings`, () => {
-        return HttpResponse.json({
-          ok: true,
-          bookings: [],
-        });
+      http.get(`${API_BASE_URL}/api/bookings`, () => {
+        return HttpResponse.json([]);
       })
     );
 
@@ -426,60 +490,6 @@ describe("UserModal", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Poistetaan...")).toBeInTheDocument();
-    });
-  });
-
-  it("handles language change and updates modal content", async () => {
-    let languageContext;
-    const handleLanguageChange = (context) => {
-      languageContext = context;
-    };
-
-    renderWithProviders(
-      <LanguageTestHelper onLanguageChange={handleLanguageChange}>
-        <UserModal isOpen={true} onClose={mockOnClose} />
-      </LanguageTestHelper>
-    );
-
-    // Wait for user data to load
-    await waitFor(() => {
-      expect(screen.getByText("KÄYTTÄJÄSI")).toBeInTheDocument();
-      expect(screen.getByText("Test User")).toBeInTheDocument();
-    });
-
-    expect(screen.getByText("PERUSTIEDOT")).toBeInTheDocument();
-    expect(screen.getByText("KOKO NIMI")).toBeInTheDocument();
-    expect(screen.getByText("SÄHKÖPOSTI")).toBeInTheDocument();
-    expect(screen.getByText("VARAUKSENI")).toBeInTheDocument();
-    expect(screen.getByText("POISTA TILI")).toBeInTheDocument();
-
-    // Change language to English
-    await waitFor(() => {
-      expect(languageContext).toBeDefined();
-    });
-
-    act(() => {
-      languageContext.changeLanguage("en");
-    });
-
-    // Should now show English content
-    await waitFor(() => {
-      expect(screen.getByText("YOUR PROFILE")).toBeInTheDocument();
-      expect(screen.getByText("BASIC INFO")).toBeInTheDocument();
-      expect(screen.getByText("FULL NAME")).toBeInTheDocument();
-      expect(screen.getByText("EMAIL")).toBeInTheDocument();
-      expect(screen.getByText("My Bookings")).toBeInTheDocument();
-      expect(screen.getByText("DELETE ACCOUNT")).toBeInTheDocument();
-    });
-
-    // Test delete confirmation dialog language change
-    const deleteButton = screen.getByText("DELETE ACCOUNT");
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(screen.getByText("CONFIRM ACCOUNT DELETION")).toBeInTheDocument();
-      expect(screen.getByText("Cancel")).toBeInTheDocument();
-      expect(screen.getByText("Confirm Deletion")).toBeInTheDocument();
     });
   });
 });

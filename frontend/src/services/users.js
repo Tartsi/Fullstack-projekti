@@ -130,6 +130,8 @@ export const requestPasswordReset = async (resetData) => {
       resetData
     );
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     if (response.data.ok) {
       return {
         success: true,
@@ -287,20 +289,13 @@ export const deleteUser = async (deleteData) => {
  */
 export const getUserBookings = async () => {
   try {
-    const response = await apiClient.get("/api/users/bookings");
+    const response = await apiClient.get("/api/bookings");
 
-    if (response.data.ok) {
-      return {
-        success: true,
-        bookings: response.data.bookings,
-      };
-    } else {
-      return {
-        success: false,
-        message: response.data.message,
-        bookings: [],
-      };
-    }
+    // Direct array response from bookings endpoint
+    return {
+      success: true,
+      bookings: response.data,
+    };
   } catch (error) {
     // Handle 401 silently
     if (error.response?.status === 401) {

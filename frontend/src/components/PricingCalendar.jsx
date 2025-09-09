@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useAuth } from "../contexts/AuthContext";
+import { createBooking } from "../services/bookings";
+import BookingSuccess from "./BookingSuccess";
 import {
   timeSlots,
   generateAvailableDates,
@@ -38,8 +41,16 @@ import ClickIcon from "../assets/icons/click-svgrepo-com.svg";
 /**
  * PricingCalendar - Booking interface component
  *
+ * IMPORTANT: Component is this large purely for practice purposes / personal challenge
+ * Obviously this is at the cost of proper testing but for this project
+ * It shall be acceptable, as the booking implementation will likely not
+ * be taken further. If however this changes, the component will be broken
+ * into multiple parts. Currently no tests are present for this component
+ * for this reason.
+ *
  * IMPORTANT: Currently uses placeholder data for demonstration purposes.
- * Backend integration required for production use.
+ * Backend integration required for production use. Will not be developed
+ * Unless the project goes further as per customer request
  *
  * @component
  * @description A comprehensive booking interface with the following features:
@@ -81,6 +92,7 @@ import ClickIcon from "../assets/icons/click-svgrepo-com.svg";
  */
 const PricingCalendar = () => {
   const { t, language } = useLanguage();
+  const { isAuthenticated } = useAuth();
 
   // Core booking state
   const [selectedDate, setSelectedDate] = useState(null);
@@ -88,6 +100,13 @@ const PricingCalendar = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  // Address validation state - now supports multiple errors
+  const [addressErrors, setAddressErrors] = useState([]);
+
+  // Phone validation state - now supports multiple errors
+  const [phoneErrors, setPhoneErrors] = useState([]);
 
   // Data state (TODO: Replace with API calls)
   const [availableDates, setAvailableDates] = useState([]);
@@ -103,6 +122,12 @@ const PricingCalendar = () => {
   const [showPaymentSection, setShowPaymentSection] = useState(false);
   const [showPaymentTooltip, setShowPaymentTooltip] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+  // Booking success state
+  const [showBookingSuccess, setShowBookingSuccess] = useState(false);
+  const [bookingSuccessDetails, setBookingSuccessDetails] = useState(null);
+  const [isSubmittingBooking, setIsSubmittingBooking] = useState(false);
 
   // Service selection state
   const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
@@ -131,16 +156,113 @@ const PricingCalendar = () => {
   const sectionContainerClasses =
     "bg-white rounded-lg shadow-md p-4 mt-16 max-w-md mx-auto font-sans border-2 transition-all duration-300";
 
+  /**
+   * Validates address format including Finnish postal code - returns all errors
+   * @param {string} addressValue - The address value to validate
+   * @returns {object} - Validation result with isValid boolean and errors array
+   */
+  const validateAddress = (addressValue) => {
+    const errors = [];
+
+    if (!addressValue || addressValue.trim() === "") {
+      return { isValid: false, errors: [] }; // Empty is not an error, just not valid
+    }
+
+    // Basic address format: Should contain at least one letter and one number
+    const hasNumber = /\d/.test(addressValue);
+    const hasLetter = /[a-zA-ZäöüÄÖÜ]/.test(addressValue);
+    // Finnish postal code: 5 digits
+    const finnishPostalCodeRegex = /\b\d{5}\b/;
+
+    if (!hasNumber || !hasLetter) {
+      errors.push(t("pricing.payment.location.errors.addressMissingParts"));
+    }
+
+    if (addressValue.trim().length < 5) {
+      errors.push(t("pricing.payment.location.errors.addressTooShort"));
+    }
+
+    if (!finnishPostalCodeRegex.test(addressValue)) {
+      errors.push(t("pricing.payment.location.errors.addressMissingPostal"));
+    }
+
+    return { isValid: errors.length === 0, errors };
+  };
+
+  /**
+   * Validates phone number format (Finnish format, + sign optional) - returns all errors
+   * @param {string} phoneValue - The phone number to validate
+   * @returns {object} - Validation result with isValid boolean and errors array
+   */
+  const validatePhoneNumber = (phoneValue) => {
+    const errors = [];
+
+    if (!phoneValue || phoneValue.trim() === "") {
+      return { isValid: false, errors: [] }; // Empty is not an error, just not valid
+    }
+
+    if (phoneValue.length < 8) {
+      errors.push(t("pricing.payment.location.errors.phoneTooShort"));
+    }
+
+    // + sign is now optional - accept both formats
+    // If it starts with +, check for full international format
+    if (phoneValue.startsWith("+") && phoneValue.length < 10) {
+      errors.push(t("pricing.payment.location.errors.phoneTooShort"));
+    }
+
+    return { isValid: errors.length === 0, errors };
+  };
+
+  /**
+   * Gets all possible address validation errors for constant display
+   * @returns {Array} - Array of all possible address error messages
+   */
+  const getAllAddressErrors = () => {
+    return [
+      t("pricing.payment.location.errors.addressMissingParts"),
+      t("pricing.payment.location.errors.addressTooShort"),
+      t("pricing.payment.location.errors.addressMissingPostal"),
+    ];
+  };
+
+  /**
+   * Gets all possible phone validation errors for constant display
+   * @returns {Array} - Array of all possible phone error messages
+   */
+  const getAllPhoneErrors = () => {
+    return [t("pricing.payment.location.errors.phoneTooShort")];
+  };
+
+  /**
+   * Sanitizes address input by removing dangerous characters
+   * @param {string} value - The input value to sanitize
+   * @returns {string} - Sanitized value
+   */
+  const sanitizeAddressInput = (value) => {
+    // Remove dangerous characters like <, >, &, ", ', etc.
+    return value.replace(/[<>&"']/g, "");
+  };
+
   // Common conditions
   const isServiceSelected = selectedServiceIndex !== null;
   const isServiceUnselected = selectedServiceIndex === null;
   const isCurrentServiceDisabled = currentServiceIndex !== 0;
+  const isAddressValid =
+    address.trim() &&
+    validateAddress(address).isValid &&
+    addressErrors.length === 0;
+  const isPhoneValid =
+    phoneNumber.trim() &&
+    validatePhoneNumber(phoneNumber).isValid &&
+    phoneErrors.length === 0;
   const isPaymentReady =
     selectedDate &&
     selectedTimeSlot &&
     selectedPaymentMethod &&
     selectedCity &&
-    address.trim();
+    isAddressValid &&
+    isPhoneValid;
 
   // Initialize current week to start of this week on component mount
   useEffect(() => {
@@ -259,16 +381,66 @@ const PricingCalendar = () => {
   };
 
   /**
-   * Handle address input change
+   * Handle address input change with real-time validation and sanitization
    */
   const handleAddressChange = (event) => {
-    setAddress(event.target.value);
+    const rawValue = event.target.value;
+    const sanitizedValue = sanitizeAddressInput(rawValue);
+
+    // If sanitization removed characters, use the sanitized value
+    setAddress(sanitizedValue);
+
+    // Real-time validation - update errors as user types
+    if (sanitizedValue.trim()) {
+      const validation = validateAddress(sanitizedValue);
+      setAddressErrors(validation.errors);
+    } else {
+      setAddressErrors([]);
+    }
   };
 
+  /**
+   * Handle address input blur - no longer validates immediately
+   */
+  const handleAddressBlur = () => {
+    // Remove immediate validation - only validate on payment confirmation
+    return;
+  };
+
+  /**
+   * Handle phone number input change with real-time validation
+   */
+  const handlePhoneChange = (event) => {
+    const value = event.target.value;
+
+    setPhoneNumber(value);
+
+    // Real-time validation - update errors as user types
+    if (value.trim()) {
+      const validation = validatePhoneNumber(value);
+      setPhoneErrors(validation.errors);
+    } else {
+      setPhoneErrors([]);
+    }
+  };
+
+  /**
+   * Handle phone number input blur - no longer validates immediately
+   */
+  const handlePhoneBlur = () => {
+    // Remove immediate validation - only validate on payment confirmation
+    return;
+  };
   /**
    * Handle price container selection to start booking flow
    */
   const handlePriceSelect = () => {
+    // If user is not authenticated, show login prompt instead
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true);
+      return;
+    }
+
     setSelectedServiceIndex(currentServiceIndex);
     setIsPriceSelected(true);
     // Clear any existing timeout to prevent memory leaks
@@ -279,6 +451,38 @@ const PricingCalendar = () => {
     timeoutRef.current = setTimeout(() => {
       setShowDateSection(true);
     }, 100);
+  };
+
+  /**
+   * Navigate to Hero section for login/registration
+   */
+  const navigateToHero = () => {
+    const heroSection = document.querySelector("[data-hero-section]");
+    if (heroSection) {
+      heroSection.scrollIntoView({ behavior: "auto" });
+    }
+    setShowLoginPrompt(false);
+  };
+
+  /**
+   * Handle mouse leave for desktop users
+   */
+  const handlePriceContainerMouseLeave = () => {
+    if (!isAuthenticated) {
+      setShowLoginPrompt(false);
+    }
+  };
+
+  /**
+   * Handle click outside to close login prompt on mobile
+   */
+  const handleClickOutside = (event) => {
+    if (!isAuthenticated && showLoginPrompt) {
+      const priceContainer = event.target.closest("[data-price-container]");
+      if (!priceContainer) {
+        setShowLoginPrompt(false);
+      }
+    }
   };
 
   /**
@@ -324,33 +528,81 @@ const PricingCalendar = () => {
   /**
    * Handle payment confirmation
    */
-  const handlePaymentConfirmation = () => {
+  const handlePaymentConfirmation = async () => {
+    // Prevent double submission
+    if (isSubmittingBooking) return;
+
+    // Validate address one more time before confirmation
+    const addressValidation = validateAddress(address);
+    if (!addressValidation.isValid) {
+      setAddressErrors(addressValidation.errors);
+      return;
+    }
+
+    // Validate phone number one more time before confirmation
+    const phoneValidation = validatePhoneNumber(phoneNumber);
+    if (!phoneValidation.isValid) {
+      setPhoneErrors(phoneValidation.errors);
+      return;
+    }
+
     if (
       selectedDate &&
       selectedTimeSlot &&
       selectedPaymentMethod &&
       selectedCity &&
-      address.trim()
+      isAddressValid &&
+      isPhoneValid
     ) {
-      console.log("Booking confirmation initiated:", {
-        date: selectedDate.toISOString().split("T")[0], // Safe date format
-        timeSlot: selectedTimeSlot.id, // Use ID instead of full object
-        paymentMethod: selectedPaymentMethod, // This should be sanitized
-        city: selectedCity,
-        address: address.trim(),
-        timestamp: new Date().toISOString(),
-      });
-    }
-  };
+      setIsSubmittingBooking(true);
 
-  // Cleanup timeout on component unmount to prevent memory leaks
+      try {
+        // Prepare booking data
+        const bookingData = {
+          date: selectedDate.toISOString(), // Full ISO format for backend
+          timeSlot: selectedTimeSlot.label, // Use label for display
+          city: selectedCity,
+          address: address.trim(),
+          phoneNumber: phoneNumber.trim(),
+          paymentMethod: selectedPaymentMethod,
+        };
+
+        // Submit booking to backend
+        const bookingResponse = await createBooking(bookingData);
+
+        // Prepare success details for display
+        const successDetails = {
+          date: formatDateForDisplay(selectedDate, t, language),
+          timeSlot: selectedTimeSlot.label,
+          city: selectedCity,
+          address: address.trim(),
+          phoneNumber: phoneNumber.trim(),
+          paymentMethod: selectedPaymentMethod,
+          bookingId: bookingResponse.id,
+        };
+
+        setBookingSuccessDetails(successDetails);
+        setShowBookingSuccess(true);
+      } catch (error) {
+        console.error("Error creating booking:", error);
+        // TODO: Show error message to user
+        alert(`Error creating booking: ${error.message}`);
+      } finally {
+        setIsSubmittingBooking(false);
+      }
+    }
+  }; // Cleanup timeout on component unmount to prevent memory leaks
   useEffect(() => {
+    // Add event listener for clicking outside to close login prompt
+    document.addEventListener("click", handleClickOutside);
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, []);
+  }, [showLoginPrompt, isAuthenticated]);
 
   // Service options data
   const services = [
@@ -501,18 +753,27 @@ const PricingCalendar = () => {
           animate={{ scale: isPriceSelected ? 1.1 : 1, opacity: 1 }}
           transition={{
             type: "spring",
-            stiffness: 180,
+            stiffness: 200,
             damping: 12,
-            mass: 1,
+            mass: 0.75,
           }}
+          data-price-container="true"
           onClick={currentServiceIndex === 0 ? handlePriceSelect : undefined}
+          onMouseEnter={
+            currentServiceIndex === 0 && !isAuthenticated
+              ? () => setShowLoginPrompt(true)
+              : undefined
+          }
+          onMouseLeave={handlePriceContainerMouseLeave}
           className={`${priceContainerClasses} relative ${
             currentServiceIndex === 0
-              ? `cursor-pointer ${
-                  isPriceSelected
-                    ? "border-black shadow-lg"
-                    : "border-gray-300 hover:border-black hover:shadow-md"
-                }`
+              ? isAuthenticated
+                ? `cursor-pointer ${
+                    isPriceSelected
+                      ? "border-black shadow-lg"
+                      : "border-gray-300 hover:border-black hover:shadow-md"
+                  }`
+                : "cursor-help border-gray-300 hover:border-yellow-400"
               : "cursor-not-allowed border-gray-400 opacity-75"
           }`}
           style={{
@@ -559,41 +820,76 @@ const PricingCalendar = () => {
             </p>
             {/* Pulsating text and icon */}
             <AnimatePresence>
-              {currentServiceIndex === 0 && !isPriceSelected && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 1.2 }}
-                  className="uppercase absolute -top-8 flex items-center space-x-3"
-                >
-                  {/* Pulsating text */}
+              {currentServiceIndex === 0 &&
+                !isPriceSelected &&
+                isAuthenticated && (
                   <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="font-cottage text-sm text-gray-800 italic whitespace-nowrap tracking-wider"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 1.2 }}
+                    className="uppercase absolute -top-8 flex items-center space-x-3"
                   >
-                    {language === "fi" ? "tilaa tästä" : "order here"}
-                  </motion.div>
+                    {/* Pulsating text */}
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="font-cottage text-sm text-gray-800 italic whitespace-nowrap tracking-wider"
+                    >
+                      {language === "fi" ? "tilaa tästä" : "order here"}
+                    </motion.div>
 
-                  {/* Pulsating icon */}
-                  <motion.img
-                    src={ClickIcon}
-                    alt="Click here"
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="w-5 h-5"
-                  />
-                </motion.div>
-              )}
+                    {/* Pulsating icon */}
+                    <motion.img
+                      src={ClickIcon}
+                      alt="Click here"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="w-5 h-5"
+                    />
+                  </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Login prompt for non-authenticated users */}
+            <AnimatePresence>
+              {currentServiceIndex === 0 &&
+                !isAuthenticated &&
+                showLoginPrompt && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-2 rounded-lg shadow-lg z-20 text-sm font-medium whitespace-nowrap"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={navigateToHero}
+                        className="cursor-pointer text-yellow-800 hover:text-yellow-900 font-body underline"
+                      >
+                        {language === "fi"
+                          ? "Kirjaudu sisään/Rekisteröidy"
+                          : "Login/Register"}
+                      </button>
+                      <span>
+                        {language === "fi"
+                          ? "tilataksesi palveluita"
+                          : "to order services"}
+                      </span>
+                    </div>
+                    {/* Arrow pointing down */}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-yellow-400"></div>
+                  </motion.div>
+                )}
             </AnimatePresence>
           </div>
 
@@ -1129,12 +1425,13 @@ const PricingCalendar = () => {
                     ))}
                   </div>
 
-                  {/* Address Input */}
-                  <div className="mb-4">
+                  {/* Input */}
+                  <div className="mb-2">
                     <input
                       type="text"
                       value={address}
                       onChange={handleAddressChange}
+                      onBlur={handleAddressBlur}
                       disabled={
                         !(
                           selectedDate &&
@@ -1147,18 +1444,106 @@ const PricingCalendar = () => {
                         "pricing.payment.location.addressPlaceholder"
                       )}
                       className={`w-full p-3 border-2 rounded-lg transition-all duration-300 text-sm ${
-                        selectedDate &&
-                        selectedTimeSlot &&
-                        selectedPaymentMethod &&
-                        selectedCity
-                          ? "border-gray-200 focus:border-blue-500 text-gray-700 placeholder-gray-400"
-                          : "border-gray-300 text-gray-400 bg-gray-50 cursor-not-allowed"
-                      }`}
+                        address.trim() && addressErrors.length === 0
+                          ? "border-green-500"
+                          : addressErrors.length > 0
+                          ? "border-red-500"
+                          : selectedDate &&
+                            selectedTimeSlot &&
+                            selectedPaymentMethod &&
+                            selectedCity
+                          ? "border-gray-200 focus:border-blue-500 placeholder-gray-400"
+                          : "border-gray-300 bg-gray-50 cursor-not-allowed"
+                      } text-black focus:outline-none focus:ring-0`}
                       style={{
                         fontFamily: "Arial, sans-serif",
                         fontStyle: address ? "normal" : "italic",
                       }}
                     />
+                  </div>
+
+                  {/* Phone Number Input */}
+                  <div className="mb-4">
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      onBlur={handlePhoneBlur}
+                      disabled={
+                        !(
+                          selectedDate &&
+                          selectedTimeSlot &&
+                          selectedPaymentMethod &&
+                          selectedCity
+                        )
+                      }
+                      placeholder={t(
+                        "pricing.payment.location.phonePlaceholder"
+                      )}
+                      className={`w-full p-3 border-2 rounded-lg transition-all duration-300 text-sm ${
+                        phoneNumber.trim() && phoneErrors.length === 0
+                          ? "border-green-500"
+                          : phoneErrors.length > 0
+                          ? "border-red-500"
+                          : selectedDate &&
+                            selectedTimeSlot &&
+                            selectedPaymentMethod &&
+                            selectedCity
+                          ? "border-gray-200 focus:border-blue-500 placeholder-gray-400"
+                          : "border-gray-300 bg-gray-50 cursor-not-allowed"
+                      } text-black focus:outline-none focus:ring-0`}
+                      style={{
+                        fontFamily: "Arial, sans-serif",
+                        fontStyle: phoneNumber ? "normal" : "italic",
+                      }}
+                    />
+                  </div>
+
+                  {/* All Validation Messages - Always Visible */}
+                  <div className="mb-4 space-y-1">
+                    <div className="text-xs font-medium text-gray-600 mb-2">
+                      {t("pricing.payment.location.requirementHeaders.address")}
+                    </div>
+                    {getAllAddressErrors().map((error, index) => {
+                      const isResolved = !addressErrors.includes(error);
+                      const isFieldEmpty = !address.trim();
+                      return (
+                        <div
+                          key={`address-${index}`}
+                          className={`text-sm font-medium transition-all duration-300 ${
+                            isFieldEmpty
+                              ? "text-red-600"
+                              : isResolved
+                              ? "text-green-600 line-through"
+                              : "text-red-600"
+                          }`}
+                        >
+                          • {error}
+                        </div>
+                      );
+                    })}
+
+                    <div className="text-xs font-medium text-gray-600 mb-2 mt-4">
+                      {t("pricing.payment.location.requirementHeaders.phone")}
+                    </div>
+                    {getAllPhoneErrors().map((error, index) => {
+                      const isResolved = !phoneErrors.includes(error);
+                      const isFieldEmpty = !phoneNumber.trim();
+                      return (
+                        <div
+                          key={`phone-${index}`}
+                          className={`text-sm font-medium transition-all duration-300 ${
+                            isFieldEmpty
+                              ? "text-red-600"
+                              : isResolved
+                              ? "text-green-600 line-through"
+                              : "text-red-600"
+                          }`}
+                        >
+                          • {error}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -1239,15 +1624,33 @@ const PricingCalendar = () => {
                 {/*  Payment Confirmation Button  */}
                 <motion.button
                   layout
-                  onClick={isPaymentReady ? handlePaymentConfirmation : null}
-                  disabled={!isPaymentReady}
+                  onClick={
+                    isPaymentReady && !isSubmittingBooking
+                      ? handlePaymentConfirmation
+                      : null
+                  }
+                  disabled={!isPaymentReady || isSubmittingBooking}
                   initial={{ scale: 1 }}
-                  whileHover={isPaymentReady ? { scale: 1.05 } : {}}
-                  whileTap={isPaymentReady ? { scale: buttonTapScale } : {}}
+                  whileHover={
+                    isPaymentReady && !isSubmittingBooking
+                      ? { scale: 1.05 }
+                      : {}
+                  }
+                  whileTap={
+                    isPaymentReady && !isSubmittingBooking
+                      ? { scale: buttonTapScale }
+                      : {}
+                  }
                   animate={{
-                    backgroundColor: isPaymentReady ? "#2563eb" : "#9ca3af",
+                    backgroundColor:
+                      isPaymentReady && !isSubmittingBooking
+                        ? "#2563eb"
+                        : "#9ca3af",
                     opacity: selectedDate && selectedTimeSlot ? 1 : 0.4,
-                    cursor: isPaymentReady ? "pointer" : "not-allowed",
+                    cursor:
+                      isPaymentReady && !isSubmittingBooking
+                        ? "pointer"
+                        : "not-allowed",
                   }}
                   transition={{
                     layout: fastButtonSpring,
@@ -1259,15 +1662,29 @@ const PricingCalendar = () => {
                   justify-center text-white relative overflow-hidden"
                 >
                   <span className="relative z-10">
-                    {isPaymentReady
+                    {isSubmittingBooking
+                      ? language === "fi"
+                        ? "Lähetetään..."
+                        : "Submitting..."
+                      : isPaymentReady
                       ? t("pricing.payment.confirmPayment")
                       : !(selectedDate && selectedTimeSlot)
                       ? t("pricing.payment.selectDateTime")
                       : t("pricing.payment.confirmPayment")}
                   </span>
 
+                  {/* Loading spinner when submitting */}
+                  {isSubmittingBooking && (
+                    <motion.div
+                      className="w-5 h-5 ml-2 border-2 border-white border-t-transparent rounded-full animate-spin"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+
                   {/* Animated Wallet Icon - slides in from text end when payment method is selected */}
-                  {isPaymentReady && (
+                  {isPaymentReady && !isSubmittingBooking && (
                     <motion.img
                       src={WalletArrowIcon}
                       alt="Proceed"
@@ -1279,7 +1696,7 @@ const PricingCalendar = () => {
                   )}
 
                   {/* Lock Icon for disabled state */}
-                  {!isPaymentReady && (
+                  {!isPaymentReady && !isSubmittingBooking && (
                     <img
                       src={LockSlashIcon}
                       alt="Locked"
@@ -1291,6 +1708,42 @@ const PricingCalendar = () => {
             </motion.div>
           )}
       </div>
+
+      {/* Booking Success Modal */}
+      <AnimatePresence>
+        {showBookingSuccess && bookingSuccessDetails && (
+          <BookingSuccess
+            bookingDetails={bookingSuccessDetails}
+            onClose={() => {
+              setShowBookingSuccess(false);
+              setBookingSuccessDetails(null);
+
+              // Reset the form state after modal is closed
+              setSelectedDate(null);
+              setSelectedTimeSlot(null);
+              setSelectedPaymentMethod(null);
+              setSelectedCity(null);
+              setAddress("");
+              setPhoneNumber("");
+              setAddressErrors([]);
+              setPhoneErrors([]);
+              setIsPriceSelected(false);
+              setShowDateSection(false);
+              setShowTimeSection(false);
+              setShowPaymentSection(false);
+              setSelectedServiceIndex(null);
+
+              // Scroll back to pricing section
+              const pricingSection = document.querySelector(
+                "[data-pricing-section]"
+              );
+              if (pricingSection) {
+                pricingSection.scrollIntoView({ behavior: "auto" });
+              }
+            }}
+          />
+        )}
+      </AnimatePresence>
     </motion.section>
   );
 };

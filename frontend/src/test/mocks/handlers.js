@@ -136,27 +136,110 @@ export const handlers = [
     });
   }),
 
-  // Get user bookings
-  http.get(`${API_BASE_URL}/api/users/bookings`, () => {
-    // Simulate user bookings
+  // Create booking
+  http.post(`${API_BASE_URL}/api/bookings`, async ({ request }) => {
+    const bookingData = await request.json();
+
+    // Simulate validation errors
+    if (!bookingData.date || !bookingData.timeSlot || !bookingData.city) {
+      return HttpResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    if (bookingData.phoneNumber === "invalid") {
+      return HttpResponse.json(
+        { error: "Invalid phone number" },
+        { status: 400 }
+      );
+    }
+
+    // Simulate successful booking creation
     return HttpResponse.json({
-      ok: true,
-      bookings: [
-        {
+      id: "new-booking-123",
+      date: bookingData.date,
+      timeSlot: bookingData.timeSlot,
+      city: bookingData.city,
+      location: bookingData.location,
+      phoneNumber: bookingData.phoneNumber,
+      paymentMethod: bookingData.paymentMethod,
+      status: "CONFIRMED",
+      createdAt: new Date().toISOString(),
+      user: {
+        id: "1",
+        email: "test@example.com",
+        fullName: "Test User",
+      },
+    });
+  }),
+
+  // Get user bookings
+  http.get(`${API_BASE_URL}/api/bookings`, () => {
+    // Simulate user bookings
+    return HttpResponse.json([
+      {
+        id: "1",
+        date: "2025-08-30T10:00:00.000Z",
+        timeSlot: "10:00-12:00",
+        city: "Helsinki",
+        location: "Testikatu 1, Helsinki",
+        phoneNumber: "+358501234567",
+        paymentMethod: "card",
+        status: "CONFIRMED",
+        createdAt: "2025-08-25T12:00:00.000Z",
+        user: {
           id: "1",
-          date: "2025-08-30",
-          time: "10:00",
-          service: "Car Wash",
-          status: "confirmed",
+          email: "test@example.com",
+          fullName: "Test User",
         },
-        {
-          id: "2",
-          date: "2025-09-01",
-          time: "14:00",
-          service: "Full Detail",
-          status: "pending",
+      },
+      {
+        id: "2",
+        date: "2025-09-01T14:00:00.000Z",
+        timeSlot: "14:00-16:00",
+        city: "Espoo",
+        location: "Esimerkkitie 5, Espoo",
+        phoneNumber: "+358507654321",
+        paymentMethod: "cash",
+        status: "CONFIRMED",
+        createdAt: "2025-08-26T12:00:00.000Z",
+        user: {
+          id: "1",
+          email: "test@example.com",
+          fullName: "Test User",
         },
-      ],
+      },
+    ]);
+  }),
+
+  // Delete booking
+  http.delete(`${API_BASE_URL}/api/bookings/:id`, ({ params }) => {
+    const { id } = params;
+
+    // Handle missing or invalid booking IDs
+    if (!id || id === "undefined" || id === "null" || id === "") {
+      return HttpResponse.json(
+        { error: "Booking ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (id === "non-existent") {
+      return HttpResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    if (id === "unauthorized") {
+      return HttpResponse.json(
+        { error: "Unauthorized to delete this booking" },
+        { status: 403 }
+      );
+    }
+
+    // Simulate successful deletion
+    return HttpResponse.json({
+      message: "Booking deleted successfully",
+      deletedBookingId: id,
     });
   }),
 
@@ -168,11 +251,6 @@ export const handlers = [
 
   http.post("*", ({ request }) => {
     console.warn(`Unhandled POST request: ${request.url}`);
-    return HttpResponse.json({ message: "Not found" }, { status: 404 });
-  }),
-
-  http.put("*", ({ request }) => {
-    console.warn(`Unhandled PUT request: ${request.url}`);
     return HttpResponse.json({ message: "Not found" }, { status: 404 });
   }),
 
