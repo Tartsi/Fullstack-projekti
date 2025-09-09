@@ -56,3 +56,7 @@
 - 15.08.2025
     - Add backend solutions for user registration, login, logout and deletion
     - Fix customer requested UI-elements (Pulsing 'Tilaa tästä' button placement, Contact-us to Feedback)
+- 03.09.2025
+    - Finish frontend + backend login, logout, registration, deletion, info (show user info), email reset functionalities
+- 09.09.2025
+    - Finish solution for adding bookings to a logged in user
