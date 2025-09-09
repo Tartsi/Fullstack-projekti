@@ -127,11 +127,11 @@ describe("UserReviewSection Component", () => {
     render(<UserReviewSectionWithProvider />);
 
     // Desktop carousel (should exist but be hidden on mobile)
-    const desktopCarousel = document.querySelector(".hidden.lg\\:flex");
+    const desktopCarousel = document.querySelector(".hidden.md\\:flex");
     expect(desktopCarousel).toBeInTheDocument();
 
     // Mobile carousel (should exist but be hidden on desktop)
-    const mobileCarousel = document.querySelector(".lg\\:hidden");
+    const mobileCarousel = document.querySelector(".md\\:hidden");
     expect(mobileCarousel).toBeInTheDocument();
   });
 

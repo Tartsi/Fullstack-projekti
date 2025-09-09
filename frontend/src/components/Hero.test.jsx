@@ -122,7 +122,7 @@ describe("Hero", () => {
     await user.click(screen.getByAltText(/english flag/i));
 
     expect(
-      await screen.findByText("We Clean Your Car During Your Workday")
+      await screen.findByText("We Clean Your Car During Workday")
     ).toBeInTheDocument();
 
     expect(

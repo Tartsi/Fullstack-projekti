@@ -311,6 +311,7 @@ describe("AuthModal", () => {
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.click(submitButton);
 
+    await new Promise((resolve) => setTimeout(resolve, 3100)); // Wait for 3.1 seconds for the success-message to appear
     await waitFor(() => {
       expect(screen.getByTestId("notification-success")).toBeInTheDocument();
     });

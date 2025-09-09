@@ -37,6 +37,7 @@ const Hero = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [activeLangAnim, setActiveLangAnim] = useState(null);
   const [logoutAnim, setLogoutAnim] = useState(false);
 
   /**
@@ -93,6 +94,17 @@ const Hero = () => {
   }, []);
 
   /**
+   * Handle language click with animation
+   */
+  const handleLanguageClick = (code) => {
+    if (language === code) return;
+    setActiveLangAnim(code);
+    changeLanguage(code);
+    // Drop animation flag after 1 second
+    setTimeout(() => setActiveLangAnim(null), 1000);
+  };
+
+  /**
    * Login/Logout function with animation
    */
   const handleLogin = useCallback(async () => {
@@ -129,6 +141,7 @@ const Hero = () => {
   return (
     <section
       role="region"
+      data-hero-section="true"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Main Hero Content */}
@@ -139,30 +152,53 @@ const Hero = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          {languageOptions.map((option, index) => (
-            <React.Fragment key={option.code}>
-              {index > 0 && (
-                <div className="w-px h-6 bg-black opacity-30"></div>
-              )}
-              <div
-                className={`flex items-center space-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ${
-                  language === option.code
-                    ? "opacity-100 font-semibold"
-                    : "opacity-70 hover:opacity-100"
-                }`}
-                onClick={() => changeLanguage(option.code)}
-              >
-                <img
-                  src={option.flag}
-                  alt={option.alt}
-                  className="w-6 h-4 sm:w-8 sm:h-5"
-                />
-                <span className="text-black font-cottage text-sm sm:text-base font-medium">
-                  {option.label}
-                </span>
-              </div>
-            </React.Fragment>
-          ))}
+          {languageOptions.map((option, index) => {
+            const isCurrent = language === option.code;
+            const isAnimating = activeLangAnim === option.code;
+
+            return (
+              <React.Fragment key={option.code}>
+                {index > 0 && (
+                  <div className="w-px h-6 bg-black opacity-30"></div>
+                )}
+
+                <div
+                  className={`flex items-center space-x-2 cursor-pointer transition-all duration-300
+                  ${
+                    isCurrent
+                      ? "opacity-100 font-semibold text-black underline"
+                      : "opacity-70 hover:opacity-100"
+                  }
+                  ${
+                    isAnimating
+                      ? "scale-110 text-brand-purple opacity-100"
+                      : "scale-100"
+                  }
+                  `}
+                  onClick={() => handleLanguageClick(option.code)}
+                >
+                  <motion.img
+                    src={option.flag}
+                    alt={option.alt}
+                    className="w-6 h-4 sm:w-8 sm:h-5"
+                    animate={
+                      isAnimating
+                        ? { y: [-6, -10, -6, 0], scale: [1, 1.05, 1.025, 1] }
+                        : { y: 0, scale: 1 }
+                    }
+                    transition={{
+                      duration: 1,
+                      ease: "easeInOut",
+                      times: [0, 0.3, 0.6, 1],
+                    }}
+                  />
+                  <span className="text-black font-cottage text-sm sm:text-base font-medium">
+                    {option.label}
+                  </span>
+                </div>
+              </React.Fragment>
+            );
+          })}
         </div>
 
         {/* Logo/Brand Icons */}
@@ -340,7 +376,8 @@ const Hero = () => {
             <button
               onClick={scrollToProcess}
               className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
-              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80
+              transition-all duration-300 cursor-pointer"
             >
               <span className="flex items-center space-x-2">
                 <span>{t("nav.process")}</span>
@@ -354,7 +391,8 @@ const Hero = () => {
             <button
               onClick={scrollToServices}
               className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
-              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80
+              transition-all duration-300 cursor-pointer"
             >
               <span className="flex items-center space-x-2">
                 <span>{t("nav.order")}</span>
@@ -368,7 +406,8 @@ const Hero = () => {
             <button
               onClick={scrollToContact}
               className="text-black uppercase font-cottage text-sm sm:text-base md:text-lg italic
-              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80 transition-all duration-300 cursor-pointer"
+              underline decoration-2 underline-offset-4 hover:scale-110 hover:opacity-80
+              transition-all duration-300 cursor-pointer"
             >
               <span className="flex items-center space-x-2">
                 <span>{t("nav.contact")}</span>

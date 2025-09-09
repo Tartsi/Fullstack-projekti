@@ -248,7 +248,9 @@ const UserReviewSection = () => {
       {/* Section Headline */}
       <h2
         id="reviews-title"
-        className={`uppercase text-3xl md:text-4xl font-light text-center mb-4 font-cottage text-brand-dark transition-all duration-[1500ms] delay-[350ms] underline decoration-2 underline-offset-4 ${
+        className={`uppercase text-3xl md:text-4xl font-light text-center
+        mb-4 font-cottage text-brand-dark transition-all duration-[1500ms]
+        delay-[350ms] underline decoration-2 underline-offset-4 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
@@ -257,12 +259,13 @@ const UserReviewSection = () => {
 
       {/* Carousel Container */}
       <div
-        className={`relative flex items-center justify-center overflow-visible min-h-[500px] transition-all duration-[1500ms] delay-[700ms] ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`relative flex items-center justify-center overflow-visible
+           min-h-[500px] transition-all duration-[1500ms] delay-[700ms] ${
+             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+           }`}
       >
-        {/* Desktop: Three cards visible */}
-        <div className="hidden lg:flex items-center justify-center relative w-full max-w-7xl min-h-[500px]">
+        {/* Desktop/Tablet: Three cards visible */}
+        <div className="hidden md:flex items-center justify-center relative w-full max-w-7xl min-h-[500px]">
           {/* Left Card (Previous) */}
           <div className="absolute left-10 z-10">
             <ReviewCard
@@ -297,8 +300,8 @@ const UserReviewSection = () => {
           </div>
         </div>
 
-        {/* Mobile/Tablet: Single card with arrows */}
-        <div className="lg:hidden flex items-center justify-center relative w-full">
+        {/* Mobile: Single card with arrows */}
+        <div className="md:hidden flex items-center justify-center relative w-full">
           <ReviewCard
             review={getReviewAtOffset(0)}
             position="center"

@@ -214,7 +214,8 @@ const Header = () => {
 
           {/* Language Hover Menu */}
           <div
-            className={`absolute top-[53.5%] -translate-y-1/2 left-16 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
+            className={`absolute top-[53.5%] -translate-y-1/2 left-16 text-xs sm:text-sm
+              font-light tracking-wide uppercase transition-all duration-700 z-50
                                             ${
                                               isLanguageHovered ||
                                               isMobileLanguageMenuOpen
@@ -222,16 +223,21 @@ const Header = () => {
                                                 : "opacity-0 -translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg">
+            <div
+              className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3
+            py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg"
+            >
               {languageOptions.map((option) => (
                 <div
                   key={option.code}
                   onClick={() => handleLanguageChange(option.code)}
-                  className={`flex flex-col items-center cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium ${
-                    language === option.code
-                      ? "opacity-100 font-medium text-gray-900"
-                      : ""
-                  }`}
+                  className={`flex flex-col items-center cursor-pointer hover:opacity-100
+                    hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600
+                    font-cottage hover:text-gray-900 hover:font-medium ${
+                      language === option.code
+                        ? "opacity-100 font-medium text-gray-900"
+                        : ""
+                    }`}
                 >
                   <img
                     src={option.flag}
@@ -249,11 +255,12 @@ const Header = () => {
           {/* Language Toggle Button */}
           <div
             onClick={toggleLanguageMenu}
-            className={`flex items-center space-x-1 text-xs sm:text-sm font-cottage italic hover:opacity-100 opacity-70 transition-all duration-200 cursor-pointer select-none ${
-              isLanguageChanging
-                ? "scale-110 text-brand-purple opacity-100"
-                : "scale-100"
-            }`}
+            className={`flex items-center space-x-1 text-xs sm:text-sm font-cottage italic
+              hover:opacity-100 opacity-70 transition-all duration-200 cursor-pointer select-none ${
+                isLanguageChanging
+                  ? "scale-110 text-brand-purple opacity-100"
+                  : "scale-100"
+              }`}
           >
             {(() => {
               const currentLang = getCurrentLanguageOption(language);
@@ -282,11 +289,12 @@ const Header = () => {
         >
           {/* Hover Zone for Hamburger Menu - Responsive width */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-0 w-72 xs:w-80 sm:w-96 h-16 transition-all duration-700 z-40 ${
-              isHovered || isMobileMenuOpen
-                ? "pointer-events-auto"
-                : "pointer-events-none"
-            }`}
+            className={`absolute top-1/2 -translate-y-1/2 right-0 w-72 xs:w-80 sm:w-96 h-16
+              transition-all duration-700 z-40 ${
+                isHovered || isMobileMenuOpen
+                  ? "pointer-events-auto"
+                  : "pointer-events-none"
+              }`}
           />
 
           {/* Hover-menu - Responsive positioning and scaling */}
@@ -298,7 +306,11 @@ const Header = () => {
                                                 : "opacity-0 translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-2 xs:px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg text-xs xs:text-xs sm:text-sm font-light tracking-wide uppercase">
+            <div
+              className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4
+            lg:space-x-6 px-2 xs:px-3 py-3 text-black bg-white border-2 border-black
+            rounded-lg shadow-lg text-xs xs:text-xs sm:text-sm font-light tracking-wide uppercase"
+            >
               {navItems.map((item, index) => (
                 <React.Fragment key={item.key}>
                   {item.separated && index > 0 && (
@@ -315,7 +327,8 @@ const Header = () => {
           {/* Hamburger-symbol */}
           <div
             onClick={toggleHamburgerMenu}
-            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer select-none leading-none -mt-2 relative z-10"
+            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer
+            select-none leading-none -mt-2 relative z-10"
           >
             ≡
           </div>

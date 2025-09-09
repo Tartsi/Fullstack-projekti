@@ -40,8 +40,8 @@ describe("Explanation Component", () => {
 
     // Each section
     expect(screen.getByText(/Varaa aika/i));
-    expect(screen.getByText(/Ilmoita osoite/i));
-    expect(screen.getByText(/Siivoustamme varten/i));
+    expect(screen.getByText(/Lisää Osoite/i));
+    expect(screen.getByText(/Avaa Auto/i));
     expect(screen.getByText(/Siivous käynnissä/i));
     expect(screen.getByText(/Siivous valmis/i));
     expect(screen.getByText(/Nauti puhtaudesta/i));
