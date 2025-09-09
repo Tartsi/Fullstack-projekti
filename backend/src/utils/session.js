@@ -1,31 +1,40 @@
 import { PrismaClient } from "@prisma/client";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
+import pg from "pg";
 import logger from "./logger.js";
 
 const prisma = new PrismaClient();
 const PgSession = connectPgSimple(session);
 
 /**
- * Create session table if it doesn't exist
+ * Create session table if it doesn't exist using direct PostgreSQL connection
  */
 export const createSessionTableIfNotExists = async () => {
+  const client = new pg.Client({
+    connectionString:
+      process.env.PRISMA_MIGRATION_URL || process.env.DATABASE_URL,
+  });
+
   try {
-    // First create table if it doesn't exist
-    await prisma.$executeRaw`
+    await client.connect();
+    logger.info("Connected to database for session table setup");
+
+    // Create session table if it doesn't exist
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "session" (
         "sid" varchar NOT NULL COLLATE "default",
         "sess" json NOT NULL,
         "expire" timestamp(6) NOT NULL
       ) WITH (OIDS=FALSE);
-    `;
+    `);
 
-    // Add primary key constraint
+    // Add primary key constraint if it doesn't exist
     try {
-      await prisma.$executeRaw`
+      await client.query(`
         ALTER TABLE "session" ADD CONSTRAINT "session_pkey"
         PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
-      `;
+      `);
     } catch (pkError) {
       // Primary key constraint might already exist
       if (
@@ -36,19 +45,17 @@ export const createSessionTableIfNotExists = async () => {
       }
     }
 
-    // Try to create index
-    try {
-      await prisma.$executeRaw`
-        CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
-      `;
-    } catch (idxError) {
-      logger.warn("Could not create index:", idxError.message);
-    }
+    // Create index for expire column if it doesn't exist
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
+    `);
 
-    logger.info("Session table initialization completed");
+    logger.info("Session table and indexes created successfully");
   } catch (error) {
-    logger.error("Error ensuring session table exists:", error.message);
-    // Don't throw error - server should still start even if session table setup fails
+    logger.error("Error creating session table:", error.message);
+    throw error; // Throw error to prevent server from starting with broken session setup
+  } finally {
+    await client.end();
   }
 };
 
@@ -80,17 +87,26 @@ export const configureSession = (dbUrl = null) => {
 
 // Function to clean up expired sessions
 export const cleanupExpiredSessions = async () => {
+  const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
   try {
+    await client.connect();
+
     // Delete expired sessions directly
-    const result = await prisma.$executeRaw`
+    const result = await client.query(`
       DELETE FROM "session"
       WHERE "expire" < NOW();
-    `;
+    `);
+
     logger.info(
-      `Expired sessions cleaned up successfully. Deleted: ${result} sessions`
+      `Expired sessions cleaned up successfully. Deleted: ${result.rowCount} sessions`
     );
   } catch (error) {
     logger.error("Failed to cleanup expired sessions:", error.message);
+  } finally {
+    await client.end();
   }
 };
 

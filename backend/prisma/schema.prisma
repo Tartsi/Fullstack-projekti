@@ -35,6 +35,7 @@ model Booking {
   id        String        @id @default(uuid())
   userId    String
   date      DateTime
+  timeSlot  String?       
   location  String
   status    BookingStatus @default(DRAFT)
   createdAt DateTime      @default(now())

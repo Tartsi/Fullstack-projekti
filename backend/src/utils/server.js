@@ -38,8 +38,10 @@ export const configureCors = (app) => {
  */
 export const startServer = async (app, port) => {
   try {
+    logger.info("Initializing session table...");
     // Initialize session table before starting the server
     await createSessionTableIfNotExists();
+    logger.info("Session table initialization completed");
 
     app.listen(port, "0.0.0.0", () => {
       logger.info(`Server running on http://0.0.0.0:${port}`);
