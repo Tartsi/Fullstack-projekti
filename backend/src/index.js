@@ -19,7 +19,10 @@ const app = express();
 const PORT = Number(process.env.PORT || 4000);
 
 // Trust proxy if behind one (for session cookies to work correctly)
-if (process.env.NODE_ENV === "development") {
+if (
+  process.env.NODE_ENV === "development" ||
+  process.env.CORS_ORIGIN?.includes("localhost")
+) {
   app.set("trust proxy", 1);
 }
 

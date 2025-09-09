@@ -77,10 +77,16 @@ export const configureSession = (dbUrl = null) => {
     saveUninitialized: false,
     name: "connect.sid", // Explicitly set cookie name
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure:
+        process.env.NODE_ENV === "production" &&
+        !process.env.CORS_ORIGIN?.includes("localhost"),
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      sameSite:
+        process.env.NODE_ENV === "production" &&
+        !process.env.CORS_ORIGIN?.includes("localhost")
+          ? "strict"
+          : "lax",
     },
   });
 };

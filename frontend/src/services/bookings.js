@@ -2,7 +2,10 @@
  * Booking service for handling booking-related API calls
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+// Configure API base URL consistently with users.js
+const API_BASE_URL = import.meta.env.PROD
+  ? "" // Use same origin in production
+  : import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 /**
  * Create a new booking

@@ -16,15 +16,19 @@ export const configureCors = (app) => {
       cors({
         origin: process.env.CORS_ORIGIN
           ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
-          : ["http://localhost:5173", "http://localhost:3000"],
+          : ["http://localhost:5173"],
         credentials: true,
       })
     );
   } else {
-    // In production, allow same origin requests
+    // In production, use CORS_ORIGIN if defined, otherwise allow same origin
+    const allowedOrigins = process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+      : true; // Allow same origin if no CORS_ORIGIN defined
+
     app.use(
       cors({
-        origin: true, // Allow same origin
+        origin: allowedOrigins,
         credentials: true,
       })
     );

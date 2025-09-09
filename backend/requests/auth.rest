@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
   "email": "test@example.com",
-  "password": "password123",
+  "password": "Password123",
   "fullName": "Test User"
 }
 
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "email": "test@example.com",
-  "password": "password123"
+  "password": "Password123"
 }
 
 ### Get Current User (requires authentication)
@@ -38,7 +38,7 @@ Content-Type: application/json
 
 {
   "email": "test@example.com",
-  "password": "password123"
+  "password": " Password123"
 }
 
 ### Test Invalid Registration (duplicate user)
@@ -47,7 +47,7 @@ Content-Type: application/json
 
 {
   "email": "test@example.com",
-  "password": "password123"
+  "password": "Password123"
 }
 
 ### Test Invalid Login
