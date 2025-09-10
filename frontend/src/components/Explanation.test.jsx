@@ -147,7 +147,7 @@ describe("Explanation Component", () => {
 
     // The first step container should have scale-110 class (active state)
     const firstStep = screen.getByLabelText(/Vaihe 1:/);
-    expect(firstStep).toHaveClass("scale-110");
+    expect(firstStep).toHaveClass("scale-105");
   });
 
   it("cleans up intervals on unmount", () => {

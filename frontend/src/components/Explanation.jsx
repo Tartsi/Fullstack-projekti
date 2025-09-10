@@ -116,7 +116,7 @@ const Explanation = () => {
 
     intervalRef.current = setInterval(() => {
       setActiveStep((prevStep) => (prevStep + 1) % processSteps.length);
-    }, 3000); // Change every 3 seconds (60% faster than 7.5 seconds)
+    }, 4000); // Change every 4 seconds for better visibility
   }, [processSteps.length]);
 
   // Start auto progression only after section becomes visible and animations complete
@@ -181,7 +181,11 @@ const Explanation = () => {
                     className={`
                       flex items-start space-x-2 sm:space-x-3 lg:space-x-4 xl:space-x-6 p-2 sm:p-3 lg:p-4 xl:p-6 rounded-lg sm:rounded-xl
                       border-2 border-gray-200 transition-all duration-1000 bg-white/80 backdrop-blur-sm shadow-md
-                      ${activeStep === index ? "scale-110" : "scale-100"}
+                      ${
+                        activeStep === index
+                          ? "scale-105 shadow-xl border-brand-purple bg-brand-purple/10"
+                          : "scale-100"
+                      }
                       ${
                         isVisible
                           ? "opacity-100 translate-y-0"
@@ -197,8 +201,12 @@ const Explanation = () => {
                   >
                     {/* Step Number - Left Side */}
                     <div
-                      className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full flex items-center justify-center text-lg font-bold
-                      bg-brand-purple text-white shadow-lg"
+                      className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full flex items-center justify-center text-lg font-bold
+                      transition-all duration-1000 shadow-lg ${
+                        activeStep === index
+                          ? "bg-brand-purple text-white scale-110 shadow-2xl"
+                          : "bg-brand-purple text-white"
+                      }`}
                     >
                       <span className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-cottage">
                         {step.id}
