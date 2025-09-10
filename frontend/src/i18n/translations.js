@@ -137,6 +137,7 @@ export const translations = {
         error: "Viestin lähetys epäonnistui. Yritä uudelleen.",
       },
       copyright: "Workday-Vacuumers. Kaikki oikeudet pidätetään.",
+      backToTop: "Takaisin ylös",
     },
     // About section
     about: {
@@ -390,7 +391,7 @@ export const translations = {
       deleteBookingConfirm:
         "Are you sure you want to cancel this booking? The booking will be deleted permanently!",
       deletingBooking: "Deleting booking...",
-      bookingDeleted: "BOOKING DELETED SUCCESFULLY",
+      bookingDeleted: "BOOKING DELETED SUCCESSFULLY",
       bookingDeleteError: "FAILED TO DELETE BOOKING",
       deleteAccount: "DELETE ACCOUNT",
       deleteConfirm: "CONFIRM ACCOUNT DELETION",
@@ -440,6 +441,7 @@ export const translations = {
         error: "Failed to send message. Please try again.",
       },
       copyright: "Workday-Vacuumers. All rights reserved.",
+      backToTop: "Back to top",
     },
     // About section
     about: {

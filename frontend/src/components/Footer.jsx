@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
+import { smoothScrollToElement, easingFunctions } from "../utils/scrollUtils";
 import lockSlashIcon from "../assets/icons/lock-slash-svgrepo-com.svg";
 import unlockIcon from "../assets/icons/unlock-svgrepo-com.svg";
 
@@ -65,7 +66,7 @@ const Footer = () => {
     t("footer.address"),
   ];
 
-  // Common hover effect classes (slowed down by 25% more: 300ms → 500ms → 625ms)
+  // Common hover effect classes
   const socialLinkClasses =
     "flex flex-col items-center hover:scale-110 transform transition-transform duration-[625ms] opacity-70 hover:opacity-100";
 
@@ -73,7 +74,7 @@ const Footer = () => {
   const isButtonDisabled =
     isSubmitting || !message.trim() || submitStatus !== null;
 
-  // Handle form submission
+  // Handle form submission with client-side sanitizations
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -89,7 +90,7 @@ const Footer = () => {
       return;
     }
 
-    // Enhanced XSS and injection protection
+    // XSS and injection protection
     const sanitizedMessage = trimmedMessage
       // Remove script tags and their content (case insensitive)
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
@@ -111,11 +112,6 @@ const Footer = () => {
       .replace(/@import/gi, "")
       // Remove url() CSS function
       .replace(/url\s*\(/gi, "")
-      // Remove SQL injection keywords (basic protection)
-      .replace(
-        /\b(union|select|insert|update|delete|drop|create|alter|exec|execute)\b/gi,
-        ""
-      )
       // Remove potential NoSQL injection patterns
       .replace(/\$\w+/g, "")
       // Remove potential template injection patterns
@@ -174,7 +170,7 @@ const Footer = () => {
     setSubmitStatus(null);
 
     try {
-      // Simulate form submission (replace with actual API call later)
+      // Simulate form submission (replace with actual API call later if project goes further)
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // For now, just show success and clear form
@@ -201,6 +197,31 @@ const Footer = () => {
         setSubmitStatus(null);
       }
     }
+  };
+
+  // Smooth scroll to top using scrollUtils with ultra slow animation
+  const scrollToTop = () => {
+    const startPosition = window.pageYOffset;
+    const distance = -startPosition; // Negative because we're going to top
+    let start = null;
+
+    function animation(currentTime) {
+      if (start === null) start = currentTime;
+      const timeElapsed = currentTime - start;
+      const duration = 2500; // 2.5 seconds for ultra smooth experience
+
+      // Use easeInOutCubic for the smoothest experience
+      const progress = Math.min(timeElapsed / duration, 1);
+      const ease = easingFunctions.easeInOutCubic(progress);
+
+      window.scrollTo(0, startPosition + distance * ease);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    }
+
+    requestAnimationFrame(animation);
   };
 
   return (
@@ -390,8 +411,67 @@ const Footer = () => {
           }`}
         >
           <div className="w-1/2 lg:w-216 mx-auto border-t border-black border-opacity-20 pt-6">
-            <div className="inline-block text-xs tracking-wide opacity-60 font-body">
-              © {new Date().getFullYear()} {t("footer.copyright")}
+            {/* Mobile: Back to Top Button above copyright */}
+            <div className="lg:hidden flex justify-center mb-4">
+              <button
+                onClick={scrollToTop}
+                className="flex items-center gap-2 cursor-pointer text-xs tracking-wide opacity-60 hover:opacity-100 transition-all duration-500 hover:scale-110 transform group"
+                aria-label={t("footer.backToTop")}
+              >
+                <div className="animate-bounce group-hover:animate-pulse">
+                  <svg
+                    className="w-4 h-4 transform rotate-180"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span className="font-body">{t("footer.backToTop")}</span>
+              </button>
+            </div>
+
+            {/* Desktop: Copyright centered with Back to Top on the right */}
+            <div className="hidden lg:block">
+              <div className="relative flex justify-center">
+                {/* Copyright - Centered */}
+                <div className="text-xs tracking-wide opacity-60 font-body">
+                  © {new Date().getFullYear()} {t("footer.copyright")}
+                </div>
+
+                {/* Back to Top Button - Positioned to the right (Desktop only) */}
+                <button
+                  onClick={scrollToTop}
+                  className="absolute right-0 flex items-center gap-2 cursor-pointer text-xs tracking-wide opacity-60 hover:opacity-100 transition-all duration-500 hover:scale-110 transform group"
+                  aria-label={t("footer.backToTop")}
+                >
+                  <div className="animate-bounce group-hover:animate-pulse">
+                    <svg
+                      className="w-4 h-4 transform rotate-180"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <span className="font-body">{t("footer.backToTop")}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile: Copyright centered below Back to Top */}
+            <div className="lg:hidden text-center">
+              <div className="text-xs tracking-wide opacity-60 font-body">
+                © {new Date().getFullYear()} {t("footer.copyright")}
+              </div>
             </div>
           </div>
         </div>

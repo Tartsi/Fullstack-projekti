@@ -7,6 +7,48 @@ const API_BASE_URL = import.meta.env.PROD
   ? "" // Use same origin in production
   : import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
+// CSRF token management
+let csrfToken = null;
+
+/**
+ * Get CSRF token from backend
+ */
+const getCsrfToken = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/csrf-token`, {
+      credentials: "include",
+    });
+    const data = await response.json();
+    csrfToken = data.csrfToken;
+    return csrfToken;
+  } catch (error) {
+    console.error("Failed to get CSRF token:", error);
+    return null;
+  }
+};
+
+/**
+ * Helper function to add CSRF token to headers
+ */
+const getHeaders = async (additionalHeaders = {}) => {
+  const headers = {
+    "Content-Type": "application/json",
+    ...additionalHeaders,
+  };
+
+  // Add CSRF token in production
+  if (import.meta.env.PROD) {
+    if (!csrfToken) {
+      await getCsrfToken();
+    }
+    if (csrfToken) {
+      headers["X-CSRF-Token"] = csrfToken;
+    }
+  }
+
+  return headers;
+};
+
 /**
  * Create a new booking
  * @param {Object} bookingData - The booking data
@@ -20,11 +62,10 @@ const API_BASE_URL = import.meta.env.PROD
  */
 export const createBooking = async (bookingData) => {
   try {
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}/api/bookings`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       credentials: "include", // Important for sending session cookies
       body: JSON.stringify(bookingData),
     });
@@ -49,8 +90,10 @@ export const createBooking = async (bookingData) => {
  */
 export const getUserBookings = async () => {
   try {
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}/api/bookings`, {
       method: "GET",
+      headers,
       credentials: "include",
     });
 
@@ -75,8 +118,10 @@ export const getUserBookings = async () => {
  */
 export const deleteBooking = async (bookingId) => {
   try {
+    const headers = await getHeaders();
     const response = await fetch(`${API_BASE_URL}/api/bookings/${bookingId}`, {
       method: "DELETE",
+      headers,
       credentials: "include",
     });
 

@@ -28,9 +28,25 @@ export const setupTestDb = async () => {
   }
 };
 
-// Cleanup after all tests
+// Clean database after all tests
 export const teardownTestDb = async () => {
-  await prisma.$disconnect();
+  try {
+    // Clean specific tables in order (foreign key constraints)
+    await prisma.booking.deleteMany({});
+    await prisma.user.deleteMany({});
+
+    // Clean session table if it exists (it might be handled differently)
+    try {
+      await prisma.$executeRaw`DELETE FROM session WHERE 1=1;`;
+    } catch (error) {
+      // Session table might not exist or be managed differently
+      console.warn("Could not clean session table:", error.message);
+    }
+  } catch (error) {
+    console.error("Error in teardownTestDb:", error);
+  } finally {
+    await prisma.$disconnect();
+  }
 };
 
 // Vitest hooks

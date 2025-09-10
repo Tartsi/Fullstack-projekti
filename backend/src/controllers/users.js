@@ -2,7 +2,9 @@ import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import argon2 from "argon2";
 import { z } from "zod";
+import rateLimit from "express-rate-limit";
 import { authLogger } from "../utils/middleware.js";
+import { sanitizeString } from "../utils/sanitization.js";
 
 const router = Router();
 // Default prisma instance, can be overridden for testing
@@ -13,20 +15,82 @@ export const setPrismaInstance = (customPrisma) => {
   prisma = customPrisma;
 };
 
-// Validation schemas
+// Rate limiter for registration endpoint to prevent abuse
+const registerRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // Limit each IP to 5 registration requests per windowMs
+  message: {
+    ok: false,
+    message: "Too many registration attempts. Please try again later.",
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // Skip successful requests in count
+  skipSuccessfulRequests: true,
+  // Skip failed requests (validation errors, etc.) in count to prevent lockout on typos
+  skipFailedRequests: false,
+});
+
+// Rate limiter for login endpoint to prevent brute force attacks
+const loginRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes window
+  max: 10, // Limit each IP to 10 login attempts per windowMs
+  message: {
+    ok: false,
+    message: "Too many login attempts. Please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  skipFailedRequests: false,
+});
+
+// Rate limiter for user deletion to prevent abuse
+const deleteUserRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 3, // Limit each IP to 3 deletion attempts per windowMs
+  message: {
+    ok: false,
+    message: "Too many deletion attempts. Please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  skipFailedRequests: false,
+});
+
+// Rate limiter for password reset to prevent abuse
+const resetPasswordRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // Limit each IP to 5 reset attempts per windowMs
+  message: {
+    ok: false,
+    message: "Too many password reset attempts. Please try again later.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  skipFailedRequests: false,
+});
+
+// Validation schemas with sanitization
 const registerSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6),
-  fullName: z.string(),
+  email: z.string().email().transform(sanitizeString),
+  password: z.string().min(6).transform(sanitizeString),
+  fullName: z.string().min(1).max(100).transform(sanitizeString),
 });
 
 const loginSchema = z.object({
-  email: z.email(),
-  password: z.string(),
+  email: z.string().email().transform(sanitizeString),
+  password: z.string().min(1).transform(sanitizeString),
 });
 
 const resetPasswordSchema = z.object({
-  email: z.email(),
+  email: z.string().email().transform(sanitizeString),
+});
+
+const deleteUserSchema = z.object({
+  password: z.string().min(1).transform(sanitizeString),
 });
 
 // Registration endpoint
@@ -226,10 +290,6 @@ export const logout = async (req, res) => {
   }
 };
 
-const deleteUserSchema = z.object({
-  password: z.string().min(1, "Password is required"),
-});
-
 // Delete user account endpoint
 export const deleteUser = async (req, res) => {
   try {
@@ -367,11 +427,11 @@ export const requireAuth = (req, res, next) => {
 };
 
 // Routes
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", registerRateLimit, register);
+router.post("/login", loginRateLimit, login);
 router.post("/logout", logout);
-router.post("/reset-password", requestPasswordReset);
-router.delete("/delete", requireAuth, deleteUser);
+router.post("/reset-password", resetPasswordRateLimit, requestPasswordReset);
+router.delete("/delete", requireAuth, deleteUserRateLimit, deleteUser);
 router.get("/info", requireAuth, getCurrentUser);
 
 export default router;

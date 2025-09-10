@@ -16,6 +16,118 @@ const apiClient = axios.create({
   withCredentials: true, // Cookies for session management
 });
 
+// CSRF token management
+let csrfToken = null;
+let csrfRequired = null; // Cache whether CSRF is required
+
+/**
+ * Check if CSRF token is required by examining the token from backend
+ */
+const checkCsrfRequired = async () => {
+  if (csrfRequired !== null) return csrfRequired;
+
+  try {
+    const response = await apiClient.get("/api/csrf-token");
+    const token = response.data.csrfToken;
+    // If we get a real token (not dev-mode dummy), CSRF is required
+    csrfRequired = token !== "dev-mode-no-csrf";
+    csrfToken = token;
+    return csrfRequired;
+  } catch (error) {
+    console.error("Failed to check CSRF requirement:", error);
+    csrfRequired = false;
+    return false;
+  }
+};
+
+/**
+ * Get CSRF token from backend
+ */
+const getCsrfToken = async () => {
+  try {
+    const response = await apiClient.get("/api/csrf-token");
+    csrfToken = response.data.csrfToken;
+    return csrfToken;
+  } catch (error) {
+    console.error("Failed to get CSRF token:", error);
+    return null;
+  }
+};
+
+/**
+ * Force refresh CSRF token (useful after logout or session issues)
+ */
+const refreshCsrfToken = async () => {
+  csrfToken = null;
+  csrfRequired = null; // Reset the cache
+  await checkCsrfRequired(); // This will fetch new token and update cache
+  return csrfToken;
+};
+
+// Request interceptor to add CSRF token to headers
+apiClient.interceptors.request.use(
+  async (config) => {
+    // Add CSRF token to non-GET requests if required by backend
+    if (config.method !== "get") {
+      const isRequired = await checkCsrfRequired();
+      if (isRequired) {
+        if (!csrfToken) {
+          await getCsrfToken();
+        }
+        if (csrfToken && csrfToken !== "dev-mode-no-csrf") {
+          config.headers["X-CSRF-Token"] = csrfToken;
+        }
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle CSRF token errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    // Prevent infinite retry loops
+    if (error.config._csrfRetryCount) {
+      console.log("CSRF retry already attempted, giving up");
+      return Promise.reject(error);
+    }
+
+    // If CSRF token is invalid or mismatch, try to get a new one and retry
+    if (
+      error.response?.status === 403 &&
+      (error.response?.data?.message?.includes("CSRF") ||
+        error.response?.data?.error?.includes("CSRF") ||
+        error.message?.includes("CSRF") ||
+        error.response?.statusText?.includes("CSRF"))
+    ) {
+      console.log("CSRF error detected, refreshing token...", {
+        status: error.response?.status,
+        message: error.response?.data?.message,
+        error: error.response?.data?.error,
+        statusText: error.response?.statusText,
+      });
+
+      // Force refresh token and cache
+      await refreshCsrfToken();
+
+      // Only retry if we got a valid CSRF token
+      if (csrfToken && csrfToken !== "dev-mode-no-csrf") {
+        error.config.headers["X-CSRF-Token"] = csrfToken;
+        error.config._csrfRetryCount = 1; // Mark as retried
+        console.log("Retrying request with new CSRF token");
+        return apiClient.request(error.config);
+      } else {
+        console.error("Failed to get valid CSRF token for retry");
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 /**
  * Check backend health status
  */
@@ -167,6 +279,9 @@ export const logoutUser = async () => {
   try {
     const response = await apiClient.post("/api/users/logout");
 
+    // Force refresh CSRF token after logout
+    await refreshCsrfToken();
+
     if (response.data.ok) {
       return {
         success: true,
@@ -180,6 +295,9 @@ export const logoutUser = async () => {
     }
   } catch (error) {
     console.error("User logout failed:", error);
+
+    // Force refresh CSRF token even if logout failed
+    await refreshCsrfToken();
 
     if (error.response?.data?.message) {
       return {

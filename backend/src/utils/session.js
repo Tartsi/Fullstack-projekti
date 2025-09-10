@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import pg from "pg";
+import lusca from "lusca";
 import logger from "./logger.js";
 
 const prisma = new PrismaClient();
@@ -60,14 +61,14 @@ export const createSessionTableIfNotExists = async () => {
 };
 
 /**
- * Configure session middleware
+ * Configure session and CSRF protection middleware
  * @param {string} dbUrl - Optional database URL to use (for testing)
- * @returns {Function} Express session middleware
+ * @returns {Array} Array of Express middleware [session, csrf]
  */
 export const configureSession = (dbUrl = null) => {
   const connectionString = dbUrl || process.env.DATABASE_URL;
 
-  return session({
+  const sessionMiddleware = session({
     store: new PgSession({
       conString: connectionString,
       tableName: "session",
@@ -89,6 +90,17 @@ export const configureSession = (dbUrl = null) => {
           : "lax",
     },
   });
+
+  // CSRF protection middleware - only in production
+  const middleware = [sessionMiddleware];
+
+  if (process.env.NODE_ENV === "production") {
+    const csrfMiddleware = lusca.csrf();
+    middleware.push(csrfMiddleware);
+  }
+
+  // Return array of middleware for use with app.use(...configureSession())
+  return middleware;
 };
 
 // Function to clean up expired sessions

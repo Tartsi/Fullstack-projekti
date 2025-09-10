@@ -1,6 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { requireAuth } from "../utils/middleware.js";
+import { sanitizeString } from "../utils/sanitization.js";
 
 const router = express.Router();
 let prisma = new PrismaClient();
@@ -28,8 +29,23 @@ router.use(requireAuth);
  */
 router.post("/", async (req, res) => {
   try {
-    const { date, timeSlot, city, address, phoneNumber, paymentMethod } =
-      req.body;
+    // Sanitize all input fields
+    const {
+      date,
+      timeSlot: rawTimeSlot,
+      city: rawCity,
+      address: rawAddress,
+      phoneNumber: rawPhoneNumber,
+      paymentMethod: rawPaymentMethod,
+    } = req.body;
+
+    // Sanitize string inputs
+    const timeSlot = sanitizeString(rawTimeSlot);
+    const city = sanitizeString(rawCity);
+    const address = sanitizeString(rawAddress);
+    const phoneNumber = sanitizeString(rawPhoneNumber);
+    const paymentMethod = sanitizeString(rawPaymentMethod);
+
     const userId = req.user?.id;
 
     // Validate required fields

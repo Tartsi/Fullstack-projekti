@@ -6,7 +6,9 @@ import helmet from "helmet";
 
 import usersRouter from "./controllers/users.js";
 import bookingsRouter from "./controllers/bookings.js";
+
 import { requestLogger, errorLogger } from "./utils/middleware.js";
+import { sanitizeInput } from "./utils/sanitization.js";
 import { startServer } from "./utils/server.js";
 import { configureSession } from "./utils/session.js";
 import { configureCors } from "./utils/server.js";
@@ -32,11 +34,25 @@ app.use(helmet());
 app.use(requestLogger);
 app.use(express.json());
 
-// Session configuration
-app.use(configureSession());
+// Input sanitization middleware
+app.use(sanitizeInput);
+
+// Session and CSRF protection configuration
+app.use(...configureSession());
 
 // CORS configuration
 configureCors(app);
+
+// CSRF token endpoint
+app.get("/api/csrf-token", (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    // In production, return the CSRF token
+    res.json({ csrfToken: req.csrfToken() });
+  } else {
+    // In development, return a dummy token
+    res.json({ csrfToken: "dev-mode-no-csrf" });
+  }
+});
 
 app.use("/api/users", usersRouter);
 app.use("/api/bookings", bookingsRouter);

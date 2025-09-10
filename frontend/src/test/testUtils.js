@@ -61,7 +61,7 @@ export const mockFailedRegistration = (
 
 export const mockSuccessfulPasswordReset = () => {
   server.use(
-    http.post(`${API_BASE_URL}/api/users/forgot-password`, () => {
+    http.post(`${API_BASE_URL}/api/users/reset-password`, () => {
       return HttpResponse.json({
         message: "Password reset email sent",
       });
@@ -71,7 +71,7 @@ export const mockSuccessfulPasswordReset = () => {
 
 export const mockFailedPasswordReset = (errorMessage = "Email is required") => {
   server.use(
-    http.post(`${API_BASE_URL}/api/users/forgot-password`, () => {
+    http.post(`${API_BASE_URL}/api/users/reset-password`, () => {
       return HttpResponse.json({ message: errorMessage }, { status: 400 });
     })
   );
