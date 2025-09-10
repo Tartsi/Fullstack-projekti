@@ -179,7 +179,7 @@ router.get("/", async (req, res) => {
 
 /**
  * DELETE /api/bookings/:id
- * Delete a booking completely
+ * Delete a booking completely for an authenticated user
  *
  * @param {string} id - Booking ID
  * @returns {Object} Delete confirmation

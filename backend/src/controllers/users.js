@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import argon2 from "argon2";
 import { z } from "zod";
 import rateLimit from "express-rate-limit";
-import { authLogger } from "../utils/middleware.js";
+import { authLogger, requireAuth } from "../utils/middleware.js";
 import { sanitizeString } from "../utils/sanitization.js";
 
 const router = Router();
@@ -413,17 +413,6 @@ export const getCurrentUser = async (req, res) => {
       message: "Internal server error",
     });
   }
-};
-
-// Middleware to check if user is authenticated
-export const requireAuth = (req, res, next) => {
-  if (!req.session.userId) {
-    return res.status(401).json({
-      ok: false,
-      message: "Authentication required",
-    });
-  }
-  next();
 };
 
 // Routes
