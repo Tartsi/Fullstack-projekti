@@ -84,8 +84,13 @@ cd backend
 # Generate Prisma client
 npm run prisma:gen
 
-# Run migrations on main database
+# Run migrations once on development database
 npm run migrate:deploy
+
+# If you want to run backend tests on a separate test database MIGRATE that one too!
+# Do this by going to schema.prisma-file located in backend/prisma and change the url and directUrl
+# to env("TEST_DATABASE_URL") and env("TEST_PRISMA_MIGRATION_URL) and now repeat the above process
+# After migrations have ran, change them back to the original URLs.
 ```
 
 ### 7. Run Application
@@ -135,3 +140,4 @@ npm test
 - Frontend runs on port 5173
 - Tests use separate test database to avoid conflicts
 - Environment files are gitignored for security
+
