@@ -93,11 +93,13 @@ describe("Footer Component", () => {
       </LanguageProvider>
     );
     const currentYear = new Date().getFullYear();
-    expect(
-      screen.getByText(
-        `© ${currentYear} Workday-Vacuumers. Kaikki oikeudet pidätetään.`
-      )
-    ).toBeInTheDocument();
+    const copyrightElements = screen.getAllByText(
+      `© ${currentYear} Workday-Vacuumers. Kaikki oikeudet pidätetään.`
+    );
+    expect(copyrightElements).toHaveLength(2); // One for mobile, one for desktop
+    copyrightElements.forEach((element) => {
+      expect(element).toBeInTheDocument();
+    });
   });
 
   it("social media links have hover effects", () => {

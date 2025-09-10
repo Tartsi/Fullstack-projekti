@@ -14,14 +14,36 @@ vi.mock("../assets/icons/check-circle-svgrepo-com.svg", () => ({
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, onClick, ...props }) => (
+    div: ({
+      children,
+      onClick,
+      initial,
+      animate,
+      transition,
+      whileHover,
+      whileTap,
+      ...props
+    }) => (
       <div onClick={onClick} {...props}>
         {children}
       </div>
     ),
-    h2: ({ children, ...props }) => <h2 {...props}>{children}</h2>,
-    p: ({ children, ...props }) => <p {...props}>{children}</p>,
-    button: ({ children, onClick, ...props }) => (
+    h2: ({ children, initial, animate, transition, ...props }) => (
+      <h2 {...props}>{children}</h2>
+    ),
+    p: ({ children, initial, animate, transition, ...props }) => (
+      <p {...props}>{children}</p>
+    ),
+    button: ({
+      children,
+      onClick,
+      initial,
+      animate,
+      transition,
+      whileHover,
+      whileTap,
+      ...props
+    }) => (
       <button onClick={onClick} {...props}>
         {children}
       </button>

@@ -47,7 +47,7 @@ describe("Explanation Component", () => {
     expect(screen.getByText(/Nauti puhtaudesta/i));
   });
 
-  it("renders section in English after language change", () => {
+  it("renders section in English after language change", async () => {
     render(
       <LanguageProvider>
         <Header />
@@ -66,7 +66,9 @@ describe("Explanation Component", () => {
       .closest("div");
 
     // Click to switch language to English
-    fireEvent.click(englishOption);
+    await act(async () => {
+      fireEvent.click(englishOption);
+    });
 
     // Check if the text is now in English
     const engText = screen.queryByText("Provide Address");

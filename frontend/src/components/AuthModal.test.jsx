@@ -303,15 +303,22 @@ describe("AuthModal", () => {
 
     // Switch to forgot password view
     const forgotPasswordLink = screen.getByText("Unohditko salasanasi?");
-    fireEvent.click(forgotPasswordLink);
+    await act(async () => {
+      fireEvent.click(forgotPasswordLink);
+    });
 
     const emailInput = screen.getByPlaceholderText("Sähköposti");
     const submitButton = screen.getByRole("button", { name: /lähetä/i });
 
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.change(emailInput, { target: { value: "test@example.com" } });
+      fireEvent.click(submitButton);
+    });
 
-    await new Promise((resolve) => setTimeout(resolve, 3100)); // Wait for 3.1 seconds for the success-message to appear
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3100)); // Wait for 3.1 seconds for the success-message to appear
+    });
+
     await waitFor(() => {
       expect(screen.getByTestId("notification-success")).toBeInTheDocument();
     });
@@ -336,9 +343,15 @@ describe("AuthModal", () => {
       name: /kirjaudu/i,
     });
 
-    fireEvent.change(emailInput, { target: { value: "invalid@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "WrongPassword123" } });
-    fireEvent.click(submitButton);
+    await act(async () => {
+      fireEvent.change(emailInput, {
+        target: { value: "invalid@example.com" },
+      });
+      fireEvent.change(passwordInput, {
+        target: { value: "WrongPassword123" },
+      });
+      fireEvent.click(submitButton);
+    });
 
     await waitFor(() => {
       expect(screen.getByTestId("notification-error")).toBeInTheDocument();
