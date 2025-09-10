@@ -121,7 +121,7 @@ export const translations = {
       email: "info@workday-siivouspalvelut.fi",
       phone: "+358 40 123 4567",
       address: "Siivoustie 123, 00100 Helsinki",
-      followUs: "Seuraa Meitä Sosiaalisessa Mediassa!",
+      followUs: "Seuraa Meitä Sosiaalisessa Mediassa",
       socialMedia: {
         twitter: "Twitter",
         linkedin: "LinkedIn",
@@ -143,7 +143,7 @@ export const translations = {
     about: {
       title: "Mitä on WOCUUMING?",
       descriptionFirst:
-        "Nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana! Kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
+        "Nopea ja tehokas palvelu, joka siivoaa autosi sisätilat työpäivän aikana. Kun keskityt työhösi toimistossa, siivouspalvelumme huolehtii autosi puhtaudesta parkkipaikalla.",
       descriptionSecond:
         "Palaat raikkaaseen ja puhtaaseen autoon – eikä sinun tarvitse uhrata viikonloppujasi autosi putsaamiseen. Toimimme Helsinki-Vantaa-Espoo alueella hintaan 49€ (sis. ALV 25,5%).",
       valueProposition:
@@ -267,13 +267,15 @@ export const translations = {
           "• Varaus maksetaan etukäteen valitsemallasi maksutavalla. Poikkeuksena käteismaksu, joka maksetaan tapaamisen yhteydessä.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
         location: {
           title: "Sijainti",
-          subtitle: "Valitse kaupunki ja anna osoite",
+          subtitle: "Valitse kaupunki",
           cities: {
             helsinki: "Helsinki",
             vantaa: "Vantaa",
             espoo: "Espoo",
           },
+          addressInput: "Anna osoite:",
           addressPlaceholder: 'Muoto: "Esimerkkitie 14 A, 00750"',
+          phoneInput: "Anna puhelinnumero:",
           phonePlaceholder: 'Muoto: "0401234567"',
           requirementHeaders: {
             address: "Osoitteen vaatimukset:",
@@ -425,7 +427,7 @@ export const translations = {
       email: "info@workday-vacuumers.com",
       phone: "+358 40 123 4567",
       address: "123 Clean Street, 00100 Helsinki",
-      followUs: "Follow Us On Social Media!",
+      followUs: "Follow Us On Social Media",
       socialMedia: {
         twitter: "Twitter",
         linkedin: "LinkedIn",
@@ -447,7 +449,7 @@ export const translations = {
     about: {
       title: "What is WOCUUMING?",
       descriptionFirst:
-        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday! While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
+        "WOCUUMING, short for Workday-Vacuuming, is a fast and efficient service that cleans your car interior during your workday. While you focus on your work, our cleaning service takes care of your car's interior in the parking lot.",
       descriptionSecond:
         "Return from work to a fresh and clean car – no need to sacrifice your weekends cleaning your car. We operate in the Helsinki-Vantaa-Espoo area for 49€ (VAT 25,5% included).",
       valueProposition:
@@ -570,13 +572,15 @@ export const translations = {
           "• Booking is paid in advance using your chosen payment method, with expection regarding cash payment, which is paid upon meeting.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
         location: {
           title: "Location",
-          subtitle: "Select city and exact address",
+          subtitle: "Select city",
           cities: {
             helsinki: "Helsinki",
             vantaa: "Vantaa",
             espoo: "Espoo",
           },
+          addressInput: "Insert address:",
           addressPlaceholder: 'Format: "Example Street 14 A, 00750"',
+          phoneInput: "Insert phonenumber:",
           phonePlaceholder: 'Format: "0401234567"',
           requirementHeaders: {
             address: "Address requirements:",

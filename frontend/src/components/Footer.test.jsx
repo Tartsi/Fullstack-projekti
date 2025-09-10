@@ -60,13 +60,12 @@ describe("Footer Component", () => {
       </LanguageProvider>
     );
     expect(
-      screen.getByText("Seuraa Meitä Sosiaalisessa Mediassa!")
+      screen.getByText("Seuraa Meitä Sosiaalisessa Mediassa")
     ).toBeInTheDocument();
     expect(screen.getByText("Twitter")).toBeInTheDocument();
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.getByText("Instagram")).toBeInTheDocument();
-    expect(screen.getByText("TikTok")).toBeInTheDocument();
   });
 
   it("renders social media icons", () => {
@@ -76,14 +75,13 @@ describe("Footer Component", () => {
       </LanguageProvider>
     );
     const socialLinks = screen.getAllByRole("link");
-    expect(socialLinks).toHaveLength(5); // 5 social media links
+    expect(socialLinks).toHaveLength(4); // 4 social media links
 
     // Check if Font Awesome icons are present
     expect(document.querySelector(".fa-x-twitter")).toBeInTheDocument();
     expect(document.querySelector(".fa-linkedin")).toBeInTheDocument();
     expect(document.querySelector(".fa-github")).toBeInTheDocument();
     expect(document.querySelector(".fa-instagram")).toBeInTheDocument();
-    expect(document.querySelector(".fa-tiktok")).toBeInTheDocument();
   });
 
   it("renders copyright information with current year", () => {

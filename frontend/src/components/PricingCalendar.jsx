@@ -1425,8 +1425,11 @@ const PricingCalendar = () => {
                     ))}
                   </div>
 
-                  {/* Input */}
+                  {/* Address Input */}
                   <div className="mb-2">
+                    <p className="text-gray-600 text-sm">
+                      {t("pricing.payment.location.addressInput")}
+                    </p>
                     <input
                       type="text"
                       value={address}
@@ -1464,6 +1467,9 @@ const PricingCalendar = () => {
 
                   {/* Phone Number Input */}
                   <div className="mb-4">
+                    <p className="text-gray-600 text-sm">
+                      {t("pricing.payment.location.phoneInput")}
+                    </p>
                     <input
                       type="tel"
                       value={phoneNumber}

@@ -15,22 +15,20 @@ To provide a simple, easy-to-use and fast-loading landing page for the Workday-V
 - **About Section**: explaining what the business does
 - **Process Explanation**: step-by-step explanation how process works
 - **User Review Section**: including testimonials and ratings + a large overall rating
-- **Pricing Section**: with clear and simple plan(s)
+- **Pricing Section**: with clear and simple plan + booking + payment
 - **Contact Form**: feedback and contact information
 ---
 
 ## Scope
-### Included
-- Full frontend implementation with React + Vite
-- Login + Registration
+### MVP Included
+- Frontend implementation with React + Vite
+- Backend implementation with Node.js + Express
+- Registration, Login, Logout, Deletion
 - Hosting (Fly.io)
 - Database (Neon)
 - Component-based architecture
-- Animations through for example Framer Motion
-- Documentation and version control
-
-### Excluded
-- Payment integrations
+- Smooth animations
+- Documentation
 
 ---
 
@@ -44,4 +42,4 @@ To provide a simple, easy-to-use and fast-loading landing page for the Workday-V
 - Page loads quickly and functions without bugs
 - Visitors understand and trust the service concept
 - At least one call-to-action is visible and inviting in the hero section and later on, on the page
-- The layout and brand feel unique and aligned
+- The layout and brand feel unique, aligned and consistent throughout the page

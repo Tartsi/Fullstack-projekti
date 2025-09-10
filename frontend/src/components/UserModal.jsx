@@ -469,7 +469,7 @@ const UserModal = ({ isOpen, onClose }) => {
                       {userBookings.map((booking) => (
                         <div
                           key={booking.id}
-                          className="bg-gray-50 px-4 py-3 rounded-lg border"
+                          className="bg-gray-50 px-4 py-3 rounded-lg border-1 border-black"
                         >
                           <div className="flex justify-between items-center">
                             <div className="flex-1">

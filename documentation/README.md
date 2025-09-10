@@ -3,7 +3,9 @@
 This folder contains the technical documentation for the Fullstack-project.
 
 ## Contents
-- [definition.md](./definition.md): Project definition
-- [architecture.md](./architecture.md): Frontend Architecture
-- [changelog.md](./changelog.md): Development progress
-- [workhours.md](./workhours.md): Work hours tracking and management
+- [Project definition](./definition.md)
+- [Local Testing Guide](./local_testing.md)
+- [Frontend Architecture](./frontend_architecture.md)
+- [Backend Architecture](./backend_architecture.md)
+- [Changelog](./changelog.md)
+- [Workhours](./workhours.md)

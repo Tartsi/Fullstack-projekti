@@ -56,7 +56,6 @@ const Footer = () => {
     { icon: "fab fa-linkedin", key: "linkedin" },
     { icon: "fab fa-github", key: "github" },
     { icon: "fab fa-instagram", key: "instagram" },
-    { icon: "fab fa-tiktok", key: "tiktok" },
   ];
 
   // Contact information array for easier maintenance
@@ -387,7 +386,13 @@ const Footer = () => {
                 {socialMediaLinks.map((social) => (
                   <a
                     key={social.key}
-                    href="#"
+                    href={
+                      social.key === "linkedin"
+                        ? "https://www.linkedin.com/in/tarvo-lilja-b70637373/"
+                        : social.key === "github"
+                        ? "https://github.com/Tartsi"
+                        : "#"
+                    }
                     className={socialLinkClasses}
                     aria-label={`Follow us on ${t(
                       `footer.socialMedia.${social.key}`
