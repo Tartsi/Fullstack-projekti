@@ -1,0 +1,69 @@
+# Authentication API Tests
+# Use these requests to test the authentication endpoints
+
+### Health Check (Database Connection Test)
+GET http://localhost:4000/healthz
+Content-Type: application/json
+
+### Register User
+POST http://localhost:4000/api/users/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123",
+  "fullName": "Test User"
+}
+
+### Login User
+POST http://localhost:4000/api/users/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123"
+}
+
+### Get Current User (requires authentication)
+GET http://localhost:4000/api/users/info
+Content-Type: application/json
+
+### Logout User
+POST http://localhost:4000/api/users/logout
+Content-Type: application/json
+
+### Delete User Account (requires authentication)
+DELETE http://localhost:4000/api/users/delete
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": " Password123"
+}
+
+### Test Invalid Registration (duplicate user)
+POST http://localhost:4000/api/users/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123"
+}
+
+### Test Invalid Login
+POST http://localhost:4000/api/users/login
+Content-Type: application/json
+
+{
+  "email": "testuser",
+  "password": "wrongpassword"
+}
+
+### Test Registration with invalid data
+POST http://localhost:4000/api/users/register
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "123"
+}

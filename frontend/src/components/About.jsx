@@ -81,27 +81,32 @@ const About = () => {
         {/* Title */}
         <h2
           id="about-title"
-          className={`text-2xl sm:text-3xl lg:text-4xl font-cottage italic tracking-wide text-brand-dark underline mb-8 transition-all duration-1000 delay-[350ms] ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-2xl uppercase sm:text-3xl lg:text-4xl font-cottage italic
+            tracking-wide text-brand-dark underline mb-8 transition-all duration-1000 delay-[350ms] ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
         >
           {t("about.title")}
         </h2>
 
         {/* First Description Container */}
         <div
-          className={`p-6 sm:p-7 lg:p-1 rounded-lg max-w-2xl mx-auto mb-4 h-32 sm:h-28 lg:h-24 flex items-center transition-all duration-1000 ${
-            isFirstDescVisible
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-95"
-          }`}
+          className={`p-6 sm:p-7 lg:p-1 rounded-lg max-w-2xl mx-auto mb-4 h-32
+            sm:h-28 lg:h-24 flex items-center transition-all duration-1000 ${
+              isFirstDescVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-8 scale-95"
+            }`}
         >
           <p
-            className={`text-base sm:text-lg font-body text-black italic leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
-              isFirstDescVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
-            }`}
+            className={`text-base sm:text-lg font-body text-black italic leading-relaxed
+              transition-all duration-800 delay-500 whitespace-pre-line ${
+                isFirstDescVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+              }`}
           >
             {t("about.descriptionFirst")}
           </p>
@@ -121,14 +126,16 @@ const About = () => {
 
         {/* Second Description Container */}
         <div
-          className={`p-6 sm:p-7 lg:p-10 rounded-lg max-w-2xl mx-auto mb-4 h-32 sm:h-28 lg:h-24 flex items-center transition-all duration-1000 ${
-            isSecondDescVisible
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-95"
-          }`}
+          className={`p-6 sm:p-7 lg:p-10 rounded-lg max-w-2xl mx-auto mb-4 h-32 sm:h-28
+            lg:h-24 flex items-center transition-all duration-1000 ${
+              isSecondDescVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-8 scale-95"
+            }`}
         >
           <p
-            className={`text-base sm:text-lg font-body text-black italic leading-relaxed transition-all duration-800 delay-500 whitespace-pre-line ${
+            className={`text-base sm:text-lg font-body text-black italic leading-relaxed 
+            transition-all duration-800 delay-500 whitespace-pre-line ${
               isSecondDescVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"
@@ -152,18 +159,20 @@ const About = () => {
 
         {/* Value Proposition Highlight */}
         <div
-          className={`p-4 sm:p-6 bg-white rounded-lg border-l-4 border-brand-purple shadow-lg max-w-2xl mx-auto mb-8 transition-all duration-1000 ${
-            isValuePropVisible
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-8 scale-95"
-          }`}
+          className={`uppercase p-4 sm:p-6 bg-white rounded-lg border-l-4 border-brand-purple
+            shadow-lg max-w-2xl mx-auto mb-8 transition-all duration-1000 ${
+              isValuePropVisible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-8 scale-95"
+            }`}
         >
           <p
-            className={`text-lg sm:text-xl font-cottage italic text-brand-dark leading-relaxed transition-all duration-800 delay-500 ${
-              isValuePropVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
-            }`}
+            className={`text-lg sm:text-xl font-cottage italic text-brand-dark leading-relaxed
+              transition-all duration-800 delay-500 ${
+                isValuePropVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+              }`}
           >
             "{t("about.valueProposition")}"
           </p>
@@ -173,19 +182,21 @@ const About = () => {
         <div className="py-8 sm:py-12 lg:py-16 flex justify-center items-center relative">
           <button
             onClick={scrollToExplanation}
-            className={`flex flex-col items-center space-y-4 group cursor-pointer transition-all duration-1000 hover:scale-110 p-4 ${
-              isArrowVisible
-                ? "opacity-100 translate-y-0 scale-100"
-                : "opacity-0 translate-y-8 scale-95"
-            }`}
+            className={`flex flex-col items-center space-y-4 group cursor-pointer transition-all
+              duration-1000 hover:scale-110 p-4 ${
+                isArrowVisible
+                  ? "opacity-100 translate-y-0 scale-100"
+                  : "opacity-0 translate-y-8 scale-95"
+              }`}
             aria-label="Scroll to explanation section"
           >
             {/* Large downward arrow */}
             <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center">
               <svg
-                className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-brand-dark opacity-80 group-hover:opacity-100 transition-all duration-800 ${
-                  isArrowVisible ? "animate-bounce" : ""
-                }`}
+                className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-brand-dark opacity-80
+                  group-hover:opacity-100 transition-all duration-800 ${
+                    isArrowVisible ? "animate-bounce" : ""
+                  }`}
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >

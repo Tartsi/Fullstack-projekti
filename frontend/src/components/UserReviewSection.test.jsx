@@ -1,7 +1,8 @@
 import React from "react";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import UserReviewSection from "./UserReviewSection";
+import Header from "./Header";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
 // Mock IntersectionObserver
@@ -14,12 +15,14 @@ global.IntersectionObserver = vi.fn().mockImplementation((callback) => ({
   unobserve: vi.fn(),
 }));
 
+// Helper provider
 const UserReviewSectionWithProvider = () => (
   <LanguageProvider>
     <UserReviewSection />
   </LanguageProvider>
 );
 
+// Begin tests
 describe("UserReviewSection Component", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -39,11 +42,37 @@ describe("UserReviewSection Component", () => {
     expect(reviewSection).toHaveAttribute("id", "reviews");
   });
 
-  it("renders section headline", () => {
+  it("renders section headline and Finnish text by default", () => {
     render(<UserReviewSectionWithProvider />);
 
     const headline = screen.getByText("Wocuuming pelasti päiväni!");
     expect(headline).toBeInTheDocument();
+  });
+
+  it("renders section in English after language change", () => {
+    render(
+      <LanguageProvider>
+        <Header />
+        <UserReviewSection />
+      </LanguageProvider>
+    );
+
+    // Get the main language selector (not in dropdown)
+    const allFinElements = screen.getAllByText("FIN");
+    const mainLanguageSelector = allFinElements[1].closest("div");
+
+    // Find the English flag in the same container
+    const languageContainer = mainLanguageSelector.parentElement;
+    const englishOption = languageContainer
+      .querySelector('[alt="English flag"]')
+      .closest("div");
+
+    // Click to switch language to English
+    fireEvent.click(englishOption);
+
+    // Check if the text is now in English
+    const engText = screen.queryByText("Wocuuming polished my day!");
+    expect(engText).toBeInTheDocument();
   });
 
   it("calculates average rating correctly", () => {
@@ -60,7 +89,7 @@ describe("UserReviewSection Component", () => {
     // Check for star SVG using data-testid approach would be better,
     // but for now just check for the rating text
     expect(screen.getAllByText("4.6 / 5")[0]).toBeInTheDocument();
-    expect(screen.getAllByText("Kokonaisarvosana")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Kokonaisarvosana!")[0]).toBeInTheDocument();
   });
 
   it("renders navigation arrows", () => {
@@ -98,11 +127,11 @@ describe("UserReviewSection Component", () => {
     render(<UserReviewSectionWithProvider />);
 
     // Desktop carousel (should exist but be hidden on mobile)
-    const desktopCarousel = document.querySelector(".hidden.lg\\:flex");
+    const desktopCarousel = document.querySelector(".hidden.md\\:flex");
     expect(desktopCarousel).toBeInTheDocument();
 
     // Mobile carousel (should exist but be hidden on desktop)
-    const mobileCarousel = document.querySelector(".lg\\:hidden");
+    const mobileCarousel = document.querySelector(".md\\:hidden");
     expect(mobileCarousel).toBeInTheDocument();
   });
 

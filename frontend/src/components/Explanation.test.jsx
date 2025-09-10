@@ -1,7 +1,8 @@
 import React from "react";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import Explanation from "./Explanation";
+import Header from "./Header";
 import { LanguageProvider } from "../i18n/LanguageContext";
 
 // Mock IntersectionObserver
@@ -19,6 +20,7 @@ const ExplanationWithProvider = () => (
   </LanguageProvider>
 );
 
+// Begin tests
 describe("Explanation Component", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -28,6 +30,49 @@ describe("Explanation Component", () => {
     vi.runOnlyPendingTimers();
     vi.useRealTimers();
     vi.clearAllMocks();
+  });
+
+  it("renders explanation section with Finnish text by default", () => {
+    render(<ExplanationWithProvider />);
+
+    // Header
+    expect(screen.getByText(/Näin wocuuming toimii/i));
+
+    // Each section
+    expect(screen.getByText(/Varaa aika/i));
+    expect(screen.getByText(/Lisää Osoite/i));
+    expect(screen.getByText(/Avaa Auto/i));
+    expect(screen.getByText(/Siivous käynnissä/i));
+    expect(screen.getByText(/Siivous valmis/i));
+    expect(screen.getByText(/Nauti puhtaudesta/i));
+  });
+
+  it("renders section in English after language change", async () => {
+    render(
+      <LanguageProvider>
+        <Header />
+        <Explanation />
+      </LanguageProvider>
+    );
+
+    // Get the main language selector (not in dropdown)
+    const allFinElements = screen.getAllByText("FIN");
+    const mainLanguageSelector = allFinElements[1].closest("div");
+
+    // Find the English flag in the same container
+    const languageContainer = mainLanguageSelector.parentElement;
+    const englishOption = languageContainer
+      .querySelector('[alt="English flag"]')
+      .closest("div");
+
+    // Click to switch language to English
+    await act(async () => {
+      fireEvent.click(englishOption);
+    });
+
+    // Check if the text is now in English
+    const engText = screen.queryByText("Provide Address");
+    expect(engText).toBeInTheDocument();
   });
 
   it("renders explanation section with correct structure", () => {

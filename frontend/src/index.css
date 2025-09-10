@@ -42,15 +42,21 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* Hide Microsoft Edge's built-in password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
 /* Language change animation */
 @keyframes languageChange {
   0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
 
 .language-change-animation {
-  animation: languageChange 0.6s ease-in-out;
+  animation: languageChange 1s ease-in-out;
 }
 
 /* Brand color utilities */

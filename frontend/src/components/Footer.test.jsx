@@ -26,7 +26,7 @@ describe("Footer Component", () => {
         <Footer />
       </LanguageProvider>
     );
-    expect(screen.getByText("Ota Yhteyttä")).toBeInTheDocument();
+    expect(screen.getByText("Anna palautetta")).toBeInTheDocument();
   });
 
   it("renders the contact information header", () => {
@@ -93,11 +93,13 @@ describe("Footer Component", () => {
       </LanguageProvider>
     );
     const currentYear = new Date().getFullYear();
-    expect(
-      screen.getByText(
-        `© ${currentYear} Workday-Vacuumers. Kaikki oikeudet pidätetään.`
-      )
-    ).toBeInTheDocument();
+    const copyrightElements = screen.getAllByText(
+      `© ${currentYear} Workday-Vacuumers. Kaikki oikeudet pidätetään.`
+    );
+    expect(copyrightElements).toHaveLength(2); // One for mobile, one for desktop
+    copyrightElements.forEach((element) => {
+      expect(element).toBeInTheDocument();
+    });
   });
 
   it("social media links have hover effects", () => {
@@ -368,6 +370,6 @@ describe("Footer Component", () => {
     fireEvent.click(englishOption);
 
     // Check if language has changed
-    expect(screen.getByText("Contact Us")).toBeInTheDocument();
+    expect(screen.getByText("Feedback")).toBeInTheDocument();
   });
 });

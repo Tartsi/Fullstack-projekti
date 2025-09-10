@@ -2,17 +2,25 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import App from "../App";
-import backgroundImage from "../assets/background/blob-scene-haikei.svg";
+import { LanguageProvider } from "../i18n/LanguageContext";
+import { AuthProvider } from "../contexts/AuthContext";
+
+// Test wrapper with all providers
+const TestWrapper = ({ children }) => (
+  <LanguageProvider>
+    <AuthProvider>{children}</AuthProvider>
+  </LanguageProvider>
+);
 
 describe("App Component", () => {
   it("renders without crashing", () => {
-    render(<App />);
-    // Check if the app renders the main layout structure
-    expect(screen.getByRole("main")).toBeInTheDocument();
+    render(<App />, { wrapper: TestWrapper });
+    // Check if the app renders by looking for a common element
+    expect(screen.getByRole("banner")).toBeInTheDocument(); // Header should be present
   });
 
   it("renders the Layout component", () => {
-    render(<App />);
+    render(<App />, { wrapper: TestWrapper });
     // Check if Layout is rendered by looking for header and footer
     expect(screen.getByRole("banner")).toBeInTheDocument(); // Header
     expect(screen.getByRole("contentinfo")).toBeInTheDocument(); // Footer

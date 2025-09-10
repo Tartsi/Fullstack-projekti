@@ -8,7 +8,9 @@ export const translations = {
         "Ammattitaitoinen auton sisäsiivous samalla, kun keskityt työhösi. Palaat kotiin puhtaalla autolla.",
       cta: "Varaa Siivous",
       scrollText: "Lue Lisää",
+      userProfile: "Käyttäjätiedot",
       login: "Kirjaudu Sisään",
+      logout: "Kirjaudu Ulos",
     },
     // Header
     nav: {
@@ -18,6 +20,100 @@ export const translations = {
       order: "Tilaa",
       contact: "Yhteystiedot",
       login: "Kirjaudu sisään",
+    },
+    // Auth Modal
+    auth: {
+      login: "KIRJAUTUMINEN",
+      createAccount: "LUO TILI",
+      signIn: "Kirjaudu",
+      signingIn: "Kirjaudutaan...",
+      backToLogin: "<- Takaisin",
+      sending: "Lähetetään...",
+      createNewUser: "Luo uusi käyttäjä",
+      fullName: "Koko Nimi",
+      email: "Sähköposti",
+      password: "Salasana",
+      confirmPassword: "Vahvista Salasana",
+      cancel: "Peruuta",
+      creating: "Luodaan...",
+      registrationSuccess: "Rekisteröinti onnistui!",
+      loginSuccess: "Kirjautuminen onnistui!",
+      forgotPassword: "Unohditko salasanasi?",
+      resetPassword: "PALAUTA SALASANA",
+      sendReset: "Lähetä",
+      passwordResetSuccess: "Palautusviesti lähetetty!",
+      successIcon: "Onnistui",
+      errorIcon: "Virhe",
+      errors: {
+        fullNameRequired: "Koko nimi vaaditaan",
+        fullNameShort: "Nimi oltava vähintään 4 kirjainta",
+        fullNameTooLong: "Koko nimi on liian pitkä",
+        fullNameInvalid: "Sisältää virheellisiä merkkejä",
+        emailRequired: "Sähköposti vaaditaan",
+        emailInvalid: "Sähköpostiosoite on virheellinen",
+        emailTooLong: "Sähköpostiosoite on liian pitkä",
+        passwordRequired: "Salasana vaaditaan",
+        passwordMinLength: "Tarvitaan vähintään 6 merkkiä",
+        passwordTooLong: "Salasana on liian pitkä",
+        passwordLowercase: "Tarvitaan vähintään yksi pieni kirjain",
+        passwordUppercase: "Tarvitaan vähintään yksi iso kirjain",
+        passwordNumber: "Tarvitaan vähintään yksi numero",
+        passwordSpaces: "Salasana ei voi sisältää välilyöntejä",
+        passwordMismatch: "Salasanat eivät täsmää",
+        registrationFailed: "Rekisteröinti epäonnistui.",
+        loginFailed: "Kirjautuminen epäonnistui.",
+        networkError: "Verkkovirhe.",
+      },
+    },
+    // User Profile
+    userProfile: {
+      title: "KÄYTTÄJÄSI",
+      basicInfo: "PERUSTIEDOT",
+      loadingState: "Ladataan käyttäjätietoja...",
+      fullName: "KOKO NIMI",
+      email: "SÄHKÖPOSTI",
+      role: "ROOLI",
+      memberSince: "JÄSEN ALKAEN",
+      bookings: "VARAUKSENI",
+      noBookings: "Sinulla ei ole aktiivisia varauksia.",
+      bookingStatus: {
+        confirmed: "Vahvistettu",
+        draft: "Luonnos",
+        cancelled: "Peruttu",
+      },
+      bookingLocation: "Varauksen sijainti: ",
+      loadingBookings: "Ladataan varauksia...",
+      deleteBooking: "Peruuta",
+      deleteBookingConfirm:
+        "Haluatko varmasti peruutta tämän varauksen? Varaus poistetaan pysyvästi!",
+      deletingBooking: "Poistetaan varausta...",
+      bookingDeleted: "VARAUS POISTETTU ONNISTUNEESTI",
+      bookingDeleteError: "VARAUKSEN POISTO EPÄONNISTUI",
+      deleteAccount: "POISTA TILI",
+      deleteConfirm: "VAHVISTA TILIN POISTO",
+      deleteWarning:
+        "Tämä toiminto poistaa tilisi ja kaikki varauksesi pysyvästi. Syötä salasanasi vahvistaaksesi.",
+      enterPassword: "SYÖTÄ SALASANASI",
+      confirmDelete: "Vahvista Poisto",
+      cancel: "Peruuta",
+      deleting: "Poistetaan...",
+      accountDeleted: "Tili poistettu onnistuneesti",
+      deleteError: "Tilin poistaminen epäonnistui",
+      close: "Sulje",
+    },
+    // Booking Success
+    bookingSuccess: {
+      title: "Varaus onnistui!",
+      message:
+        "Varauksesi on vahvistettu.\nTarkastathan varauksesi tiedot ja ota yhteyttä tarvittaessa.",
+      bookingDetails: "Varauksen tiedot:",
+      date: "Päivämäärä:",
+      time: "Aika:",
+      city: "Kaupunki:",
+      address: "Osoite:",
+      phone: "Puhelin:",
+      payment: "Maksutapa:",
+      close: "Sulje",
     },
     // Footer
     footer: {
@@ -34,13 +130,14 @@ export const translations = {
         tiktok: "TikTok",
       },
       contactUs: {
-        title: "Ota Yhteyttä",
+        title: "Anna palautetta",
         placeholder: "Kirjoita viestisi tähän (max 150 merkkiä)",
         submit: "Lähetä",
         success: "Viesti lähetetty onnistuneesti!",
         error: "Viestin lähetys epäonnistui. Yritä uudelleen.",
       },
       copyright: "Workday-Vacuumers. Kaikki oikeudet pidätetään.",
+      backToTop: "Takaisin ylös",
     },
     // About section
     about: {
@@ -56,6 +153,7 @@ export const translations = {
     // Services section
     services: {
       title: "Palvelut",
+      comingSoon: "TULOSSA PIAN!",
     },
     // Explanation/Process section
     explanation: {
@@ -64,15 +162,17 @@ export const translations = {
       steps: {
         step1: {
           title: "Varaa Aika",
-          description: "Varaa kalenterista sinulle sopiva aika ja tee tilaus.",
+          description:
+            "Kirjaudu sisään, varaa kalenterista sinulle sopiva aika ja tee tilaus.",
         },
         step2: {
-          title: "Ilmoita Osoite",
-          description: "Ilmoita, missä osoitteessa tapaamme sinut ja autosi.",
+          title: "Lisää Osoite",
+          description: "Kerro, missä osoitteessa tapaamme sinut ja autosi.",
         },
         step3: {
           title: "Avaa Auto",
-          description: "Avaa auto siivoustamme varten.",
+          description:
+            "Otamme yhteyttä puhelimitse kun olemme paikalla siivousta varten.",
         },
         step4: {
           title: "Siivous Käynnissä",
@@ -80,7 +180,8 @@ export const translations = {
         },
         step5: {
           title: "Siivous Valmis",
-          description: "Ilmoitamme sinulle, kun siivous on valmis.",
+          description:
+            "Ilmoitamme sinulle tekstiviestillä, kun siivous on valmis.",
         },
         step6: {
           title: "Nauti Puhtaudesta",
@@ -163,10 +264,32 @@ export const translations = {
         },
         helpTooltip: "Maksuehdot",
         helpContent:
-          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
+          "• Varaus maksetaan etukäteen valitsemallasi maksutavalla. Poikkeuksena käteismaksu, joka maksetaan tapaamisen yhteydessä.\n• Voit peruuttaa varauksen veloituksetta 12h varauksen jälkeen.\n• Yli 12h peruutuksista palautamme maksun, mutta pidätämme 10 € käyttämättömän varauksen käsittelymaksuna.\n• Palautus hyvitetään alkuperäiselle maksutavalle 3–5 arkipäivän kuluessa.\n• No-show (ei peruutusta) → maksua ei palauteta.\n• Kaikki hinnat sisältävät ALV:n.",
+        location: {
+          title: "Sijainti",
+          subtitle: "Valitse kaupunki ja anna osoite",
+          cities: {
+            helsinki: "Helsinki",
+            vantaa: "Vantaa",
+            espoo: "Espoo",
+          },
+          addressPlaceholder: 'Muoto: "Esimerkkitie 14 A, 00750"',
+          phonePlaceholder: 'Muoto: "0401234567"',
+          requirementHeaders: {
+            address: "Osoitteen vaatimukset:",
+            phone: "Puhelinnumeron vaatimukset:",
+          },
+          errors: {
+            addressInvalid: "Osoite sisältää kiellettyjä merkkejä",
+            addressMissingParts: "Osoite koostuu kirjaimista ja numeroista",
+            addressTooShort: "Osoite on liian lyhyt",
+            addressMissingPostal: "Postinumero puuttuu osoitteesta",
+            phoneInvalid: "Numero sisältää kiellettyjä merkkejä",
+            phoneTooShort: "Puhelinnumero on liian lyhyt",
+          },
+        },
         confirmPayment: "Vahvista Maksu",
         selectDateTime: "Valitse Päivä ja Aika",
-        selectPaymentMethod: "Valitse Maksutapa",
       },
     },
     // Reviews section
@@ -184,12 +307,14 @@ export const translations = {
   en: {
     // Hero
     hero: {
-      headline: "We Clean Your Car During Your Workday",
+      headline: "We Clean Your Car During Workday",
       subheading:
         "Professional car interior cleaning while you focus on work. Return home with a clean car.",
       cta: "Book Cleaning",
       scrollText: "Learn More",
+      userProfile: "Profile",
       login: "Log In",
+      logout: "Log Out",
     },
     // Header
     nav: {
@@ -199,6 +324,100 @@ export const translations = {
       order: "Order",
       contact: "Contact",
       login: "Log in",
+    },
+    // Auth Modal
+    auth: {
+      login: "LOGIN",
+      createAccount: "CREATE ACCOUNT",
+      signIn: "Sign In",
+      signingIn: "Signing In...",
+      backToLogin: "<- Back",
+      sending: "Sending...",
+      createNewUser: "Create new user",
+      fullName: "Full Name",
+      email: "Email",
+      password: "Password",
+      confirmPassword: "Confirm Password",
+      cancel: "Cancel",
+      creating: "Creating...",
+      registrationSuccess: "Registration successful!",
+      loginSuccess: "Login successful!",
+      forgotPassword: "Forgot your password?",
+      resetPassword: "RESET PASSWORD",
+      sendReset: "Send",
+      passwordResetSuccess: "Email sent successfully!",
+      successIcon: "Success",
+      errorIcon: "Error",
+      errors: {
+        fullNameRequired: "Full name is required",
+        fullNameShort: "Must have at least 4 characters",
+        fullNameTooLong: "Full name is too long",
+        fullNameInvalid: "Contains invalid characters",
+        emailRequired: "Email is required",
+        emailInvalid: "Email address is invalid",
+        emailTooLong: "Email address is too long",
+        passwordRequired: "Password is required",
+        passwordMinLength: "Must have at least 6 characters",
+        passwordTooLong: "Password is too long",
+        passwordLowercase: "At least one lowercase letter required",
+        passwordUppercase: "At least one uppercase letter required",
+        passwordNumber: "Must contain at least one number",
+        passwordSpaces: "Cannot contain spaces",
+        passwordMismatch: "Passwords do not match",
+        registrationFailed: "Registration failed.",
+        loginFailed: "Login failed.",
+        networkError: "Network error.",
+      },
+    },
+    // User Profile
+    userProfile: {
+      title: "YOUR PROFILE",
+      basicInfo: "BASIC INFO",
+      loadingState: "Loading user details...",
+      fullName: "FULL NAME",
+      email: "EMAIL",
+      role: "ROLE",
+      memberSince: "MEMBER SINCE",
+      bookings: "My Bookings",
+      noBookings: "You have no active bookings.",
+      bookingStatus: {
+        confirmed: "Confirmed",
+        draft: "Draft",
+        cancelled: "Cancelled",
+      },
+      loadingBookings: "Loading bookings...",
+      bookingLocation: "Booking location: ",
+      deleteBooking: "Cancel",
+      deleteBookingConfirm:
+        "Are you sure you want to cancel this booking? The booking will be deleted permanently!",
+      deletingBooking: "Deleting booking...",
+      bookingDeleted: "BOOKING DELETED SUCCESSFULLY",
+      bookingDeleteError: "FAILED TO DELETE BOOKING",
+      deleteAccount: "DELETE ACCOUNT",
+      deleteConfirm: "CONFIRM ACCOUNT DELETION",
+      deleteWarning:
+        "This action will permanently delete your account and all your bookings. Enter your password to confirm.",
+      enterPassword: "ENTER YOUR PASSWORD",
+      confirmDelete: "Confirm Deletion",
+      cancel: "Cancel",
+      deleting: "Deleting...",
+      accountDeleted: "Account deleted successfully",
+      deleteError: "Failed to delete account",
+      close: "Close",
+    },
+    // Booking Success
+    bookingSuccess: {
+      title: "Booking Successful!",
+      message:
+        "Your booking has been confirmed.\nCheck the booking information and contact us when needed.",
+      bookingDetails: "Booking Details:",
+      date: "Date:",
+      time: "Time:",
+      city: "City:",
+      address: "Address:",
+      phone: "Phone:",
+      payment: "Payment:",
+      close: "Close",
     },
     // Footer
     footer: {
@@ -215,13 +434,14 @@ export const translations = {
         tiktok: "TikTok",
       },
       contactUs: {
-        title: "Contact Us",
+        title: "Feedback",
         placeholder: "Write your message here (max 150 characters)",
         submit: "Send",
         success: "Message sent successfully!",
         error: "Failed to send message. Please try again.",
       },
       copyright: "Workday-Vacuumers. All rights reserved.",
+      backToTop: "Back to top",
     },
     // About section
     about: {
@@ -237,6 +457,7 @@ export const translations = {
     // Services section
     services: {
       title: "Services",
+      comingSoon: "COMING SOON!",
     },
     // Explanation/Process section
     explanation: {
@@ -246,7 +467,7 @@ export const translations = {
         step1: {
           title: "Book Time",
           description:
-            "Book a suitable time from the calendar and place your order.",
+            "Log in, book a suitable time from the calendar and place your order.",
         },
         step2: {
           title: "Provide Address",
@@ -254,7 +475,7 @@ export const translations = {
         },
         step3: {
           title: "Open Car",
-          description: "Open your car for our cleaning service.",
+          description: "We will inform you via phone when we have arrived.",
         },
         step4: {
           title: "Cleaning in Progress",
@@ -262,7 +483,8 @@ export const translations = {
         },
         step5: {
           title: "Cleaning Complete",
-          description: "We notify you when the cleaning is finished.",
+          description:
+            "We will notify you via phone when the cleaning has finished.",
         },
         step6: {
           title: "Enjoy Cleanliness",
@@ -345,10 +567,32 @@ export const translations = {
         },
         helpTooltip: "Payment Terms",
         helpContent:
-          "• Booking is paid in advance using your chosen payment method.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
+          "• Booking is paid in advance using your chosen payment method, with expection regarding cash payment, which is paid upon meeting.\n• You can cancel the booking free of charge for up to 12h after reservation.\n• For cancellations over 12 hours from booking, we refund the payment but retain €10 as a processing fee for unused bookings.\n• Refunds are credited to the original payment method within 3–5 business days.\n• No-show (no cancellation) → no refund.\n• All prices include VAT.",
+        location: {
+          title: "Location",
+          subtitle: "Select city and exact address",
+          cities: {
+            helsinki: "Helsinki",
+            vantaa: "Vantaa",
+            espoo: "Espoo",
+          },
+          addressPlaceholder: 'Format: "Example Street 14 A, 00750"',
+          phonePlaceholder: 'Format: "0401234567"',
+          requirementHeaders: {
+            address: "Address requirements:",
+            phone: "Phone number requirements:",
+          },
+          errors: {
+            addressInvalid: "Address contains invalid characters",
+            addressMissingParts: "Address contains both letters and numbers",
+            addressTooShort: "Address is too short",
+            addressMissingPostal: "Postal code missing from address",
+            phoneInvalid: "Number contains invalid characters",
+            phoneTooShort: "Phonenumber is too short",
+          },
+        },
         confirmPayment: "Confirm Payment",
         selectDateTime: "Select Date and Time",
-        selectPaymentMethod: "Select Payment Method",
       },
     },
     // Reviews section

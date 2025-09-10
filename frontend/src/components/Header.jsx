@@ -20,12 +20,16 @@ import { scrollAnimations } from "../utils/scrollUtils";
  * - A language selector is included on the left side, allowing users to switch between Finnish and English.
  * - Language changes trigger animations for visual feedback.
  * - Clean, minimal design without background or company branding.
+ * - Mobile support: Menus can be opened/closed by tapping icons and closed by tapping outside
  */
 const Header = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLanguageHovered, setIsLanguageHovered] = useState(false);
   const [isLanguageChanging, setIsLanguageChanging] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileLanguageMenuOpen, setIsMobileLanguageMenuOpen] =
+    useState(false);
   const { language, changeLanguage, t } = useLanguage();
 
   /**
@@ -33,14 +37,16 @@ const Header = () => {
    */
   const toggleHamburgerMenu = useCallback(() => {
     setIsHovered(!isHovered);
-  }, [isHovered]);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  }, [isHovered, isMobileMenuOpen]);
 
   /**
    * Toggle language menu visibility
    */
   const toggleLanguageMenu = useCallback(() => {
     setIsLanguageHovered(!isLanguageHovered);
-  }, [isLanguageHovered]);
+    setIsMobileLanguageMenuOpen(!isMobileLanguageMenuOpen);
+  }, [isLanguageHovered, isMobileLanguageMenuOpen]);
 
   /**
    * Optimized scroll handler using useCallback to prevent unnecessary re-renders
@@ -57,6 +63,39 @@ const Header = () => {
   }, [handleScroll]);
 
   /**
+   * Close menus when clicking outside of them (for mobile devices)
+   */
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click is outside of both menus
+      const isClickInsideHamburger = event.target.closest(
+        '[data-menu="hamburger"]'
+      );
+      const isClickInsideLanguage = event.target.closest(
+        '[data-menu="language"]'
+      );
+
+      if (!isClickInsideHamburger && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+        setIsHovered(false);
+      }
+
+      if (!isClickInsideLanguage && isMobileLanguageMenuOpen) {
+        setIsMobileLanguageMenuOpen(false);
+        setIsLanguageHovered(false);
+      }
+    };
+
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMobileMenuOpen, isMobileLanguageMenuOpen]);
+
+  /**
    * Handles the language change process by updating the current language
    * and triggering a temporary animation state.
    * Added optimization to prevent unnecessary state changes
@@ -69,6 +108,9 @@ const Header = () => {
       if (newLanguage !== language) {
         setIsLanguageChanging(true);
         changeLanguage(newLanguage);
+        // Close mobile language menu after language change
+        setIsMobileLanguageMenuOpen(false);
+        setIsLanguageHovered(false);
         // Reset animation after a short delay
         setTimeout(() => {
           setIsLanguageChanging(false);
@@ -79,18 +121,28 @@ const Header = () => {
   );
 
   /**
+   * Helper function to close mobile hamburger menu
+   */
+  const closeMobileHamburgerMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+    setIsHovered(false);
+  }, []);
+
+  /**
    * Enhanced scroll to the about section using centralized utility
    */
   const scrollToAbout = useCallback(() => {
     scrollAnimations.medium("about");
-  }, []);
+    closeMobileHamburgerMenu();
+  }, [closeMobileHamburgerMenu]);
 
   /**
    * Scroll to the explanation section (process)
    */
   const scrollToProcess = useCallback(() => {
     scrollAnimations.medium("explanation");
-  }, []);
+    closeMobileHamburgerMenu();
+  }, [closeMobileHamburgerMenu]);
 
   /**
    * Scroll to the services section (pricing calendar) with proper positioning
@@ -104,7 +156,8 @@ const Header = () => {
     } else {
       scrollAnimations.medium("pricing");
     }
-  }, []);
+    closeMobileHamburgerMenu();
+  }, [closeMobileHamburgerMenu]);
 
   /**
    * Scroll to the contact section (footer) with ultra-slow animation on large screens
@@ -116,19 +169,11 @@ const Header = () => {
     } else {
       scrollAnimations.medium("footer");
     }
-  }, []);
-
-  /**
-   * Login function placeholder
-   */
-  const handleLogin = useCallback(() => {
-    // TODO: Implement login functionality
-    console.log("Login clicked");
-  }, []);
+    closeMobileHamburgerMenu();
+  }, [closeMobileHamburgerMenu]);
 
   // Navigation items to reduce repetition
   const navItems = [
-    { key: "login", onClick: handleLogin, separated: true },
     { key: "about", onClick: scrollToAbout },
     { key: "process", onClick: scrollToProcess },
     { key: "order", onClick: scrollToServices },
@@ -154,35 +199,45 @@ const Header = () => {
         {/* Language Selector */}
         <div
           className="flex items-center relative"
+          data-menu="language"
           onMouseEnter={() => setIsLanguageHovered(true)}
           onMouseLeave={() => setIsLanguageHovered(false)}
         >
           {/* Hover Zone for Language Menu */}
           <div
             className={`absolute top-1/2 -translate-y-1/2 left-0 w-80 h-16 transition-all duration-700 z-40 ${
-              isLanguageHovered ? "pointer-events-auto" : "pointer-events-none"
+              isLanguageHovered || isMobileLanguageMenuOpen
+                ? "pointer-events-auto"
+                : "pointer-events-none"
             }`}
           />
 
-          {/* Language Hover Menu - Dropped by 3.5% */}
+          {/* Language Hover Menu */}
           <div
-            className={`absolute top-[53.5%] -translate-y-1/2 left-16 text-xs sm:text-sm font-light tracking-wide uppercase transition-all duration-700 z-50
+            className={`absolute top-[53.5%] -translate-y-1/2 left-16 text-xs sm:text-sm
+              font-light tracking-wide uppercase transition-all duration-700 z-50
                                             ${
-                                              isLanguageHovered
+                                              isLanguageHovered ||
+                                              isMobileLanguageMenuOpen
                                                 ? "opacity-100 translate-x-0"
                                                 : "opacity-0 -translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg">
+            <div
+              className="flex space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-3
+            py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg"
+            >
               {languageOptions.map((option) => (
                 <div
                   key={option.code}
                   onClick={() => handleLanguageChange(option.code)}
-                  className={`flex flex-col items-center cursor-pointer hover:opacity-100 hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600 font-cottage hover:text-gray-900 hover:font-medium ${
-                    language === option.code
-                      ? "opacity-100 font-medium text-gray-900"
-                      : ""
-                  }`}
+                  className={`flex flex-col items-center cursor-pointer hover:opacity-100
+                    hover:scale-110 opacity-70 whitespace-nowrap italic transition-all duration-600
+                    font-cottage hover:text-gray-900 hover:font-medium ${
+                      language === option.code
+                        ? "opacity-100 font-medium text-gray-900"
+                        : ""
+                    }`}
                 >
                   <img
                     src={option.flag}
@@ -200,11 +255,12 @@ const Header = () => {
           {/* Language Toggle Button */}
           <div
             onClick={toggleLanguageMenu}
-            className={`flex items-center space-x-1 text-xs sm:text-sm font-cottage italic hover:opacity-100 opacity-70 transition-all duration-200 cursor-pointer select-none ${
-              isLanguageChanging
-                ? "scale-110 text-brand-purple opacity-100"
-                : "scale-100"
-            }`}
+            className={`flex items-center space-x-1 text-xs sm:text-sm font-cottage italic
+              hover:opacity-100 opacity-70 transition-all duration-200 cursor-pointer select-none ${
+                isLanguageChanging
+                  ? "scale-110 text-brand-purple opacity-100"
+                  : "scale-100"
+              }`}
           >
             {(() => {
               const currentLang = getCurrentLanguageOption(language);
@@ -227,26 +283,34 @@ const Header = () => {
         {/* Navigation Menu*/}
         <div
           className="flex items-center relative"
+          data-menu="hamburger"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           {/* Hover Zone for Hamburger Menu - Responsive width */}
           <div
-            className={`absolute top-1/2 -translate-y-1/2 right-0 w-72 xs:w-80 sm:w-96 h-16 transition-all duration-700 z-40 ${
-              isHovered ? "pointer-events-auto" : "pointer-events-none"
-            }`}
+            className={`absolute top-1/2 -translate-y-1/2 right-0 w-72 xs:w-80 sm:w-96 h-16
+              transition-all duration-700 z-40 ${
+                isHovered || isMobileMenuOpen
+                  ? "pointer-events-auto"
+                  : "pointer-events-none"
+              }`}
           />
 
           {/* Hover-menu - Responsive positioning and scaling */}
           <div
             className={`absolute top-1/2 -translate-y-1/2 right-8 xs:right-10 sm:right-12 transition-all duration-700 z-50
                                             ${
-                                              isHovered
+                                              isHovered || isMobileMenuOpen
                                                 ? "opacity-100 translate-x-0"
                                                 : "opacity-0 translate-x-4 pointer-events-none"
                                             }`}
           >
-            <div className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6 px-2 xs:px-3 py-3 text-black bg-white border-2 border-black rounded-lg shadow-lg text-xs xs:text-xs sm:text-sm font-light tracking-wide uppercase">
+            <div
+              className="flex items-center space-x-1 xs:space-x-2 sm:space-x-3 md:space-x-4
+            lg:space-x-6 px-2 xs:px-3 py-3 text-black bg-white border-2 border-black
+            rounded-lg shadow-lg text-xs xs:text-xs sm:text-sm font-light tracking-wide uppercase"
+            >
               {navItems.map((item, index) => (
                 <React.Fragment key={item.key}>
                   {item.separated && index > 0 && (
@@ -263,7 +327,8 @@ const Header = () => {
           {/* Hamburger-symbol */}
           <div
             onClick={toggleHamburgerMenu}
-            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer select-none leading-none -mt-2 relative z-10"
+            className="text-xl xs:text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-thin cursor-pointer
+            select-none leading-none -mt-2 relative z-10"
           >
             ≡
           </div>

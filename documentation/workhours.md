@@ -1,12 +1,11 @@
 # Work Hours
 
-- Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or mental visualisation (designing the outlook).
+- Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or visualisation (designing the outlook). Note that within all hours are included time spent studying new techniques if it was necessary.
 
-## Total hours: 80 hours 30 minutes
+## Total hours: 114 hours
 
-###  Large review number #1 15.07.2025 (Through port-forwarding)
-- Total hours with customer: 3 hours 30 minutes
-- Total hours designing the outlook of the site: 4 hours
+- Total hours with customer: 4 hours
+- Total hours designing the outlook of the site: 5 hours
 
 - 23.06.2025
     - 3 hours: Initialized project repository and defined repository settings.
@@ -39,7 +38,7 @@
 - 16.07.2025 & 17.07.2025
     - 12 hours: Large scale animation changes to the site, Header changes, and Explanation section implementation, a lot of bug fixes and scaling changes which ate up my time...
 - 18.07.2025 -> 30.07.2025 (excluding 19.07.2025, 20.07.2025, 27.07.2025, 28.07.2025)
-    - 15 hours: Working on Pricing and Reservation section; including animations, testing, scalability, bugfixing, a lot of designing.
+    - 15 hours (Keep in mind all hours include time spent learning new things, especially with animations): Working on Pricing and Reservation section; including animations, testing, scalability, bugfixing, a lot of designing.
 - 31.07.2025:
     - 3 hours: Started and finished User Review Section. Included are animation, scalability, testing and designing.
     - 2 hours: Made some UI improvements as per customer request
@@ -58,3 +57,11 @@
 - 12.08.2025:
     - 2 hours: Fly.io-deployment
     - 1 hour: Customer requested UI-changes
+- 15.08.2025:
+    - 3 hours: Add backend solutions for user registration, login, logout and deletion and fix customer requested UI-elements (Pulsing 'Tilaa tästä' button placement, Footer-component changes)
+- 18.08.2025 - 02.09.2025:
+    - 20 hours (Keep in mind all hours include time spent learning new things, especially with animations): Working on frontend + backend solutions for registration, login, logout, deletion
+- 03.09.2025 - 05.09.2025:
+    - 5 hours: Finishing some tests + UI Changes as per user request
+- 08.09.2025-09.09.2025:
+    - 4 hours: Implement booking functionality to frontend + backend and some minor UI along the way
