@@ -2,7 +2,7 @@
 
 - Work hours that are tracked are hours spent advancing this project, whether it is coding, testing, documentation, self-studying, customer interaction or visualisation (designing the outlook). Note that within all hours are included time spent studying new techniques if it was necessary.
 
-## Total hours: 114 hours
+## Total hours: 118 hours
 
 - Total hours with customer: 4 hours
 - Total hours designing the outlook of the site: 5 hours
@@ -65,3 +65,5 @@
     - 5 hours: Finishing some tests + UI Changes as per user request
 - 08.09.2025-09.09.2025:
     - 4 hours: Implement booking functionality to frontend + backend and some minor UI along the way
+- 10.09.2025-11.09.2025:
+    - 4 hours: Fix security issues, add CSRF-token, Fix tests + Final UI changes, Finalize documentation + Add codecoverage

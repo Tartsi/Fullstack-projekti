@@ -60,3 +60,6 @@
     - Finish frontend + backend login, logout, registration, deletion, info (show user info), email reset functionalities
 - 09.09.2025
     - Finish solution for adding bookings to a logged in user
+- 11.09.2025
+    - Fix security issues, add CSRF-token, Fix tests + Final UI changes, Finalize documentation + Add codecoverage
+    - Version 1.0.0 ready
